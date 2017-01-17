@@ -11,6 +11,8 @@ public class Order {
   private int result;
   // private Currency pair
   
+  // testing github desktop
+  
   public Order(){
     this.quantity = 0;
     this.direction = "";
