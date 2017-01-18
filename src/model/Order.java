@@ -11,7 +11,6 @@ public class Order {
   private int result;
   // private Currency pair
   
-  // testing 
   
   public Order(){
     this.quantity = 0;

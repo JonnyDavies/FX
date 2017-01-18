@@ -21,17 +21,18 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import view.FXViewChartPane;
 import view.FXViewCurrencyPairPane;
+import view.FXViewLoginPage;
 import view.FXViewMenuPane;
 import view.FXViewRootPane;
 
 public class FXController {
   
-  private FXViewRootPane view;
+  private FXViewLoginPage view;
   private FXViewChartPane cp;
   private FXViewCurrencyPairPane cupp;
   private FXViewMenuPane mp;
   
-  private static StringProperty message1; // static ?
+  private static StringProperty message1; // static ? review this
   private static StringProperty message2;
   private static StringProperty message3;
   private static StringProperty message4;
@@ -39,17 +40,22 @@ public class FXController {
   private static String update;
   
   
-  public FXController (FXViewRootPane view){
+  public FXController (FXViewLoginPage view){
       // reference to view - eventually view and controller.
       this.view = view;
-      
+   /**   
+    * normally this
+    * 
       // get a reference to all panes
       this.cp = view.getChartPane();
       this.cupp = view.getCurrencyPairPane();
       this.mp = view.getMenuPane();
       
       //attach event handlers to view using private helper method
+      
       this.attachEventHandlers();
+      
+    */
   }
   
   public void attachEventHandlers(){
@@ -126,7 +132,7 @@ public class FXController {
             }
         };
     }
-}
+  }
   
   public void bindSocketValuesToLabels (){ 
    
