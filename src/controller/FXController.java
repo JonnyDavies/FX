@@ -23,11 +23,12 @@ import view.FXViewChartPane;
 import view.FXViewCurrencyPairPane;
 import view.FXViewLoginPage;
 import view.FXViewMenuPane;
+import view.FXViewRegisterPage;
 import view.FXViewRootPane;
 
 public class FXController {
   
-  private FXViewLoginPage view;
+  private FXViewRegisterPage view;
   private FXViewChartPane cp;
   private FXViewCurrencyPairPane cupp;
   private FXViewMenuPane mp;
@@ -38,9 +39,8 @@ public class FXController {
   private static StringProperty message4;
 
   private static String update;
-  
-  
-  public FXController (FXViewLoginPage view){
+   
+  public FXController (FXViewRegisterPage view){
       // reference to view - eventually view and controller.
       this.view = view;
    /**   
@@ -53,8 +53,7 @@ public class FXController {
       
       //attach event handlers to view using private helper method
       
-      this.attachEventHandlers();
-      
+      this.attachEventHandlers();     
     */
   }
   
