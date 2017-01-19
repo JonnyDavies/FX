@@ -99,6 +99,7 @@ public class FXController {
                       // Platform.runLater? 
                       
                       update = fromServer;
+                      System.out.println(update);
                       String[] s = update.split("-");
                       
                         Platform.runLater(new Runnable() {
