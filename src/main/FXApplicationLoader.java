@@ -13,7 +13,7 @@ public class FXApplicationLoader extends Application {
 
   // normally this
   // private FXViewRootPane view;
-  private FXViewRegisterPage view;
+  private FXViewLoginPage view;
   private FXController controller;
  
   
@@ -27,11 +27,9 @@ public class FXApplicationLoader extends Application {
     
     // this while testing the login page
     
-    view = new FXViewRegisterPage();
-    
+    view = new FXViewLoginPage();    
     //  FXModel model = new FXModel(); // this will be something like FXTrader but rename once UML diagrams are done!
     controller = new FXController(view); //    new FXController(model, view); 
-
   }
   
 
@@ -44,7 +42,7 @@ public class FXApplicationLoader extends Application {
   public void start(Stage stage) throws Exception {
     
       // we need to figure out where how we're going to change the scene obviously contoller 
-    
+      controller.setStage(stage);
       stage.setTitle("FX");
       stage.setScene(new Scene(view));
       stage.show();   

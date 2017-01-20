@@ -1,5 +1,7 @@
 package view;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,6 +15,7 @@ import javafx.scene.text.Font;
 public class FXViewRegisterPage extends BorderPane {
   
 private FXViewRegisterPane lp;
+private Button b1, b2;
   
   public FXViewRegisterPage(){
       
@@ -66,9 +69,9 @@ private FXViewRegisterPane lp;
         vb1.getChildren().addAll(l1,t1,l2,t2,l3,t3,l4,t4,l5,t5,l6,t6);
         vb1.setSpacing(2);
                
-        Button b2 = new Button("Register");
+        b2 = new Button("Register");
         b2.setPrefSize(160,35);      
-        Button b1 = new Button("Back");
+        b1 = new Button("Back");
         b1.setPrefSize(160,35);
               
         HBox hb1 = new HBox();
@@ -97,6 +100,14 @@ private FXViewRegisterPane lp;
     vbud.setStyle("-fx-background-color : white");   
     return vbud;
   } 
+  
+  public void addRegisterInfoHandler(EventHandler<ActionEvent> handler) {
+    b2.setOnAction(handler);
+  }
+ 
+  public void addBackHandler(EventHandler<ActionEvent> handler) {
+    b1.setOnAction(handler);
+  }
       
   
 

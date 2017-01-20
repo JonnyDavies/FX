@@ -18,7 +18,9 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 import view.FXViewChartPane;
 import view.FXViewCurrencyPairPane;
 import view.FXViewLoginPage;
@@ -28,47 +30,66 @@ import view.FXViewRootPane;
 
 public class FXController {
   
-  private FXViewRegisterPage view;
+  private FXViewLoginPage lg;
+  private FXViewRootPane rp;
+  private FXViewRegisterPage re;
   private FXViewChartPane cp;
   private FXViewCurrencyPairPane cupp;
   private FXViewMenuPane mp;
+  
+  private Stage window;
   
   private static StringProperty message1; // static ? review this
   private static StringProperty message2;
   private static StringProperty message3;
   private static StringProperty message4;
+  
+  private Scene login;
+  private Scene register;
+  private Scene market;
+
 
   private static String update;
    
-  public FXController (FXViewRegisterPage view){
-      // reference to view - eventually view and controller.
-      this.view = view;
-   /**   
-    * normally this
-    * 
-      // get a reference to all panes
-      this.cp = view.getChartPane();
-      this.cupp = view.getCurrencyPairPane();
-      this.mp = view.getMenuPane();
+  public FXController (FXViewLoginPage lg){
+      // reference to view - eventually view and controller.    
+      this.lg = lg;
+      this.rp = new FXViewRootPane();
+      this.re = new FXViewRegisterPage(); 
+      this.cp = rp.getChartPane();
+      this.cupp = rp.getCurrencyPairPane();
+      this.mp = rp.getMenuPane();
       
-      //attach event handlers to view using private helper method
-      
+      login = new Scene(new FXViewLoginPage(), 1000, 1200);
+      market = new Scene(new FXViewRootPane(), 1000,  1200);
+      register = new Scene(new FXViewRegisterPage(), 1000, 1200);
+
+      //attach event handlers to view using private helper method      
       this.attachEventHandlers();     
-    */
+   
   }
+  
+//  public void attachEventHandlers(){
+//    System.out.println("?");
+//    cp.addUpHandler(new UpHandler());
+//    // cp.addDownHandler(new DownHandler());
+//  }
   
   public void attachEventHandlers(){
-    System.out.println("?");
-    cp.addUpHandler(new UpHandler());
-    // cp.addDownHandler(new DownHandler());
+    lg.addRegisterHandler(e -> window.setScene(register));
+    lg.addLoginHandler(e -> window.setScene(market));   
+    re.addBackHandler(e -> window.setScene(login));
+    re.addRegisterInfoHandler(e -> window.setScene(login));
   }
   
-  private class UpHandler implements EventHandler<ActionEvent> {
-      public void handle(ActionEvent e) {
-        System.out.println("????");
-        cp.addToChart();
-      }
-  }
+  
+  
+//  private class UpHandler implements EventHandler<ActionEvent> {
+//      public void handle(ActionEvent e) {
+//        System.out.println("????");
+//        cp.addToChart();
+//      }
+//  }
   
   public void startSocketListener(){
     FirstLineService service = new FirstLineService();
@@ -79,8 +100,7 @@ public class FXController {
       }
     });
     bindSocketValuesToLabels();
-    service.start();
-    
+    service.start();   
   }
   
   private static class FirstLineService extends Service<String> {
@@ -132,6 +152,12 @@ public class FXController {
         };
     }
   }
+  
+
+  
+  public void setStage(Stage stage){  
+      this.window = stage;    
+  };
   
   public void bindSocketValuesToLabels (){ 
    

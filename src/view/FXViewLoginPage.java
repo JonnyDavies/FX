@@ -1,5 +1,7 @@
 package view;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,10 +16,10 @@ import javafx.scene.text.FontWeight;
 public class FXViewLoginPage extends BorderPane {
   
   private FXViewLoginPane lp;
+  private Button b1, b2;
   
   public FXViewLoginPage(){
-    
-    
+        
     lp = new FXViewLoginPane();
     AnchorPane ap = new AnchorPane();
     ap.getChildren().add(lp);
@@ -46,9 +48,10 @@ public class FXViewLoginPage extends BorderPane {
         vb1.getChildren().addAll(l1,t1,l2,t2);
         vb1.setSpacing(2);
                
-        Button b2 = new Button("Register");
-        b2.setPrefSize(160,35);      
-        Button b1 = new Button("Logon");
+        b2 = new Button("Register");
+        b2.setPrefSize(160,35);  
+        
+        b1 = new Button("Logon");
         b1.setPrefSize(160,35);
               
         HBox hb1 = new HBox();
@@ -77,6 +80,14 @@ public class FXViewLoginPage extends BorderPane {
     vbud.setStyle("-fx-background-color : white");   
     return vbud;
   } 
+  
+  public void addRegisterHandler(EventHandler<ActionEvent> handler) {
+       b2.setOnAction(handler);
+  }
     
+  public void addLoginHandler(EventHandler<ActionEvent> handler) {
+       b1.setOnAction(handler);
+}
+
   
 }
