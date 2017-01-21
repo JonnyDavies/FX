@@ -39,13 +39,17 @@ public class FXApplicationLoader extends Application {
    */
   
   @Override
-  public void start(Stage stage) throws Exception {
+  public void start(Stage window) throws Exception {
+    
+      Scene login = new Scene(view);
     
       // we need to figure out where how we're going to change the scene obviously contoller 
-      controller.setStage(stage);
-      stage.setTitle("FX");
-      stage.setScene(new Scene(view));
-      stage.show();   
+      controller.setStage(window);
+      // important we keep this reference to the scene
+      controller.setScene(login);
+      window.setTitle("FX");
+      window.setScene(login);
+      window.show();   
       // service start?
       
       /**

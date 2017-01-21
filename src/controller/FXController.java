@@ -59,37 +59,21 @@ public class FXController {
       this.cp = rp.getChartPane();
       this.cupp = rp.getCurrencyPairPane();
       this.mp = rp.getMenuPane();
-      
-      login = new Scene(new FXViewLoginPage(), 1000, 1200);
-      market = new Scene(new FXViewRootPane(), 1000,  1200);
-      register = new Scene(new FXViewRegisterPage(), 1000, 1200);
-
-      //attach event handlers to view using private helper method      
-      this.attachEventHandlers();     
-   
+          
+      register = new Scene(this.re);
+      market = new Scene(this.rp);
+    
+      this.attachEventHandlers();       
   }
   
-//  public void attachEventHandlers(){
-//    System.out.println("?");
-//    cp.addUpHandler(new UpHandler());
-//    // cp.addDownHandler(new DownHandler());
-//  }
   
   public void attachEventHandlers(){
-    lg.addRegisterHandler(e -> window.setScene(register));
-    lg.addLoginHandler(e -> window.setScene(market));   
-    re.addBackHandler(e -> window.setScene(login));
-    re.addRegisterInfoHandler(e -> window.setScene(login));
+    this.lg.addRegisterHandler(e -> this.setSceneToBeDisplayed("Register"));
+    this.lg.addLoginHandler(e -> this.setSceneToBeDisplayed("Market"));   
+    this.re.addBackHandler(e -> this.setSceneToBeDisplayed("Login"));
+    this.re.addRegisterInfoHandler(e -> this.setSceneToBeDisplayed("Login"));
   }
   
-  
-  
-//  private class UpHandler implements EventHandler<ActionEvent> {
-//      public void handle(ActionEvent e) {
-//        System.out.println("????");
-//        cp.addToChart();
-//      }
-//  }
   
   public void startSocketListener(){
     FirstLineService service = new FirstLineService();
@@ -120,7 +104,6 @@ public class FXController {
                   String fromServer;          
                   while ((fromServer = in.readLine()) != null) {
                     
-                      System.out.println(fromServer);
                       // Platform.runLater? 
                       
                       update = fromServer;
@@ -153,11 +136,30 @@ public class FXController {
     }
   }
   
+  public void setSceneToBeDisplayed(String nextScreen){
+          
+        switch(nextScreen){
+           case "Login":   
+             window.setScene(login);
+             break;
+           case "Market":
+             window.setScene(market);
+             break;
+           case "Register":
+             window.setScene(register);
+             break;
+         }
+        window.show();
+  }
 
   
   public void setStage(Stage stage){  
       this.window = stage;    
-  };
+  }
+  
+  public void setScene(Scene scene){  
+    this.login = scene;    
+}
   
   public void bindSocketValuesToLabels (){ 
    
