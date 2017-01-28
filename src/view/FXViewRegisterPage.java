@@ -16,6 +16,7 @@ public class FXViewRegisterPage extends BorderPane {
   
 private FXViewRegisterPane lp;
 private Button b1, b2;
+private TextField t1, t2, t3, t4, t5, t6;
   
   public FXViewRegisterPage(){
       
@@ -36,32 +37,32 @@ private Button b1, b2;
       
         Label l1 = new Label("First Name: ");
         l1.setFont(new Font("Arial", 15)); 
-        TextField t1 = new TextField();    
+        t1 = new TextField();    
         t1.setPrefSize(300,30); 
         
         Label l2 = new Label("Last Name: ");
         l2.setFont(new Font("Arial", 15)); 
-        TextField t2 = new TextField();    
+        t2 = new TextField();    
         t2.setPrefSize(300,30); 
         
         Label l3 = new Label("Username: ");
         l3.setFont(new Font("Arial", 15)); 
-        TextField t3 = new TextField();    
+        t3 = new TextField();    
         t3.setPrefSize(300,30); 
         
         Label l4 = new Label("Email Address: ");
         l4.setFont(new Font("Arial", 15)); 
-        TextField t4 = new TextField();    
+        t4 = new TextField();    
         t4.setPrefSize(300,30); 
         
         Label l5 = new Label("Password: ");
         l5.setFont(new Font("Arial", 15)); 
-        TextField t5 = new TextField(); 
+        t5 = new TextField(); 
         t5.setPrefSize(300,30);
         
         Label l6 = new Label("Re-enter Password: ");
         l6.setFont(new Font("Arial", 15)); 
-        TextField t6 = new TextField();
+        t6 = new TextField();
         t6.setPrefSize(300,30); 
         
         
@@ -108,7 +109,30 @@ private Button b1, b2;
   public void addBackHandler(EventHandler<ActionEvent> handler) {
     b1.setOnAction(handler);
   }
-      
+  
+  public String getFirstName(){
+    return t1.getText();
+  }
+  
+  public String getLastName(){
+    return t2.getText();
+  }
+  
+  public String getUsername(){
+    return t3.getText();
+  }
+  
+  public String getEmail(){
+    return t4.getText();
+  }
+     
+  public String getPassword(){
+    return t5.getText();
+  }
+  
+  public String getPasswordConfirmed(){
+    return t6.getText();
+  }
   
 
 }

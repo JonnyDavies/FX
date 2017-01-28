@@ -87,7 +87,7 @@ public class FXViewLoginPage extends BorderPane {
     
   public void addLoginHandler(EventHandler<ActionEvent> handler) {
        b1.setOnAction(handler);
-}
+  }
 
   
 }
