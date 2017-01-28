@@ -233,7 +233,11 @@ public class FXController {
       System.out.println("This is a VALID password");
       
       // if password is valid, check the user has reentered it properly
-      if(this.re.getPassword().compareTo(this.re.getPasswordConfirmed()) == 0)
+      
+      int result = this.re.getPassword().compareTo(this.re.getPasswordConfirmed());
+      System.out.println(result);
+      
+      if(result == 0)
       {
         System.out.println("The renetered password is the same");
       }
