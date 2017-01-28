@@ -4,12 +4,16 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import view.FXViewLoginPage;
+import view.FXViewRegisterPage;
 import view.FXViewRootPane;
 import controller.FXController;
 
 public class FXApplicationLoader extends Application {
 
-  private FXViewRootPane view;
+  // normally this
+  // private FXViewRootPane view;
+  private FXViewLoginPage view;
   private FXController controller;
  
   
@@ -17,33 +21,41 @@ public class FXApplicationLoader extends Application {
    * Find out exactly what the init function does
    * one-time? obviously, what's called first etc
    */
-  
-  
   public void init() {   
-    view = new FXViewRootPane();
-  //  FXModel model = new FXModel(); // this will be something like FXTrader but rename once UML diagrams are done!
+    // normally this 
+    // view = new FXViewRootPane();
+    
+    // this while testing the login page
+    
+    view = new FXViewLoginPage();    
+    //  FXModel model = new FXModel(); // this will be something like FXTrader but rename once UML diagrams are done!
     controller = new FXController(view); //    new FXController(model, view); 
-
   }
   
-  /**
-   * Testing out Git and sourcetree!!
-   */
-    /*
-     * ONce again another test!
-     */
+
   /**
    * Same with this, what's the difference between the init and start?
    * They must do similar things!
    */
   
   @Override
-  public void start(Stage stage) throws Exception {
-      stage.setTitle("FX");
-      stage.setScene(new Scene(view));
-      stage.show();   
+  public void start(Stage window) throws Exception {
+    
+      Scene login = new Scene(view);
+    
+      // we need to figure out where how we're going to change the scene obviously contoller 
+      controller.setStage(window);
+      // important we keep this reference to the scene
+      controller.setScene(login);
+      window.setTitle("FX");
+      window.setScene(login);
+      window.show();   
       // service start?
-      controller.startSocketListener();
+      
+      /**
+       * Commenting this out for a bit while work on login and register page
+       */
+      //controller.startSocketListener();
   }
      
   /*

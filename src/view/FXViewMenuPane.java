@@ -25,7 +25,6 @@ public class FXViewMenuPane extends HBox {
     m2.setPrefSize(100,30);
     
     this.getChildren().addAll(m1, m2);
-    
   }
 
 }

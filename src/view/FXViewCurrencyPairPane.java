@@ -39,8 +39,8 @@ public class FXViewCurrencyPairPane extends VBox {
     Button b1 = new Button("Buy");
     b1.setMinSize(100,50);
     b1.setMaxSize(100,50);
-    b1.setPrefSize(100,50)
-    ; 
+    b1.setPrefSize(100,50); 
+    
     Button b1a = new Button("Sell");
     b1a.setMinSize(100,50);
     b1a.setMaxSize(100,50);
