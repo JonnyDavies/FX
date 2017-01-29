@@ -35,11 +35,11 @@ public class FXViewLoginPage extends BorderPane {
     
     public FXViewLoginPane(){
       
-        Label l1 = new Label("Email Address: ");
+        Label l1 = new Label("Email Address ");
         l1.setFont(new Font("Arial", 15)); 
         TextField t1 = new TextField();
         t1.setPrefSize(300,30); 
-        Label l2 = new Label("Password: ");
+        Label l2 = new Label("Password ");
         l2.setFont(new Font("Arial", 15)); 
         TextField t2 = new TextField(); 
         t2.setPrefSize(300,30);

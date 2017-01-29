@@ -21,6 +21,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import model.Database;
 import view.FXViewChartPane;
 import view.FXViewCurrencyPairPane;
 import view.FXViewLoginPage;
@@ -146,16 +147,21 @@ public class FXController {
   
   public void setSceneToBeDisplayed(String nextScreen)
   {
-          
+        
         switch(nextScreen)
         {
            case "Login":  
-             // validation
-             
+             // validation           
              // put a condition round this if validation fails return back to page
-             this.validateTraderDetails();
-             this.setTraderDetails();
-             window.setScene(login);
+             if(this.validateTraderDetails())
+             {
+               this.setTraderDetails();
+               window.setScene(login);
+             }
+             else
+             {
+               window.setScene(register);
+             }
              break;
            case "Back":
              window.setScene(login);
@@ -184,58 +190,65 @@ public class FXController {
   
   public void setTraderDetails()
   {
-    System.out.println(this.re.getFirstName());  
+    System.out.println(this.re.getFirstName());
+    Database db = new Database();
+    db.doesTableExist("Trader");
   }
   
   public boolean validateTraderDetails()
   {
     boolean traderDetailsValid = true;
-    
-    // first check that all has been entered!
-    
-    // validate first name, last name, 
-    
-    // username
-    
-    // email address
-    
-    // password and the re-entered
-       
-    
-    if(validateName(this.re.getFirstName()))
+        
+    if(validateName(this.re.getFirstName().getText()))
     {
       System.out.println("The first name is valid!!!!");
     }
     else
     {
-      System.out.println("This isn't valid mate :(");
+      this.re.getFirstName().setStyle("-fx-text-box-border: red");
+      this.re.getErrorFirstName().setVisible(true);
+      traderDetailsValid = false;
     }
     
-    if(validateUsername(this.re.getUsername()))
+    if(validateName(this.re.getLastName().getText()))
+    {
+      System.out.println("The first name is valid!!!!");
+    }
+    else
+    {
+      System.out.println("This isn't valid mate :(");   
+      this.re.getLastName().setStyle("-fx-text-box-border: red ");  
+      this.re.getErrorLastName().setVisible(true);
+      traderDetailsValid = false;
+    }
+    
+    
+    if(validateUsername(this.re.getUsername().getText()))
     {
       System.out.println("This username is validdddd!!!");
     }
     else
     {
-      System.out.println("Username naaaahhhh!!");
+      this.re.getUsername().setStyle("-fx-text-box-border: red "); 
+      this.re.getErrorUsername().setVisible(true);
+      traderDetailsValid = false;
     }
     
-    if(validateEmail(this.re.getEmail()))
+    if(validateEmail(this.re.getEmail().getText()))
     {
       System.out.println("This is a VALID EMAIL");
     }
     else
     {
-      System.out.println("This isn't a valid email");
+      this.re.getEmail().setStyle("-fx-text-box-border: red ");  
+      this.re.getErrorEmail().setVisible(true);
+      traderDetailsValid = false;
     }
     
-    if(vaildatePassword(this.re.getPassword()))
-    {
-      System.out.println("This is a VALID password");
-      
-      // if password is valid, check the user has reentered it properly
-      
-      int result = this.re.getPassword().compareTo(this.re.getPasswordConfirmed());
+    if(vaildatePassword(this.re.getPassword().getText()))
+    {      
+      // if password is valid, check the user has reentered it properly 
+      int result = this.re.getPassword().getText().compareTo(this.re.getPasswordConfirmed().getText());
       System.out.println(result);
       
       if(result == 0)
@@ -244,24 +257,26 @@ public class FXController {
       }
       else
       {
-        System.out.println("The reentered password is NOT the same");
+        this.re.getPasswordConfirmed().setStyle("-fx-text-box-border: red ");
+        this.re.getErrorPasswordConfirmed().setVisible(true);
+        traderDetailsValid = false;
       }
     }
     else
     {
-      System.out.println("This isnt valid password");
+      this.re.getPasswordConfirmed().setStyle("-fx-text-box-border: red ");  
+      this.re.getPassword().setStyle("-fx-text-box-border: red ");  
+      this.re.getErrorPasswordConfirmed().setVisible(true);
+      this.re.getErrorPassword().setVisible(true);
+      traderDetailsValid = false;
     }
-    
-    
-    // 
-    
-       
+ 
     return traderDetailsValid;
   }
   
   public boolean validateName(String name)
   {
-    Pattern regex = Pattern.compile("[A-Za-z]{2,15}");    
+    Pattern regex = Pattern.compile("[a-zA-Z]{2,15}");    
     Matcher m = regex.matcher(name.trim());    
     boolean isNameValid = m.matches();
     return isNameValid;
@@ -269,7 +284,7 @@ public class FXController {
   
   public boolean validateUsername(String username)
   {
-    Pattern regex = Pattern.compile("[A-Za-z0-9]{1,10}");
+    Pattern regex = Pattern.compile("[a-zA-Z0-9]{1,15}");
     Matcher m = regex.matcher(username.trim());
     boolean isUsernameValid = m.matches();
     return isUsernameValid;  
