@@ -17,6 +17,7 @@ public class FXViewLoginPage extends BorderPane {
   
   private FXViewLoginPane lp;
   private Button b1, b2;
+  private TextField t1, t2;
   
   public FXViewLoginPage(){
         
@@ -37,11 +38,11 @@ public class FXViewLoginPage extends BorderPane {
       
         Label l1 = new Label("Email Address ");
         l1.setFont(new Font("Arial", 15)); 
-        TextField t1 = new TextField();
+        t1 = new TextField();
         t1.setPrefSize(300,30); 
         Label l2 = new Label("Password ");
         l2.setFont(new Font("Arial", 15)); 
-        TextField t2 = new TextField(); 
+        t2 = new TextField(); 
         t2.setPrefSize(300,30);
         
         VBox vb1 = new VBox();
@@ -88,6 +89,14 @@ public class FXViewLoginPage extends BorderPane {
   public void addLoginHandler(EventHandler<ActionEvent> handler) {
        b1.setOnAction(handler);
   }
-
   
+  public TextField getEmail()
+  {
+      return t1;
+  }
+
+  public TextField getPassword()
+  {
+      return t2;
+  }
 }

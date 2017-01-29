@@ -22,12 +22,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import model.Database;
+import lib.BCrypt;
 import view.FXViewChartPane;
 import view.FXViewCurrencyPairPane;
 import view.FXViewLoginPage;
 import view.FXViewMenuPane;
 import view.FXViewRegisterPage;
 import view.FXViewRootPane;
+
+import java.util.ArrayList;
 import java.util.regex.*;
 
 public class FXController {
@@ -49,6 +52,11 @@ public class FXController {
   private Scene login;
   private Scene register;
   private Scene market;
+  
+  
+  // for bcrypt password
+  private static int workload = 12;
+
 
   private static String update;
    
@@ -167,7 +175,14 @@ public class FXController {
              window.setScene(login);
              break;
            case "Market":
-             window.setScene(market);
+             if (this.authenticate())
+             {
+               window.setScene(market);
+             }
+             else
+             {
+               window.setScene(login);
+             }
              break;
            case "Register":
              window.setScene(register);
@@ -192,7 +207,29 @@ public class FXController {
   {
     System.out.println(this.re.getFirstName());
     Database db = new Database();
-    db.doesTableExist("Trader");
+   
+    if (!db.doesTableExist("trader"))
+    {
+        db.createTable();
+    }
+    else
+    {
+      System.out.println("TABLE EXISTS");
+    }
+    
+    // store registration detail values
+    ArrayList<String> traderDetails = new ArrayList<String>();
+    traderDetails.add(this.re.getFirstName().getText());
+    traderDetails.add(this.re.getLastName().getText());
+    traderDetails.add(this.re.getEmail().getText());
+    
+    // hash password using Bcrypt for security.   
+    String salt = BCrypt.gensalt(workload);
+    String hashed_password = BCrypt.hashpw(this.re.getPassword().getText(), salt); 
+    traderDetails.add(hashed_password);
+    
+    db.insertTraderDetails(traderDetails);    
+    // successful message on logon page
   }
   
   public boolean validateTraderDetails()
@@ -222,17 +259,6 @@ public class FXController {
       traderDetailsValid = false;
     }
     
-    
-    if(validateUsername(this.re.getUsername().getText()))
-    {
-      System.out.println("This username is validdddd!!!");
-    }
-    else
-    {
-      this.re.getUsername().setStyle("-fx-text-box-border: red "); 
-      this.re.getErrorUsername().setVisible(true);
-      traderDetailsValid = false;
-    }
     
     if(validateEmail(this.re.getEmail().getText()))
     {
@@ -305,7 +331,7 @@ public class FXController {
     boolean isPasswordValid = m.matches();
     return isPasswordValid;
   }
-   
+  
   public void bindSocketValuesToLabels ()
   {   
     message1 = new SimpleStringProperty();
@@ -323,5 +349,23 @@ public class FXController {
     message4 = new SimpleStringProperty();
     Label l4 = cupp.getLabel4();
     l4.textProperty().bind(message4);       
+  }
+  
+  public boolean authenticate()
+  {
+    boolean traderExist = false;
+    String userEnterdEmail = this.lg.getEmail().getText();
+    String userEnterPwd = this.lg.getPassword().getText();
+    
+    
+    Database db = new Database();
+    
+    if(db.doesTraderExist(userEnterdEmail))
+    {
+      String storedHashedPwd = db.retreiveTradersPassword(userEnterdEmail);
+      traderExist = BCrypt.checkpw(userEnterPwd, storedHashedPwd);      
+    }
+       
+    return traderExist;
   }
 }
