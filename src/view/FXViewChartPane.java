@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
 
 public class FXViewChartPane extends VBox {
   
-  private Button b1;
   private LineChart<Number, Number> lc;
   private XYChart.Series<Number, Number> series;
   private FXViewOrderPane op;
@@ -65,36 +64,10 @@ public class FXViewChartPane extends VBox {
     series = new LineChart.Series<>();
     lc.getData().add(series); 
     
-    b1 = new Button("Test");
-    b1.setOnAction(e -> { 
-          //this.clear();
-          System.out.println("TESTING");
-          series.getData().add(new XYChart.Data(  7,    1.012));
 
-    });
-
-    vb.getChildren().addAll(lc,b1);
+    vb.getChildren().addAll(lc);
     return vb;
   }
-
-  private  XYChart.Series<Number, Number> returnSeries() {
-  
-      //defining a series       
-      //populating the series with data
-      
-                   // add(new XYChart.Data (TIME,    PRICE);
-                                          //time,    price
-      series.getData().add(new XYChart.Data(  0,    1.000));
-      series.getData().add(new XYChart.Data(  1,    1.001));      
-
-      return series;     
-  } 
-  
-  public void addUpHandler(EventHandler<ActionEvent> handler) 
-  {
-      b1.setOnAction(handler);
-  }
-  
 
   public LineChart<Number, Number> getChart()
   {

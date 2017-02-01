@@ -9,7 +9,6 @@ import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -135,8 +134,7 @@ public class FXController {
                              message1.set(s[0]);
                              message2.set(s[1]);                         
                              message3.set(s[2]);                         
-                             message4.set(s[3]); 
-                            
+                             message4.set(s[3]);                             
                          }
                         });
                         
@@ -186,7 +184,7 @@ public class FXController {
            case "Market":
              if (this.authenticate())
              {
-               this.startSocketListener();
+               // this.startSocketListener();
                window.setScene(market);
              }
              else

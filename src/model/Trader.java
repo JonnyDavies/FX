@@ -4,33 +4,36 @@ import java.util.ArrayList;
 
 public class Trader {
   
-  private String username;
+  private String email;
   private String password;
-  private String fullName;
+  private String firstName;
+  private String lastName;
   private double equity;
   private ArrayList <Order> orders;
   
   
   public Trader (){
-    this.username = "";
+    this.email = "";
     this.password = "";
     this.equity = 0.00;
-    this.fullName = "";
+    this.firstName = "";
+    this.lastName = "";
   }
   
-  public Trader (String username, String password, String fullName, double equity){
-    this.username = username;
+  public Trader (String email, String password, String firstName, String lastName,  double equity){
+    this.email = email;
     this.password = password;
-    this.fullName = fullName;
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.equity = equity;
   }
   
-  public void setUsername(String username){
-      this.username = username;
+  public void setEmail(String email){
+      this.email = email;
   }
   
-  public String getUsername(){
-      return username;
+  public String getEmail(){
+      return this.email;
   }
   
   public void setPassword(String password){
@@ -38,15 +41,23 @@ public class Trader {
   }
 
   public String getPassword(){
-    return password;
+    return this.password;
   }
   
-  public void setFullName(String fullName){
-      this.fullName = fullName;
+  public void setFirstName(String firstName){
+      this.firstName = firstName;
   }
 
-  public String getFullName(){
-      return fullName;
+  public String getFirstName(){
+      return this.firstName;
+  }
+  
+  public void setLastName(String lastName){
+    this.lastName = lastName;
+  }
+  
+  public String getLastName(){
+      return lastName;
   }
 
   public void setEquity(double equity){
@@ -62,7 +73,7 @@ public class Trader {
   }
   
   public String toString(){
-    return "Trader[username= " + username + " password=" + password + " fullName=" + fullName + " Equity=" + equity + " ]";
+    return "Trader[username= " + email + " password=" + password + " firstName=" + firstName + " lastName=" + lastName + " Equity=" + equity + " ]";
   }
 
 
