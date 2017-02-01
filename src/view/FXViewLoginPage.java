@@ -56,7 +56,7 @@ public class FXViewLoginPage extends BorderPane {
         b1.setPrefSize(160,35);
               
         HBox hb1 = new HBox();
-        hb1.getChildren().addAll(b1,b2);
+        hb1.getChildren().addAll(b2,b1);
         vb1.getChildren().addAll(hb1);
         vb1.setPadding(new Insets(100, 100, 100, 100));
         vb1.setSpacing(10);

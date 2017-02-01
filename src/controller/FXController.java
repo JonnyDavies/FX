@@ -19,6 +19,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import model.Database;
@@ -43,15 +44,19 @@ public class FXController {
   private FXViewMenuPane mp;
   
   private Stage window;
+  private Scene login;
+  private Scene register;
+  private Scene market;
   
   private static StringProperty message1; // static ? review this
   private static StringProperty message2;
   private static StringProperty message3;
   private static StringProperty message4;
   
-  private Scene login;
-  private Scene register;
-  private Scene market;
+  private int notStayingHere = 2;
+   
+  
+
   
   
   // for bcrypt password
@@ -71,7 +76,8 @@ public class FXController {
       this.mp = this.rp.getMenuPane();
           
       register = new Scene(this.re);
-      market = new Scene(this.rp);
+      market = new Scene(this.rp); 
+      
     
       this.attachEventHandlers();       
   }
@@ -83,6 +89,7 @@ public class FXController {
     this.lg.addLoginHandler(e -> this.setSceneToBeDisplayed("Market"));   
     this.re.addBackHandler(e -> this.setSceneToBeDisplayed("Back"));
     this.re.addRegisterInfoHandler(e -> this.setSceneToBeDisplayed("Login"));
+    this.mp.addLogOutHandler(e -> this.setSceneToBeDisplayed("Logout"));
   }
   
   
@@ -125,13 +132,15 @@ public class FXController {
                       
                         Platform.runLater(new Runnable() {
                          public void run() {
-                             message1.set("1." + s[0]);
-                             message2.set("1." + s[1]);                         
-                             message3.set("2." + s[2]);                         
-                             message4.set("1." + s[3]);                         
-                          }
+                             message1.set(s[0]);
+                             message2.set(s[1]);                         
+                             message3.set(s[2]);                         
+                             message4.set(s[3]); 
+                            
+                         }
                         });
-                         
+                        
+            
                       if (fromServer.equals("Bye."))
                           break;     
                   }
@@ -177,12 +186,16 @@ public class FXController {
            case "Market":
              if (this.authenticate())
              {
+               this.startSocketListener();
                window.setScene(market);
              }
              else
              {
                window.setScene(login);
              }
+             break;
+           case "Logout":
+             window.setScene(login);
              break;
            case "Register":
              window.setScene(register);
@@ -336,7 +349,10 @@ public class FXController {
   {   
     message1 = new SimpleStringProperty();
     Label l1 = cupp.getLabel1();
-    l1.textProperty().bind(message1);   
+    l1.textProperty().bind(message1); 
+    l1.textProperty().addListener((observable, oldValue, newValue) -> {
+        this.updateCharts();    
+    });
     
     message2 = new SimpleStringProperty();
     Label l2 = cupp.getLabel2();
@@ -348,8 +364,8 @@ public class FXController {
        
     message4 = new SimpleStringProperty();
     Label l4 = cupp.getLabel4();
-    l4.textProperty().bind(message4);       
-  }
+    l4.textProperty().bind(message4);
+   }
   
   public boolean authenticate()
   {
@@ -367,5 +383,18 @@ public class FXController {
     }
        
     return traderExist;
+  }
+  
+  // jonathandavies27@gmail.com
+  
+  public void updateCharts()
+  {
+    XYChart.Series<Number, Number> series = this.cp.getSeries();
+    String dubs = message1.get();
+    
+    double d = Double.parseDouble(dubs);
+    this.cp.updateSeries(notStayingHere, d);
+    notStayingHere++;
+    
   }
 }

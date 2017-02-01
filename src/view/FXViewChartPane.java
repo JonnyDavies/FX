@@ -10,91 +10,106 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 
-public class FXViewChartPane extends TabPane {
+public class FXViewChartPane extends VBox {
   
-  private Button b1, b2;
-  LineChart<Number, Number> lc;
+  private Button b1;
+  private LineChart<Number, Number> lc;
+  private XYChart.Series<Number, Number> series;
+  private FXViewOrderPane op;
+  private NumberAxis xAxis;
+  private NumberAxis yAxis;
+
   
   public FXViewChartPane(){
 
+    TabPane tb = new TabPane();
+    
     final Tab t1 = new Tab();
     t1.setText("EUR/USD");
     t1.setContent(addFlowPane());
-    
-    final Tab t2 = new Tab();
-    t2.setText("GBP/USD");
-    t2.setContent(addFlowPane());
        
-    this.getTabs().addAll(t1,t2);
+    tb.getTabs().addAll(t1);
+    op = new FXViewOrderPane();
+    this.getChildren().addAll(tb, op);
   }
   
-  public FlowPane addFlowPane() {
+  public VBox addFlowPane() {
     
-    FlowPane flow = new FlowPane();
-    flow.setStyle("-fx-background-color :  #e6e6e6");
-    flow.setPadding(new Insets(10, 10, 10, 10));
-    flow.setVgap(4);
-    flow.setHgap(4);
-    Double[] data = {0.1, 0.4, 0.5, 0.7, 0.9, 1.0, 0.9, 0.8};
-     
-    b1 = new Button("Up");
-    b1.setMinSize(100,50);
-    b1.setMaxSize(100,50);
-    b1.setPrefSize(100,50);
+    VBox vb = new VBox();
+    vb.setStyle("-fx-background-color :  #e6e6e6");
+    vb.setPadding(new Insets(10, 10, 10, 10));
     
-    b2 = new Button("Down");
-    b2.setMinSize(100,50);
-    b2.setMaxSize(100,50);
-    b2.setPrefSize(100,50);
+    //defining the axes
+    xAxis = new NumberAxis();
+    yAxis = new NumberAxis();
+    
+    // time
+    xAxis.setAutoRanging(false);
+    xAxis.setLowerBound(0);
+    xAxis.setUpperBound(100);
+    xAxis.setTickUnit(1);
+    
+    // price  
+    yAxis.setAutoRanging(false);
+    yAxis.setLowerBound(1.000);
+    yAxis.setUpperBound(1.101);
+    yAxis.setTickUnit  (0.001);
+  
+    lc = new LineChart<>(xAxis, yAxis); 
+    lc.setPrefSize(850.0, 1050.0);
+    lc.setStyle(".chart-line-symbol { -fx-background-color: null, null }");    
+    lc.setLegendVisible(false);
+    
+    series = new LineChart.Series<>();
+    lc.getData().add(series); 
+    
+    b1 = new Button("Test");
+    b1.setOnAction(e -> { 
+          //this.clear();
+          System.out.println("TESTING");
+          series.getData().add(new XYChart.Data(  7,    1.012));
 
-    lc = createLineChart(data);  
-    
-    flow.getChildren().addAll(lc,b1,b2);
-    return flow;
+    });
+
+    vb.getChildren().addAll(lc,b1);
+    return vb;
   }
 
-  private LineChart<Number, Number> createLineChart(Double[] axisValues) {
+  private  XYChart.Series<Number, Number> returnSeries() {
   
-      //defining the axes
-      final NumberAxis xAxis = new NumberAxis();
-      final NumberAxis yAxis = new NumberAxis();
-      xAxis.setLabel("Time");
-      
-      //creating the chart
-      final LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);    
-      lineChart.setTitle("");
-      lineChart.setPrefSize(950.0, 650.0);
-      
-      //defining a series
-      XYChart.Series<Number, Number> series = new LineChart.Series<>();
-      series.setName("X Axis");
-      
+      //defining a series       
       //populating the series with data
-      series.getData().add(new XYChart.Data(4.2, 193.2));
-      series.getData().add(new XYChart.Data(2.8, 33.6));
-      series.getData().add(new XYChart.Data(6.2, 24.8));
-      series.getData().add(new XYChart.Data(1, 14));
-      series.getData().add(new XYChart.Data(1.2, 26.4));
-      series.getData().add(new XYChart.Data(4.4, 114.4));
-      series.getData().add(new XYChart.Data(8.5, 323));
-      series.getData().add(new XYChart.Data(6.9, 289.8));
-      series.getData().add(new XYChart.Data(9.9, 287.1));
       
-      lineChart.getData().add(series);
-      return lineChart;
-      
+                   // add(new XYChart.Data (TIME,    PRICE);
+                                          //time,    price
+      series.getData().add(new XYChart.Data(  0,    1.000));
+      series.getData().add(new XYChart.Data(  1,    1.001));      
+
+      return series;     
   } 
   
-  public void addUpHandler(EventHandler<ActionEvent> handler) {
+  public void addUpHandler(EventHandler<ActionEvent> handler) 
+  {
       b1.setOnAction(handler);
   }
   
-  public void addToChart(){
-    XYChart.Series<Number, Number> series2 = new LineChart.Series<>();
-    series2.getData().add(new XYChart.Data(9.9, 300.1));
-    lc.getData().add(series2);
+
+  public LineChart<Number, Number> getChart()
+  {
+    return lc;
   }
-
-
+  
+  public XYChart.Series<Number, Number> getSeries()
+  {
+    return series;
+  }
+  
+  public void updateSeries(int time, double price)
+  {
+    series.getData().add(new XYChart.Data(time, price));     
+  }
+  
+  
 }

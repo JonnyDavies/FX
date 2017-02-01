@@ -21,19 +21,15 @@ public class FXViewCurrencyPairPane extends VBox {
   public FXViewCurrencyPairPane () {
     
     this.setSpacing(1);
-
-//    Text title = new Text("Currency Pair");
-//    title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
     this.setAlignment(Pos.BASELINE_CENTER);
     this.setStyle("-fx-background-color :  #d9d9d9");
-//    this.getChildren().add(title);
 
     /**********************************************/
     
     Label l1 = new Label("EUR/USD");
     l1.setFont(new Font("Arial", 20));
     
-    p1 = new Label("1.06079");
+    p1 = new Label("1.000");
     p1.setFont(Font.font("Arial", FontWeight.BOLD, 26));
     
     Button b1 = new Button("Buy");
@@ -47,6 +43,7 @@ public class FXViewCurrencyPairPane extends VBox {
     b1a.setPrefSize(100,50);
     
     HBox hbox1 = new HBox();
+    hbox1.prefHeightProperty().bind(this.heightProperty().divide(4));
     hbox1.getChildren().addAll(b1,b1a);
     
     /**********************************************/
@@ -68,6 +65,7 @@ public class FXViewCurrencyPairPane extends VBox {
     b2a.setPrefSize(100,50);
     
     HBox hbox2 = new HBox();
+    hbox2.prefHeightProperty().bind(this.heightProperty().divide(4));
     hbox2.getChildren().addAll(b2,b2a);
     
     /**********************************************/
@@ -90,7 +88,9 @@ public class FXViewCurrencyPairPane extends VBox {
     b3a.setPrefSize(100,50);
     
     HBox hbox3 = new HBox();
+    hbox3.prefHeightProperty().bind(this.heightProperty().divide(4));
     hbox3.getChildren().addAll(b3,b3a);
+
     
     /**********************************************/
     
@@ -112,25 +112,16 @@ public class FXViewCurrencyPairPane extends VBox {
     b4a.setPrefSize(100,50);
     
     HBox hbox4 = new HBox();
+    hbox4.prefHeightProperty().bind(this.heightProperty().divide(4));
     hbox4.getChildren().addAll(b4,b4a);
     
     /**********************************************/
     
 
     // add all uaed here
-    this.setSpacing(8);
-    this.getChildren().add(l1);
-    this.getChildren().add(p1);
-    this.getChildren().add(hbox1);
-    this.getChildren().add(l2);
-    this.getChildren().add(p2); 
-    this.getChildren().add(hbox2);
-    this.getChildren().add(l3);
-    this.getChildren().add(p3);  
-    this.getChildren().add(hbox3);
-    this.getChildren().add(l4);
-    this.getChildren().add(p4); 
-    this.getChildren().add(hbox4);
+    this.setSpacing(15);
+    this.setPadding(new Insets(20, 0, 0, 0));
+    this.getChildren().addAll(l1,p1,hbox1,l2,p2,hbox2,l3,p3,hbox3,l4,p4,hbox4);
 
   }
   
@@ -149,5 +140,6 @@ public class FXViewCurrencyPairPane extends VBox {
   public Label getLabel4(){
     return p4;
 }
+  
 
 }

@@ -2,41 +2,51 @@ package model;
 
 public class Order {
   
-  private int quantity;
+  private String currencyPair;
+  private Integer quantity;
   private String direction;
   private double price;
+  private double currentPrice;
   private double takeProfit;
   private double stopLoss;
-  private double margin;
-  private int result;
-  // private Currency pair
-  
+  private Integer result;  
   
   public Order(){
+    this.currencyPair = "";
     this.quantity = 0;
     this.direction = "";
     this.price = 0.0;
+    this.currentPrice = 0.0;
     this.takeProfit = 0.0;
     this.stopLoss = 0.0;
     this.result = 0;
-    // this.currencyPair = new CurrencyPair()
-  }
+    }
   
-  public Order (int quantity, String direction, double price, double takeProfit, double stopLoss, double margin, int result){    
+  public Order (String currencyPair, Integer quantity, String direction, double price, double currentPrice, double takeProfit, double stopLoss, Integer result){    
+    this.currencyPair = currencyPair;
     this.quantity = quantity;
     this.direction = direction;
     this.price = price;
+    this.currentPrice = currentPrice;
     this.takeProfit = takeProfit;
     this.stopLoss = stopLoss;
-    this.margin = margin;
     this.result = result;   
   }
   
-  public void setQuantity(int quantity){
+  
+  public String getCurrencyPair(){
+    return currencyPair;
+  }
+  
+  public void setCurrencyPair(String currencyPair){
+    this.currencyPair = currencyPair;
+  }
+  
+  public void setQuantity(Integer quantity){
     this.quantity = quantity;
   }
   
-  public int getQuantity(){
+  public Integer getQuantity(){
     return quantity;
   }
   
@@ -50,6 +60,14 @@ public class Order {
   
   public void setPrice(double price){
     this.price = price;
+  }
+  
+  public double getCurrentPrice(){
+    return currentPrice;
+  }
+  
+  public void setCurrentPrice(double currentPrice){
+    this.currentPrice = currentPrice;
   }
   
   public double getPrice(){
@@ -72,15 +90,15 @@ public class Order {
     return stopLoss;
   }
   
-  public void setResult(int result){
+  public void setResult(Integer result){
     this.result = result;
   }
   
-  public int getResult(){
+  public Integer getResult(){
     return result;
   }
   
   public String toString(){
-    return "Order[quantity=" + quantity + " direction=" + direction + " price=" + price + " takeProfit=" + takeProfit + " stopLoss=" + stopLoss + " margin=" + margin + " result=" + result + " ]";
+    return "Order[quantity=" + quantity + " direction=" + direction + " price=" + price + " takeProfit=" + takeProfit + " stopLoss=" + stopLoss + " result=" + result + " ]";
   }
 }

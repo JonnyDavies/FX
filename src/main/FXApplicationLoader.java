@@ -55,7 +55,6 @@ public class FXApplicationLoader extends Application {
       /**
        * Commenting this out for a bit while work on login and register page
        */
-      //controller.startSocketListener();
   }
      
   /*
