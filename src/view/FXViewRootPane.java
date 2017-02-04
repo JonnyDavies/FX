@@ -8,13 +8,10 @@ public class FXViewRootPane extends BorderPane {
   private FXViewMenuPane mp;
   private FXViewChartPane chtp;
   private FXViewCurrencyPairPane cupp;
-  private FXViewOrderPane op;
   
   
   public FXViewRootPane(){
-   
-    VBox center = new VBox();
-    
+       
     mp = new FXViewMenuPane();
     chtp = new FXViewChartPane();
     cupp = new FXViewCurrencyPairPane();

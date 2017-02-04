@@ -74,7 +74,25 @@ public class Database
                                                             + SQLTraderDetails.get(2) + "','" 
                                                             + SQLTraderDetails.get(3) + "','"
                                                             + equity + "' )");
-      
+    }
+    catch (SQLException e)
+    {
+      System.err.println(e.getMessage());
+    }
+    
+  }
+  
+  public void insertOrderDetails(ArrayList<String> SQLOrderDetails)
+  {
+    // enter order details ========================
+    
+    try
+    {
+      Statement statement = connection.createStatement();
+      statement.executeUpdate("INSERT INTO trader values('" + SQLOrderDetails.get(0) + "', '"
+                                                            + SQLOrderDetails.get(1) + "','" 
+                                                            + SQLOrderDetails.get(2) + "','" 
+                                                            + SQLOrderDetails.get(3) + "' )");
     }
     catch (SQLException e)
     {

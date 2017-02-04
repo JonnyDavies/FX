@@ -12,18 +12,17 @@ import model.Order;
 
 public class FXViewOrderPane extends VBox {
   
+  private ObservableList<Order> orderList;
+  private TableView<Order> order;
+  
   public FXViewOrderPane()
   {
     
     this.setStyle("-fx-background-color : grey");
     this.setPadding(new Insets(5, 0, 5, 0));
 
-    TableView<Order> order = new TableView<Order>();
-    ObservableList<Order> orderList = 
-        FXCollections.observableArrayList(            
-          new Order("GBP/EUR", 10000, "Buy", 0.0, 0.0, 0.0, 0.0, 234),
-          new Order("USD/JPY", 50000, "Buy", 1.34560, 1.34564, 1.34567, 1.34569, 234)  
-        );
+    order = new TableView<Order>();
+   
     
     TableColumn<Order,String> cpr = new TableColumn<Order,String>("Currency Pair");
     cpr.prefWidthProperty().bind(order.widthProperty().divide(8));
@@ -71,5 +70,26 @@ public class FXViewOrderPane extends VBox {
     this.setSpacing(5);   
     this.getChildren().addAll(order);
   }
+
+  public TableView<Order> returnTableView()
+ {
+      return this.order;
+ }
+  
+  public void setItemsTableView(ObservableList<Order> orders)
+ {
+      this.order.setItems(orders);
+ }
+  
+  public ObservableList<Order> getOrderList()
+  {
+      return this.orderList;
+  }
+  
+  public void addToOrderList(Order o)
+  {
+       this.orderList.add(o);
+  }
+
 
 }

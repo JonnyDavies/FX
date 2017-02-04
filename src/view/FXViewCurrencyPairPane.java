@@ -1,8 +1,11 @@
 package view;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -13,18 +16,35 @@ import javafx.scene.text.Text;
 public class FXViewCurrencyPairPane extends VBox {
 
 
-  private Label p1;
-  private Label p2;
-  private Label p3;
-  private Label p4;
+  private Label p1, p2, p3, p4;
+  private ComboBox<String> cb1, cb2;
   
   public FXViewCurrencyPairPane () {
     
-    this.setSpacing(1);
-    this.setAlignment(Pos.BASELINE_CENTER);
-    this.setStyle("-fx-background-color :  #d9d9d9");
+    /**********************************************/
+    
+    ObservableList<String> options = 
+        FXCollections.observableArrayList(
+            "2,000",
+            "4,000",
+            "10,000",
+            "20,000",
+            "40,000",
+            "100,000"
+        );
+    
+
+    cb1 = new ComboBox<String>(options);
+    cb1.setMinSize(200,30);
+    cb1.setMaxSize(200,30);
+    cb1.setPrefSize(200,30);
+    cb1.setStyle("-fx-background-color : #a3aaaf");
 
     /**********************************************/
+    VBox main = new VBox();
+    
+    main.setAlignment(Pos.BASELINE_CENTER);
+    main.setStyle("-fx-background-color :  #d9d9d9");
     
     Label l1 = new Label("EUR/USD");
     l1.setFont(new Font("Arial", 20));
@@ -119,9 +139,9 @@ public class FXViewCurrencyPairPane extends VBox {
     
 
     // add all uaed here
-    this.setSpacing(15);
-    this.setPadding(new Insets(20, 0, 0, 0));
-    this.getChildren().addAll(l1,p1,hbox1,l2,p2,hbox2,l3,p3,hbox3,l4,p4,hbox4);
+    main.setSpacing(15);
+    main.getChildren().addAll(l1,p1,hbox1,l2,p2,hbox2,l3,p3,hbox3,l4,p4,hbox4);
+    this.getChildren().addAll(cb1,main);
 
   }
   

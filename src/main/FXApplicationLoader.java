@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import model.Trader;
 import view.FXViewLoginPage;
 import view.FXViewRegisterPage;
 import view.FXViewRootPane;
@@ -15,6 +16,8 @@ public class FXApplicationLoader extends Application {
   // private FXViewRootPane view;
   private FXViewLoginPage view;
   private FXController controller;
+  private Trader model;
+
  
   
   /**
@@ -22,14 +25,13 @@ public class FXApplicationLoader extends Application {
    * one-time? obviously, what's called first etc
    */
   public void init() {   
+    
     // normally this 
-    // view = new FXViewRootPane();
-    
+    // view = new FXViewRootPane();   
     // this while testing the login page
-    
     view = new FXViewLoginPage();    
-    //  FXModel model = new FXModel(); // this will be something like FXTrader but rename once UML diagrams are done!
-    controller = new FXController(view); //    new FXController(model, view); 
+    model = new Trader(); // this will be something like FXTrader but rename once UML diagrams are done!
+    controller = new FXController(view, model); //    new FXController(model, view); 
   }
   
 
@@ -50,6 +52,8 @@ public class FXApplicationLoader extends Application {
       window.setTitle("FX");
       window.setScene(login);
       window.show();   
+      window.setMaximized(true);
+
       // service start?
       
       /**

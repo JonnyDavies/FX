@@ -3,7 +3,7 @@ package model;
 public class Order {
   
   private String currencyPair;
-  private Integer quantity;
+  private String quantity;
   private String direction;
   private double price;
   private double currentPrice;
@@ -13,7 +13,7 @@ public class Order {
   
   public Order(){
     this.currencyPair = "";
-    this.quantity = 0;
+    this.quantity = "0";
     this.direction = "";
     this.price = 0.0;
     this.currentPrice = 0.0;
@@ -22,7 +22,7 @@ public class Order {
     this.result = 0;
     }
   
-  public Order (String currencyPair, Integer quantity, String direction, double price, double currentPrice, double takeProfit, double stopLoss, Integer result){    
+  public Order (String currencyPair, String quantity, String direction, double price, double currentPrice, double takeProfit, double stopLoss, Integer result){    
     this.currencyPair = currencyPair;
     this.quantity = quantity;
     this.direction = direction;
@@ -42,11 +42,11 @@ public class Order {
     this.currencyPair = currencyPair;
   }
   
-  public void setQuantity(Integer quantity){
+  public void setQuantity(String quantity){
     this.quantity = quantity;
   }
   
-  public Integer getQuantity(){
+  public String getQuantity(){
     return quantity;
   }
   

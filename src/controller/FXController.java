@@ -12,6 +12,8 @@ import java.net.UnknownHostException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -20,17 +22,26 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Database;
+import model.Order;
+import model.Trader;
 import lib.BCrypt;
 import view.FXViewChartPane;
 import view.FXViewCurrencyPairPane;
 import view.FXViewLoginPage;
 import view.FXViewMenuPane;
+import view.FXViewNewOrderForm;
+import view.FXViewOrderPane;
 import view.FXViewRegisterPage;
 import view.FXViewRootPane;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.regex.*;
 
 public class FXController {
@@ -41,43 +52,54 @@ public class FXController {
   private FXViewChartPane cp;
   private FXViewCurrencyPairPane cupp;
   private FXViewMenuPane mp;
+  private FXViewNewOrderForm of;
+  private FXViewOrderPane op;                 
+  private Trader model;
   
   private Stage window;
+  private Stage windowModal;
+
   private Scene login;
   private Scene register;
   private Scene market;
+  private Scene modal;
   
   private static StringProperty message1; // static ? review this
   private static StringProperty message2;
   private static StringProperty message3;
   private static StringProperty message4;
   
-  private int notStayingHere = 2;
-   
-  
-
-  
-  
+  private int notStayingHere = 2;  
   // for bcrypt password
   private static int workload = 12;
 
 
   private static String update;
    
-  public FXController (FXViewLoginPage lg)
+  public FXController (FXViewLoginPage view, Trader model)
   {
       // reference to view - eventually view and controller.    
-      this.lg = lg;
+      this.lg = view;
+      this.model = model;
+     
       this.rp = new FXViewRootPane();
+     
       this.re = new FXViewRegisterPage(); 
       this.cp = this.rp.getChartPane();
+      this.op = this.cp.returnOrderPane();
+      // pop order table
+      this.model.addOrder(new Order("GBP", "2,000", "Buy", 1.0, 1.0, 1.0, 1.0, 0));
+      this.populateOrderTableOnStart(this.op.returnTableView());
+            
       this.cupp = this.rp.getCurrencyPairPane();
       this.mp = this.rp.getMenuPane();
+      this.of = new FXViewNewOrderForm();
           
       register = new Scene(this.re);
       market = new Scene(this.rp); 
-      
-    
+      modal = new Scene(this.of, 400, 300); 
+
+        
       this.attachEventHandlers();       
   }
   
@@ -89,8 +111,92 @@ public class FXController {
     this.re.addBackHandler(e -> this.setSceneToBeDisplayed("Back"));
     this.re.addRegisterInfoHandler(e -> this.setSceneToBeDisplayed("Login"));
     this.mp.addLogOutHandler(e -> this.setSceneToBeDisplayed("Logout"));
+    this.mp.addOpenChartHandler(e -> this.newOrderInputBox());
+    this.of.buyButtonHandler(e -> this.processBuyOrder());
+    this.of.sellButtonHandler(e -> this.processSellOrder());
   }
   
+  public void populateOrderTableOnStart(TableView<Order> order)
+  {
+    
+    ObservableList<Order> options = FXCollections.observableArrayList(this.model.getOrders());
+    this.op.setItemsTableView(options);   
+  }
+  
+  public void newOrderInputBox()
+  {
+    windowModal = new Stage();
+    windowModal.initModality(Modality.APPLICATION_MODAL);
+    windowModal.alwaysOnTopProperty();
+    windowModal.centerOnScreen();
+    windowModal.setScene(modal);
+    windowModal.getIcons().removeAll();
+    windowModal.showAndWait();  
+   
+   // this.of.sellButtonHandler(e -> System.out.println("Buy Order"));
+
+  }
+  
+  public void processBuyOrder()
+  {    
+    // create an order from new order box
+    // add it to Trader's existing orders 
+    // or if it is empty populate their list
+    // Populate the open order pane
+    // Store in the DB
+      
+    String quantity = this.of.returnQuantity().getValue();
+    String currency = this.of.returnCurrencyPair().getValue(); 
+    String direction = "Buy";
+    
+    double price = 0.0;
+    double currentPrice = 0.0;
+    
+    double takeProfit = this.of.returnTakeProfit().getValue();
+    double stopLoss = this.of.returnStopLoss().getValue();
+    Integer result = 0;
+    
+    
+    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss, result);
+    this.model.addOrder(buy);
+    ObservableList<Order> orderList =  FXCollections.observableArrayList(this.model.getOrders());
+    this.op.setItemsTableView(orderList);   
+    
+    // store in db. =================== database function started finish it off
+    
+    windowModal.close();
+  }
+  
+  public void processSellOrder()
+  {
+    System.out.println("Sell Order");
+    
+    // create an order from new order box
+    // add it to Trader's existing orders 
+    // or if it is empty populate their list
+    // Populate the open order pane
+    // Store in the DB      
+    String quantity = this.of.returnQuantity().getValue();
+    String currency = this.of.returnCurrencyPair().getValue(); 
+    String direction = "Sell";
+    
+    double price = 0.0;
+    double currentPrice = 0.0;
+    
+    double takeProfit = this.of.returnTakeProfit().getValue();
+    double stopLoss = this.of.returnStopLoss().getValue();
+    Integer result = 0;
+    
+    
+    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss, result);
+    this.model.addOrder(buy);
+    ObservableList<Order> orderList =  FXCollections.observableArrayList(this.model.getOrders());
+    this.op.setItemsTableView(orderList);   
+    
+    // store in db. =================== database function started finish it off
+    
+    windowModal.close();
+  }
   
   public void startSocketListener()
   {
@@ -114,7 +220,10 @@ public class FXController {
             protected String call() 
                 throws IOException, MalformedURLException {     
               try (
-                  Socket kkSocket = new Socket("PC", 4444);          
+                  Socket kkSocket = new Socket("192.168.1.20",4444);   
+                  // 10.34.98.62 Uni IP
+                  // 192.168.1.20 ethernet
+              
                   PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);         
                   BufferedReader in = new BufferedReader( new InputStreamReader(kkSocket.getInputStream()) );    
               )  
@@ -184,7 +293,7 @@ public class FXController {
            case "Market":
              if (this.authenticate())
              {
-               // this.startSocketListener();
+               //this.startSocketListener();
                window.setScene(market);
              }
              else
@@ -201,6 +310,7 @@ public class FXController {
          }
         
         window.show();
+        window.setMaximized(true);
   }
 
   

@@ -3,10 +3,12 @@ package view;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.FlowPane;
@@ -23,6 +25,9 @@ public class FXViewChartPane extends VBox {
   
   public FXViewChartPane(){
 
+    SplitPane sp = new SplitPane(); 
+    sp.setOrientation(Orientation.VERTICAL);  
+
     TabPane tb = new TabPane();
     
     final Tab t1 = new Tab();
@@ -30,8 +35,10 @@ public class FXViewChartPane extends VBox {
     t1.setContent(addFlowPane());
        
     tb.getTabs().addAll(t1);
-    op = new FXViewOrderPane();
-    this.getChildren().addAll(tb, op);
+    this.op = new FXViewOrderPane();
+    
+    sp.getItems().addAll(tb, op);
+    this.getChildren().add(sp);
   }
   
   public VBox addFlowPane() {
@@ -54,12 +61,14 @@ public class FXViewChartPane extends VBox {
     yAxis.setAutoRanging(false);
     yAxis.setLowerBound(1.000);
     yAxis.setUpperBound(1.101);
-    yAxis.setTickUnit  (0.001);
+    yAxis.setTickUnit(0.001);
   
     lc = new LineChart<>(xAxis, yAxis); 
-    lc.setPrefSize(850.0, 1050.0);
+    lc.setPrefSize(650.0, 850.0);
     lc.setStyle(".chart-line-symbol { -fx-background-color: null, null }");    
     lc.setLegendVisible(false);
+    lc.setCreateSymbols(false); //hide dots
+
     
     series = new LineChart.Series<>();
     lc.getData().add(series); 
@@ -82,6 +91,11 @@ public class FXViewChartPane extends VBox {
   public void updateSeries(int time, double price)
   {
     series.getData().add(new XYChart.Data(time, price));     
+  }
+  
+  public FXViewOrderPane returnOrderPane()
+  {
+      return this.op;
   }
   
   

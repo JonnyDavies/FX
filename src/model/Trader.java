@@ -2,6 +2,9 @@ package model;
 
 import java.util.ArrayList;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class Trader {
   
   private String email;
@@ -9,7 +12,7 @@ public class Trader {
   private String firstName;
   private String lastName;
   private double equity;
-  private ArrayList <Order> orders;
+  private ArrayList<Order> orders;
   
   
   public Trader (){
@@ -18,6 +21,7 @@ public class Trader {
     this.equity = 0.00;
     this.firstName = "";
     this.lastName = "";
+    this.orders = new ArrayList<Order>();
   }
   
   public Trader (String email, String password, String firstName, String lastName,  double equity){
@@ -26,6 +30,7 @@ public class Trader {
     this.firstName = firstName;
     this.lastName = lastName;
     this.equity = equity;
+    this.orders = new ArrayList<Order>();
   }
   
   public void setEmail(String email){
@@ -70,6 +75,21 @@ public class Trader {
   
   public ArrayList<Order> getOrders(){
     return orders;
+  }
+  
+  public void addOrder(Order o)
+  {
+    orders.add(o);
+  }
+  
+  public void removeAllOrders()
+  {
+    orders.clear();
+  }
+  
+  public void removeOrders(int index)
+  {
+    orders.remove(index);
   }
   
   public String toString(){
