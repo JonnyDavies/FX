@@ -2,11 +2,17 @@ package view;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -17,28 +23,35 @@ public class FXViewCurrencyPairPane extends VBox {
 
 
   private Label p1, p2, p3, p4;
-  private ComboBox<String> cb1, cb2;
+  private Button b1, b1a, b2, b2a, b3, b3a, b4, b4a;
+  private ToggleButton tb1, tb2, tb3;
   
   public FXViewCurrencyPairPane () {
     
     /**********************************************/
     
-    ObservableList<String> options = 
-        FXCollections.observableArrayList(
-            "2,000",
-            "4,000",
-            "10,000",
-            "20,000",
-            "40,000",
-            "100,000"
-        );
     
 
-    cb1 = new ComboBox<String>(options);
-    cb1.setMinSize(200,30);
-    cb1.setMaxSize(200,30);
-    cb1.setPrefSize(200,30);
-    cb1.setStyle("-fx-background-color : #a3aaaf");
+    tb1 = new ToggleButton("10,000");
+    tb1.setPrefSize(66,50); 
+    tb1.setMinHeight(35);
+
+    tb2 = new ToggleButton("20,000");
+    tb2.setPrefSize(67,50);
+    tb2.setMinHeight(35);
+    
+    tb3 = new ToggleButton("40,000");
+    tb3.setPrefSize(67,50);
+    tb3.setMinHeight(35);
+       
+    ToggleGroup group = new ToggleGroup();
+    tb1.setToggleGroup(group);
+    tb2.setToggleGroup(group);
+    tb3.setToggleGroup(group);
+    tb1.setSelected(true);
+   
+    HBox tb = new HBox();
+    tb.getChildren().addAll(tb1,tb2,tb3);
 
     /**********************************************/
     VBox main = new VBox();
@@ -52,14 +65,10 @@ public class FXViewCurrencyPairPane extends VBox {
     p1 = new Label("1.000");
     p1.setFont(Font.font("Arial", FontWeight.BOLD, 26));
     
-    Button b1 = new Button("Buy");
-    b1.setMinSize(100,50);
-    b1.setMaxSize(100,50);
+    b1 = new Button("Buy");
     b1.setPrefSize(100,50); 
     
-    Button b1a = new Button("Sell");
-    b1a.setMinSize(100,50);
-    b1a.setMaxSize(100,50);
+    b1a = new Button("Sell");
     b1a.setPrefSize(100,50);
     
     HBox hbox1 = new HBox();
@@ -74,14 +83,10 @@ public class FXViewCurrencyPairPane extends VBox {
     p2 = new Label("110.928");
     p2.setFont(Font.font("Arial", FontWeight.BOLD, 26));
     
-    Button b2 = new Button("Buy");
-    b2.setMinSize(100,50);
-    b2.setMaxSize(100,50);
+    b2 = new Button("Buy");
     b2.setPrefSize(100,50); 
     
-    Button b2a = new Button("Sell");
-    b2a.setMinSize(100,50);
-    b2a.setMaxSize(100,50);
+    b2a = new Button("Sell");
     b2a.setPrefSize(100,50);
     
     HBox hbox2 = new HBox();
@@ -89,22 +94,17 @@ public class FXViewCurrencyPairPane extends VBox {
     hbox2.getChildren().addAll(b2,b2a);
     
     /**********************************************/
-    
-    
+   
     Label l3 = new Label("GBP/USD");
     l3.setFont(new Font("Arial", 20));
     
-    p3 = new Label("1.21415");
+    p3 = new Label("1.001");
     p3.setFont(Font.font("Arial", FontWeight.BOLD, 26));
     
-    Button b3 = new Button("Buy");
-    b3.setMinSize(100,50);
-    b3.setMaxSize(100,50);
+    b3 = new Button("Buy");
     b3.setPrefSize(100,50); 
     
-    Button b3a = new Button("Sell");
-    b3a.setMinSize(100,50);
-    b3a.setMaxSize(100,50);
+    b3a = new Button("Sell");
     b3a.setPrefSize(100,50);
     
     HBox hbox3 = new HBox();
@@ -113,7 +113,6 @@ public class FXViewCurrencyPairPane extends VBox {
 
     
     /**********************************************/
-    
       
     Label l4 = new Label("USD/CHF");
     l4.setFont(new Font("Arial", 20));
@@ -121,14 +120,10 @@ public class FXViewCurrencyPairPane extends VBox {
     p4 = new Label("1.00998");
     p4.setFont(Font.font("Arial", FontWeight.BOLD, 26));
     
-    Button b4 = new Button("Buy");
-    b4.setMinSize(100,50);
-    b4.setMaxSize(100,50);
+    b4 = new Button("Buy");
     b4.setPrefSize(100,50); 
     
-    Button b4a = new Button("Sell");
-    b4a.setMinSize(100,50);
-    b4a.setMaxSize(100,50);
+    b4a = new Button("Sell");
     b4a.setPrefSize(100,50);
     
     HBox hbox4 = new HBox();
@@ -136,12 +131,10 @@ public class FXViewCurrencyPairPane extends VBox {
     hbox4.getChildren().addAll(b4,b4a);
     
     /**********************************************/
-    
-
     // add all uaed here
     main.setSpacing(15);
     main.getChildren().addAll(l1,p1,hbox1,l2,p2,hbox2,l3,p3,hbox3,l4,p4,hbox4);
-    this.getChildren().addAll(cb1,main);
+    this.getChildren().addAll(tb,main);
 
   }
   
@@ -161,5 +154,102 @@ public class FXViewCurrencyPairPane extends VBox {
     return p4;
 }
   
+  public ToggleButton getQuantityToggle1()
+  {
+    return tb1;
+  }
+  
+  public ToggleButton getQuantityToggle2()
+  {
+    return tb2;
+  }
+  
+  public ToggleButton getQuantityToggle3()
+  {
+    return tb3;
+  }
+  
+  public Button getEURUSDBuyButton()
+  {
+    return b1;
+  }
+  
+  public Button getEURUSDSellButton()
+  {
+    return b1a;
+  }
+  
+  public Button getUSDJPYBuyButton()
+  {
+    return b2;
+  }
+  
+  public Button getUSDJPYSellButton()
+  {
+    return b2a;
+  }
+
+  public Button getGBPUSDBuyButton()
+  {
+    return b3;
+  }
+  
+  public Button getGBPUSDSellButton()
+  {
+    return b3a;
+  }
+
+  public Button getUSDCHFBuyButton()
+  {
+    return b4;
+  }
+  
+  public Button getUSDCHFSellButton()
+  {
+    return b4a;
+  }
+  
+  
+  public void setEURUSDBuyButtonHandler(EventHandler<ActionEvent> handler)
+  {
+     b1.setOnAction(handler);
+  }
+  
+  public void setEURUSDSellButtonHandler(EventHandler<ActionEvent> handler)
+  {
+     b1a.setOnAction(handler);
+  }
+  
+  public void setUSDJPYBuyButtonHandler(EventHandler<ActionEvent> handler)
+  {
+     b2.setOnAction(handler);
+  }
+  
+  public void setUSDJPYSellButtonHandler(EventHandler<ActionEvent> handler)
+  {
+     b2a.setOnAction(handler);
+  }
+
+  public void setGBPUSDBuyButtonHandler(EventHandler<ActionEvent> handler)
+  {
+     b3.setOnAction(handler);
+  }
+  
+  public void setGBPUSDSellButtonHandler(EventHandler<ActionEvent> handler)
+  {
+     b3a.setOnAction(handler);
+  }
+
+  public void setUSDCHFBuyButtonHandler(EventHandler<ActionEvent> handler)
+  {
+     b4.setOnAction(handler);
+  }
+  
+  public void setUSDCHFSellButtonHandler(EventHandler<ActionEvent> handler)
+  {
+     b4a.setOnAction(handler);
+  }
+
+
 
 }

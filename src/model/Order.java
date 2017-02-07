@@ -9,7 +9,10 @@ public class Order {
   private double currentPrice;
   private double takeProfit;
   private double stopLoss;
-  private Integer result;  
+  private Integer result;
+  private boolean oneClickOrder;
+  private int id;
+  private static int numberOfOrders = 0;
   
   public Order(){
     this.currencyPair = "";
@@ -20,9 +23,11 @@ public class Order {
     this.takeProfit = 0.0;
     this.stopLoss = 0.0;
     this.result = 0;
+    this.oneClickOrder = false;
+    this.id = ++numberOfOrders;
     }
   
-  public Order (String currencyPair, String quantity, String direction, double price, double currentPrice, double takeProfit, double stopLoss, Integer result){    
+  public Order (String currencyPair, String quantity, String direction, double price, double currentPrice, double takeProfit, double stopLoss, Integer result, boolean oneClickOrder){    
     this.currencyPair = currencyPair;
     this.quantity = quantity;
     this.direction = direction;
@@ -31,11 +36,13 @@ public class Order {
     this.takeProfit = takeProfit;
     this.stopLoss = stopLoss;
     this.result = result;   
+    this.oneClickOrder = oneClickOrder;
+    this.id = ++numberOfOrders;
   }
   
   
   public String getCurrencyPair(){
-    return currencyPair;
+    return this.currencyPair;
   }
   
   public void setCurrencyPair(String currencyPair){
@@ -47,11 +54,11 @@ public class Order {
   }
   
   public String getQuantity(){
-    return quantity;
+    return this.quantity;
   }
   
   public String getDirection(){
-    return direction;
+    return this.direction;
   }
   
   public void setDirection(String direction){
@@ -63,7 +70,7 @@ public class Order {
   }
   
   public double getCurrentPrice(){
-    return currentPrice;
+    return this.currentPrice;
   }
   
   public void setCurrentPrice(double currentPrice){
@@ -71,7 +78,7 @@ public class Order {
   }
   
   public double getPrice(){
-    return price;
+    return this.price;
   }
   
   public void setTakeProfit(double takeProfit){
@@ -79,7 +86,7 @@ public class Order {
   }
   
   public double getTakeProfit(){
-    return takeProfit;
+    return this.takeProfit;
   }
 
   public void setStopLoss(double stopLoss){
@@ -87,7 +94,7 @@ public class Order {
   }
   
   public double getStopLoss(){
-    return stopLoss;
+    return this.stopLoss;
   }
   
   public void setResult(Integer result){
@@ -95,10 +102,22 @@ public class Order {
   }
   
   public Integer getResult(){
-    return result;
+    return this.result;
+  }
+  
+  public void setOneClickOrder(boolean oneClickOrder){
+    this.oneClickOrder = oneClickOrder;
+  }
+  
+  public boolean getOneClickOrder(){
+    return this.oneClickOrder;
+  }
+  
+  public int getId(){
+    return this.id;
   }
   
   public String toString(){
-    return "Order[quantity=" + quantity + " direction=" + direction + " price=" + price + " takeProfit=" + takeProfit + " stopLoss=" + stopLoss + " result=" + result + " ]";
+    return "Order[ id=" + id +"quantity=" + quantity + " direction=" + direction + " price=" + price + " takeProfit=" + takeProfit + " stopLoss=" + stopLoss + " result=" + result  + " oneClickOrder=" + oneClickOrder +"]";
   }
 }

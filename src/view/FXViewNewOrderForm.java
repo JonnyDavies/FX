@@ -113,13 +113,13 @@ public class FXViewNewOrderForm extends VBox {
     this.setSpacing(10);
   }
   
-  public void sellButtonHandler(EventHandler<ActionEvent> handler)
+  public void sellNewOrderButtonHandler(EventHandler<ActionEvent> handler)
   {
           b1.setOnAction(handler);
   }
   
               
-  public void buyButtonHandler(EventHandler<ActionEvent> handler)
+  public void buyNewOrderButtonHandler(EventHandler<ActionEvent> handler)
   {
           b2.setOnAction(handler);
   }

@@ -63,6 +63,7 @@ public class FXViewOrderPane extends VBox {
     res.prefWidthProperty().bind(order.widthProperty().divide(8));
     res.setCellValueFactory(new PropertyValueFactory<Order, Integer>("result"));
     res.setStyle("-fx-alignment: CENTER");
+
     
     order.setItems(orderList);
     order.getColumns().addAll(cpr, qty, dir, prc, cup, tp, sl, res);

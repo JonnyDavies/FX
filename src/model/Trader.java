@@ -87,7 +87,7 @@ public class Trader {
     orders.clear();
   }
   
-  public void removeOrders(int index)
+  public void removeOrder(int index)
   {
     orders.remove(index);
   }

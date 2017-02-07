@@ -26,9 +26,7 @@ public class FXApplicationLoader extends Application {
    */
   public void init() {   
     
-    // normally this 
-    // view = new FXViewRootPane();   
-    // this while testing the login page
+
     view = new FXViewLoginPage();    
     model = new Trader(); // this will be something like FXTrader but rename once UML diagrams are done!
     controller = new FXController(view, model); //    new FXController(model, view); 

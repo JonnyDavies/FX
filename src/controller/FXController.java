@@ -22,6 +22,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.Pane;
@@ -41,6 +42,7 @@ import view.FXViewRegisterPage;
 import view.FXViewRootPane;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.regex.*;
 
@@ -78,17 +80,15 @@ public class FXController {
    
   public FXController (FXViewLoginPage view, Trader model)
   {
-      // reference to view - eventually view and controller.    
       this.lg = view;
       this.model = model;
      
-      this.rp = new FXViewRootPane();
-     
+      this.rp = new FXViewRootPane();    
       this.re = new FXViewRegisterPage(); 
       this.cp = this.rp.getChartPane();
+      
       this.op = this.cp.returnOrderPane();
       // pop order table
-      this.model.addOrder(new Order("GBP", "2,000", "Buy", 1.0, 1.0, 1.0, 1.0, 0));
       this.populateOrderTableOnStart(this.op.returnTableView());
             
       this.cupp = this.rp.getCurrencyPairPane();
@@ -97,9 +97,7 @@ public class FXController {
           
       register = new Scene(this.re);
       market = new Scene(this.rp); 
-      modal = new Scene(this.of, 400, 300); 
-
-        
+      modal = new Scene(this.of, 400, 300);       
       this.attachEventHandlers();       
   }
   
@@ -111,14 +109,23 @@ public class FXController {
     this.re.addBackHandler(e -> this.setSceneToBeDisplayed("Back"));
     this.re.addRegisterInfoHandler(e -> this.setSceneToBeDisplayed("Login"));
     this.mp.addLogOutHandler(e -> this.setSceneToBeDisplayed("Logout"));
-    this.mp.addOpenChartHandler(e -> this.newOrderInputBox());
-    this.of.buyButtonHandler(e -> this.processBuyOrder());
-    this.of.sellButtonHandler(e -> this.processSellOrder());
+    this.mp.addNewOrderHandler(e -> this.newOrderInputBox());
+    this.mp.addDeleteOrderHandler(e -> this.deleteOrder());
+    this.mp.addOpenChartHandler(e -> this.openCharts());
+    this.of.buyNewOrderButtonHandler(e -> this.processBuyOrder());
+    this.of.sellNewOrderButtonHandler(e -> this.processSellOrder());
+    this.cupp.setEURUSDBuyButtonHandler(e->this.processOneClickBuy("EUR/USD"));
+    this.cupp.setEURUSDSellButtonHandler(e->this.processOneClickSell("EUR/USD"));
+    this.cupp.setUSDJPYBuyButtonHandler(e->this.processOneClickBuy("USD/JPY"));
+    this.cupp.setUSDJPYSellButtonHandler(e->this.processOneClickSell("USD/JPY"));
+    this.cupp.setGBPUSDBuyButtonHandler(e->this.processOneClickBuy("GBP/USD"));
+    this.cupp.setGBPUSDSellButtonHandler(e->this.processOneClickSell("GBP/USD"));
+    this.cupp.setUSDCHFBuyButtonHandler(e->this.processOneClickBuy("USD/CHF"));
+    this.cupp.setUSDCHFSellButtonHandler(e->this.processOneClickSell("USD/CHF"));
   }
   
   public void populateOrderTableOnStart(TableView<Order> order)
-  {
-    
+  { 
     ObservableList<Order> options = FXCollections.observableArrayList(this.model.getOrders());
     this.op.setItemsTableView(options);   
   }
@@ -137,6 +144,191 @@ public class FXController {
 
   }
   
+  public void deleteOrder()
+  {
+    //get selected from table view
+    // delete from table 
+    // delete it from Orders    
+    // maybe have class variables for this, give each order a unique value????
+    int indexOrder;    
+    
+    Order selected = this.op.returnTableView().getSelectionModel().getSelectedItem();
+    
+    if(selected != null)
+    {
+      indexOrder = this.model.getOrders().indexOf(selected);
+      this.model.removeOrder(indexOrder);
+      ObservableList<Order> orderList =  FXCollections.observableArrayList(this.model.getOrders());
+      this.op.setItemsTableView(orderList); 
+    }
+    
+    // deal with this, disable button maybe??
+    return;    
+  }
+  
+  public void processOneClickBuy(String currencyPair)
+  {
+    String quantity;
+       
+    if(this.cupp.getQuantityToggle1().isSelected())
+    {
+        quantity = this.cupp.getQuantityToggle1().getText();
+       
+    }  
+    else if( this.cupp.getQuantityToggle2().isSelected())
+    {
+        quantity = this.cupp.getQuantityToggle2().getText();
+    }
+    else
+    {
+        quantity = this.cupp.getQuantityToggle3().getText();
+    }
+    
+    String currency = currencyPair; 
+    String direction = "Buy";    
+    double price = 0.0;
+    double currentPrice = 0.0;
+    double takeProfit = 0.0;
+    double stopLoss = this.of.returnStopLoss().getValue();
+    Integer result = 0;
+    boolean oneClickOrder = true;
+    
+    
+    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss, result, oneClickOrder);
+    this.model.addOrder(buy);
+    ObservableList<Order> orderList =  FXCollections.observableArrayList(this.model.getOrders());
+    this.op.setItemsTableView(orderList); 
+  }
+  
+  public HashMap<String,Boolean> findOpenTabs()
+  {
+    ObservableList<Tab> options = this.cp.getTabPanes().getTabs();
+    HashMap<String,Boolean> tabStatus = new HashMap<String,Boolean>();
+
+    boolean tab1Open = false; 
+    boolean tab2Open = false;
+    boolean tab3Open = false;
+    boolean tab4Open = false;
+ 
+    for(Tab t : options){
+      if(t.getText().equals("EUR/USD")){
+        tab1Open = true;
+      }
+      if(t.getText().equals("USD/JPY")){
+        tab2Open = true;
+      }
+      if(t.getText().equals("GBP/USD")){
+        tab3Open = true;
+      }
+      if(t.getText().equals("USD/CHF")){
+        tab4Open = true;
+      }
+    }
+     
+    tabStatus.put("EUR/USD",tab1Open);
+    tabStatus.put("USD/JPY",tab2Open);
+    tabStatus.put("GBP/USD",tab3Open);
+    tabStatus.put("USD/CHF",tab4Open);
+    
+    return tabStatus;
+  }
+  
+  public void openCharts()
+  {
+   String selectedChart = this.mp.getChartCombo().getValue();
+   HashMap<String,Boolean> openTabs = this.findOpenTabs();
+   // if open don't want it open obviously
+   // how are we going to do this??
+   // Could even have new panes for each?
+      
+   switch (selectedChart)
+   {
+     
+     case "EUR/USD" :                                                   
+                        if(!openTabs.get("EUR/USD")){ 
+                          // add tab pane()
+                           this.cp.addTabPane("EUR/USD");
+                           
+                           // add series data
+                        }
+                        else{
+                          // open alert tab already open
+                        }
+                        
+                       
+         break;
+     case "USD/JPY" :
+                          // add tab pane()
+                           if(!openTabs.get("USD/JPY")){ 
+                             this.cp.addTabPane("USD/JPY");
+                           }
+                           else{
+                             // open alert tab already open
+                           }
+           
+         break;   
+     case "GBP/USD" :
+                        
+                         if(!openTabs.get("GBP/USD")){
+                           // add tab pane()
+                           this.cp.addTabPane("GBP/USD");
+                         }
+                         else{
+                           // open alert tab already open
+                         }
+         break;
+     case "USD/CHF" :
+       
+                           if(!openTabs.get("USD/CHF")){ 
+                          // add tab pane()
+                             this.cp.addTabPane("USD/CHF");
+                           }
+                           else{
+                             // open alert tab already open
+                           }
+         break; 
+   }   
+  }
+  
+  public void processOneClickSell(String currencyPair)
+  {
+    String quantity;
+    
+    if(this.cupp.getQuantityToggle1().isSelected())
+    {
+        quantity = this.cupp.getQuantityToggle1().getText();
+       
+    }  
+    else if( this.cupp.getQuantityToggle2().isSelected())
+    {
+        quantity = this.cupp.getQuantityToggle2().getText();
+    }
+    else
+    {
+        quantity = this.cupp.getQuantityToggle3().getText();
+    }
+    
+    String currency = currencyPair; 
+    String direction = "Sell";    
+    double price = 0.0;
+    
+    double currentPrice = 0.0;
+    
+    double takeProfit = 0.0;
+    double stopLoss = this.of.returnStopLoss().getValue();
+    Integer result = 0;
+    boolean oneClickOrder = true;
+    
+    
+    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss, result, oneClickOrder);
+    this.model.addOrder(buy);
+    ObservableList<Order> orderList =  FXCollections.observableArrayList(this.model.getOrders());
+    this.op.setItemsTableView(orderList); 
+  }
+  
+  
+  
+  
   public void processBuyOrder()
   {    
     // create an order from new order box
@@ -150,14 +342,14 @@ public class FXController {
     String direction = "Buy";
     
     double price = 0.0;
-    double currentPrice = 0.0;
-    
+    double currentPrice = 0.0;  
     double takeProfit = this.of.returnTakeProfit().getValue();
     double stopLoss = this.of.returnStopLoss().getValue();
     Integer result = 0;
+    boolean oneClickOrder = false;
+
     
-    
-    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss, result);
+    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss, result, oneClickOrder);
     this.model.addOrder(buy);
     ObservableList<Order> orderList =  FXCollections.observableArrayList(this.model.getOrders());
     this.op.setItemsTableView(orderList);   
@@ -179,16 +371,15 @@ public class FXController {
     String quantity = this.of.returnQuantity().getValue();
     String currency = this.of.returnCurrencyPair().getValue(); 
     String direction = "Sell";
-    
     double price = 0.0;
-    double currentPrice = 0.0;
-    
+    double currentPrice = 0.0;    
     double takeProfit = this.of.returnTakeProfit().getValue();
     double stopLoss = this.of.returnStopLoss().getValue();
     Integer result = 0;
-    
-    
-    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss, result);
+    boolean oneClickOrder = false;
+
+  
+    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss, result, oneClickOrder);
     this.model.addOrder(buy);
     ObservableList<Order> orderList =  FXCollections.observableArrayList(this.model.getOrders());
     this.op.setItemsTableView(orderList);   
@@ -220,7 +411,7 @@ public class FXController {
             protected String call() 
                 throws IOException, MalformedURLException {     
               try (
-                  Socket kkSocket = new Socket("192.168.1.20",4444);   
+                  Socket kkSocket = new Socket("PC",4444);   
                   // 10.34.98.62 Uni IP
                   // 192.168.1.20 ethernet
               
@@ -293,7 +484,7 @@ public class FXController {
            case "Market":
              if (this.authenticate())
              {
-               //this.startSocketListener();
+               this.startSocketListener();
                window.setScene(market);
              }
              else
@@ -497,12 +688,24 @@ public class FXController {
   
   public void updateCharts()
   {
-    XYChart.Series<Number, Number> series = this.cp.getSeries();
-    String dubs = message1.get();
+    String selectedChart = this.mp.getChartCombo().getValue();
+    HashMap<String,Boolean> openTabs = this.findOpenTabs();
     
-    double d = Double.parseDouble(dubs);
-    this.cp.updateSeries(notStayingHere, d);
-    notStayingHere++;
+    if(openTabs.get("EUR/USD"))
+    { 
+        String dubs1 = message1.get();
+        double d1 = Double.parseDouble(dubs1);
+        this.cp.updateSeries("EUR/USD",notStayingHere, d1);
+    }
     
+    if(openTabs.get("GBP/USD"))
+    {     
+        String dubs3 = message3.get();
+        double d3 = Double.parseDouble(dubs3);
+        this.cp.updateSeries("GBP/USD",notStayingHere, d3);
+    }
+    
+    
+    notStayingHere++;  
   }
 }
