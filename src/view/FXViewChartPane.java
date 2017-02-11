@@ -108,7 +108,7 @@ public class FXViewChartPane extends VBox {
     
     calendar = Calendar.getInstance();
     
-    for(int i = 0; i <= 100; i++){    
+    for(int i = 0; i < 100; i++){    
       calendar.add(Calendar.SECOND,1);
       timeInSeconds.add(sdf.format(calendar.getTime()));     
     }
@@ -232,7 +232,6 @@ public class FXViewChartPane extends VBox {
        this.xAxis.categorySpacingProperty();
   }
   
-  
   public void setXAxisCategories(ObservableList<String> newList)
   {
       this.xAxis.setCategories(newList);
@@ -245,6 +244,17 @@ public class FXViewChartPane extends VBox {
   
   public ArrayList<String> getTimeSeconds(){
     return timeInSeconds;
+  }
+  
+  public void setTimeSeconds(ArrayList<String> timeInSeconds){
+     this.timeInSeconds = timeInSeconds;
+  }
+  
+  
+  public void removeSubTimeInSeconds(int start, int finish)
+  {
+    this.timeInSeconds.subList(start,finish).clear();
+
   }
   
   public void addToTimeSeconds(int index, String time)

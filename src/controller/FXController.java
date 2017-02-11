@@ -748,22 +748,43 @@ public class FXController {
     ArrayList<String> newCat = new ArrayList<String>();
 
     
-    
-    if(notStayingHere >= timeInSeconds.size() - 1)
+    // chart >= 80% current time on the chart ((timeInSeconds.size()/5)* 4)
+    if(notStayingHere >= (timeInSeconds.size() - 1))
+      
     {
       int seriesFutureSize = timeInSeconds.size() + 100;
       
+      
+     // add 20 seconds in future
       for(int i = timeInSeconds.size(); i <= seriesFutureSize; i++){        
-        this.cp.addToCalender();
-        this.cp.addToTimeSeconds(i,this.cp.getSDF().format(this.cp.getCalenderInstanceTime()));
+        this.cp.addToCalender();      
+        this.cp.addToTimeSeconds(i,this.cp.getSDF().format(this.cp.getCalenderInstanceTime()));       
         newCat.add(this.cp.getSDF().format(this.cp.getCalenderInstanceTime()));
-
       }
       
-      ObservableList<String> newCategory =  FXCollections.observableArrayList(newCat); 
-      this.cp.setXAxisCategories(newCategory);
+      
+      /** This didnt work */
+      // remove first 20 seconds, so screen doesn't pile up
+//      ArrayList<String> sub = this.cp.getTimeSeconds();
+//      for(String s : sub){
+//          System.out.println(s.toString());
+//      }
+//      
+//      sub.subList(0,20).clear();
+//      
+//      for(String s : sub){
+//        System.out.println(s.toString());
+//      }
+//    
+//      this.cp.setTimeSeconds(sub);
+      // remove first 20 from series
+      
+      
+           
+      ObservableList<String> updatedCategory =  FXCollections.observableArrayList(newCat); 
+      this.cp.setXAxisCategories(updatedCategory);    
       // dunno?
-      this.cp.getXAxis().invalidateRange(newCategory);
+      this.cp.getXAxis().invalidateRange(updatedCategory);
       
       
     }
