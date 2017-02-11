@@ -142,17 +142,30 @@ public class FXViewCurrencyPairPane extends VBox {
         return p1;
   }
   
+  public void setLabel1Text (String text){
+     p1.setText(text);
+  }
+  
   public Label getLabel2 (){
     return p2;
 }
+  public void setLabel2Text (String text){
+    p2.setText(text);
+ }
   
   public Label getLabel3(){
     return p3;
 }
+  public void setLabel3Text (String text){
+    p3.setText(text);
+ }
   
   public Label getLabel4(){
     return p4;
 }
+  public void setLabel4Text (String text){
+    p4.setText(text);
+ }
   
   public ToggleButton getQuantityToggle1()
   {

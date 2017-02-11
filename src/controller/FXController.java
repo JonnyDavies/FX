@@ -5,10 +5,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
+
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -28,6 +33,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.Database;
 import model.Order;
 import model.Trader;
@@ -42,6 +48,7 @@ import view.FXViewRegisterPage;
 import view.FXViewRootPane;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.regex.*;
@@ -95,10 +102,16 @@ public class FXController {
       this.mp = this.rp.getMenuPane();
       this.of = new FXViewNewOrderForm();
           
-      register = new Scene(this.re);
-      market = new Scene(this.rp); 
-      modal = new Scene(this.of, 400, 300);       
-      this.attachEventHandlers();       
+      this.register = new Scene(this.re);
+      this.market = new Scene(this.rp); 
+      this.modal = new Scene(this.of, 400, 300);       
+      this.attachEventHandlers();   
+      
+      message1 = new SimpleStringProperty();
+      message2 = new SimpleStringProperty();
+      message3 = new SimpleStringProperty();
+      message4 = new SimpleStringProperty();
+
   }
   
   
@@ -398,7 +411,7 @@ public class FXController {
           System.out.println("done:" + t.getSource().getValue());
       }
     });
-    bindSocketValuesToLabels();
+    // bindSocketValuesToLabels();
     service.start();   
   }
   
@@ -460,6 +473,22 @@ public class FXController {
     }
   }
   
+  public void startTimeline()
+  {
+    Timeline tl = this.cp.getTimeline();
+    tl.getKeyFrames().add(
+    new KeyFrame(Duration.millis(500), 
+       new EventHandler<ActionEvent>() { 
+          @Override public void handle(ActionEvent actionEvent) {          
+                updateCharts();            
+              }      
+         }
+     ));
+    tl.setCycleCount(Animation.INDEFINITE);
+    tl.setAutoReverse(true);
+    tl.play(); 
+  }
+  
   public void setSceneToBeDisplayed(String nextScreen)
   {
         
@@ -485,7 +514,10 @@ public class FXController {
              if (this.authenticate())
              {
                this.startSocketListener();
+               // move this
                window.setScene(market);
+               this.startTimeline();
+
              }
              else
              {
@@ -644,15 +676,16 @@ public class FXController {
     return isPasswordValid;
   }
   
+  /**
+   * Taking this out for now !!!!!!!!!!!!!!!!!!!!!
+   */
+  
   public void bindSocketValuesToLabels ()
   {   
     message1 = new SimpleStringProperty();
     Label l1 = cupp.getLabel1();
     l1.textProperty().bind(message1); 
-    l1.textProperty().addListener((observable, oldValue, newValue) -> {
-        this.updateCharts();    
-    });
-    
+
     message2 = new SimpleStringProperty();
     Label l2 = cupp.getLabel2();
     l2.textProperty().bind(message2);   
@@ -686,26 +719,126 @@ public class FXController {
   
   // jonathandavies27@gmail.com
   
+  
+  // call this method in the timeline
+  // so it will series and label for currency pairs, should make it smoother
+  
   public void updateCharts()
   {
     String selectedChart = this.mp.getChartCombo().getValue();
     HashMap<String,Boolean> openTabs = this.findOpenTabs();
     
+    BigDecimal difference = new BigDecimal("0.025");
+    ArrayList<String> timeInSeconds = this.cp.getTimeSeconds();
+
+    
+    // update labels here to
+    this.updateLabels();
+    
+    
+    
+    
+    // check if update seconds -- MAY NOT BE STAYING HERE
+    // But no errors? so could be working
+    // Need the xAxis! 
+    // so if size reaches 100 add another 100.
+    
+    // ======= possible 25% increment like the other axis, only one way
+    
+    ArrayList<String> newCat = new ArrayList<String>();
+
+    
+    
+    if(notStayingHere >= timeInSeconds.size() - 1)
+    {
+      int seriesFutureSize = timeInSeconds.size() + 100;
+      
+      for(int i = timeInSeconds.size(); i <= seriesFutureSize; i++){        
+        this.cp.addToCalender();
+        this.cp.addToTimeSeconds(i,this.cp.getSDF().format(this.cp.getCalenderInstanceTime()));
+        newCat.add(this.cp.getSDF().format(this.cp.getCalenderInstanceTime()));
+
+      }
+      
+      ObservableList<String> newCategory =  FXCollections.observableArrayList(newCat); 
+      this.cp.setXAxisCategories(newCategory);
+      // dunno?
+      this.cp.getXAxis().invalidateRange(newCategory);
+      
+      
+    }
+    
+    
     if(openTabs.get("EUR/USD"))
     { 
         String dubs1 = message1.get();
         double d1 = Double.parseDouble(dubs1);
-        this.cp.updateSeries("EUR/USD",notStayingHere, d1);
+        this.cp.updateSeries("EUR/USD", timeInSeconds.get(notStayingHere), d1);
+        
+        
+        // get upper, lowers boundary strings and current value
+        String upper = String.format("%.3f", this.cp.getYAxisUpper());
+        String lower = String.format("%.3f", this.cp.getYAxisLower());
+        String current = String.format("%.3f", d1);
+        
+        
+        // turn upper, lower and current boundaries into BigDecimals
+        BigDecimal upperbd = new BigDecimal(upper); 
+        BigDecimal lowerbd = new BigDecimal(lower);
+        BigDecimal currentbd = new BigDecimal(current); 
+        
+        
+        // check if the current value is greater then or equal to current 
+        BigDecimal threeQuater = upperbd.subtract(difference);             
+        
+        if(threeQuater.compareTo(currentbd) == 0 || threeQuater.compareTo(currentbd) == -1)
+        {        
+          this.cp.setYAxisUpper(Double.parseDouble(upperbd.add(difference).toString()));
+          this.cp.setYAxisLower(Double.parseDouble(lowerbd.add(difference).toString())); 
+        }
+        
+        
+        // check if the current value is less then or equal to the bottom quarter on the chart
+        BigDecimal oneQuater = lowerbd.add(difference); 
+        
+        if(oneQuater.compareTo(currentbd) == 0 || oneQuater.compareTo(currentbd) == 1)
+        {        
+          this.cp.setYAxisUpper(Double.parseDouble(upperbd.subtract(difference).toString()));
+          this.cp.setYAxisLower(Double.parseDouble(lowerbd.subtract(difference).toString())); 
+        }
     }
     
     if(openTabs.get("GBP/USD"))
     {     
         String dubs3 = message3.get();
         double d3 = Double.parseDouble(dubs3);
-        this.cp.updateSeries("GBP/USD",notStayingHere, d3);
+        this.cp.updateSeries("GBP/USD",timeInSeconds.get(notStayingHere), d3);
     }
     
     
     notStayingHere++;  
+  }
+  
+  public void updateSeconds()
+  {
+    // here we're updating the number of seconds for the bottom of the axis
+    
+    // we start off
+  }
+  
+  public void updateLabels()
+  {
+    String l1 = message1.get();
+    this.cupp.setLabel1Text(l1);
+    
+    String l2 = message2.get();
+    this.cupp.setLabel2Text(l2);
+    
+    String l3 = message3.get();
+    this.cupp.setLabel3Text(l3);
+    
+    String l4 = message4.get();
+    this.cupp.setLabel4Text(l4); 
+    
   }
 }
