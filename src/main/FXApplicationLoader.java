@@ -26,6 +26,7 @@ public class FXApplicationLoader extends Application {
    */
   public void init() {   
     
+    
 
     view = new FXViewLoginPage();    
     model = new Trader(); // this will be something like FXTrader but rename once UML diagrams are done!
