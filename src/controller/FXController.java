@@ -513,7 +513,7 @@ public class FXController {
            case "Market":
              if (this.authenticate())
              {
-               this.startSocketListener();
+               // this.startSocketListener();
                // move this
                window.setScene(market);
                this.startTimeline();
