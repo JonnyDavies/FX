@@ -177,6 +177,12 @@ public class FXViewChartPane extends VBox {
     allSeries.get(currency).getData().add(new XYChart.Data(time, price));    
   }
   
+  public void removeSeriesElement(String currency, int index)
+  {
+    // add time label?
+    allSeries.get(currency).getData().remove(index);    
+  }
+  
   public FXViewOrderPane returnOrderPane()
   {
       return this.op;

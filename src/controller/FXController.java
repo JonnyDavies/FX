@@ -728,7 +728,7 @@ public class FXController {
     String selectedChart = this.mp.getChartCombo().getValue();
     HashMap<String,Boolean> openTabs = this.findOpenTabs();
     
-    BigDecimal difference = new BigDecimal("0.025");
+    BigDecimal difference = new BigDecimal("0.010");
     ArrayList<String> timeInSeconds = this.cp.getTimeSeconds();
 
     
@@ -748,67 +748,73 @@ public class FXController {
     ArrayList<String> newCat = new ArrayList<String>();
 
     
-    // chart >= 80% current time on the chart ((timeInSeconds.size()/5)* 4)
-    if(notStayingHere >= (timeInSeconds.size() - 1))
-      
+    // chart >= current time on the chart 
+    if(notStayingHere >= timeInSeconds.size())      
     {
-      int seriesFutureSize = timeInSeconds.size() + 100;
+      
+      int seriesFutureSize = timeInSeconds.size() + 1;
       
       
-     // add 20 seconds in future
-      for(int i = timeInSeconds.size(); i <= seriesFutureSize; i++){        
+     // add 1 seconds into the future
+      for(int i = timeInSeconds.size(); i < seriesFutureSize; i++){        
         this.cp.addToCalender();      
         this.cp.addToTimeSeconds(i,this.cp.getSDF().format(this.cp.getCalenderInstanceTime()));       
         newCat.add(this.cp.getSDF().format(this.cp.getCalenderInstanceTime()));
       }
       
-      
-      /** This didnt work */
-      // remove first 20 seconds, so screen doesn't pile up
-//      ArrayList<String> sub = this.cp.getTimeSeconds();
-//      for(String s : sub){
-//          System.out.println(s.toString());
-//      }
-//      
-//      sub.subList(0,20).clear();
-//      
-//      for(String s : sub){
-//        System.out.println(s.toString());
-//      }
-//    
-//      this.cp.setTimeSeconds(sub);
-      // remove first 20 from series
+
+      // remove first 20 seconds of category, so screen doesn't pile up    
+      ArrayList<String> sub = this.cp.getTimeSeconds();   
+      sub.subList(0,1).clear();
       
       
-           
-      ObservableList<String> updatedCategory =  FXCollections.observableArrayList(newCat); 
+      /** 
+       * When removing and adding 1,2 or 30 seconds from 
+       * the both axis then make sure you're also removing
+       * the same from the index, otherwise it goes awry.
+       * */
+      // remove 2 from the index so that stays in sync
+      notStayingHere -= 1;
+
+      
+
+      XYChart.Series<String, Number> sum = this.cp.getCertainSeries("EUR/USD");     
+      System.out.println("TESTING series size: ");
+      System.out.println(sum.getData().size());
+      
+      if(sum.getData().size() >= 100){
+        this.cp.removeSeriesElement("EUR/USD",0);
+      }
+      
+      this.cp.setTimeSeconds(sub);
+     //  remove first 20 from series
+      
+      
+      ObservableList<String> updatedCategory =  FXCollections.observableArrayList(this.cp.getTimeSeconds()); 
       this.cp.setXAxisCategories(updatedCategory);    
       // dunno?
-      this.cp.getXAxis().invalidateRange(updatedCategory);
-      
-      
-    }
+      this.cp.getXAxis().invalidateRange(updatedCategory);      
+ }
     
     
     if(openTabs.get("EUR/USD"))
     { 
         String dubs1 = message1.get();
         double d1 = Double.parseDouble(dubs1);
+        
         this.cp.updateSeries("EUR/USD", timeInSeconds.get(notStayingHere), d1);
-        
-        
+                
         // get upper, lowers boundary strings and current value
         String upper = String.format("%.3f", this.cp.getYAxisUpper());
         String lower = String.format("%.3f", this.cp.getYAxisLower());
         String current = String.format("%.3f", d1);
-        
-        
+                
         // turn upper, lower and current boundaries into BigDecimals
         BigDecimal upperbd = new BigDecimal(upper); 
         BigDecimal lowerbd = new BigDecimal(lower);
         BigDecimal currentbd = new BigDecimal(current); 
         
-        
+                
         // check if the current value is greater then or equal to current 
         BigDecimal threeQuater = upperbd.subtract(difference);             
         
@@ -817,8 +823,7 @@ public class FXController {
           this.cp.setYAxisUpper(Double.parseDouble(upperbd.add(difference).toString()));
           this.cp.setYAxisLower(Double.parseDouble(lowerbd.add(difference).toString())); 
         }
-        
-        
+                
         // check if the current value is less then or equal to the bottom quarter on the chart
         BigDecimal oneQuater = lowerbd.add(difference); 
         
