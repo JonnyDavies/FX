@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -30,7 +31,7 @@ import javafx.util.Duration;
 
 public class FXViewChartPane extends VBox {
   
-  private LineChart<String, Number> lc;
+  private AreaChart<String, Number> lc;
   private XYChart.Series<String, Number> seriesEUR;
   private XYChart.Series<String, Number> seriesUSD;
   private XYChart.Series<String, Number> seriesGBP;
@@ -50,10 +51,10 @@ public class FXViewChartPane extends VBox {
   {
     // intialise series???
     allSeries = new HashMap<String,XYChart.Series<String, Number>>();
-    allSeries.put("EUR/USD", this.seriesEUR = new LineChart.Series<>());
-    allSeries.put("USD/JPY", this.seriesUSD = new LineChart.Series<>());
-    allSeries.put("GBP/USD", this.seriesGBP = new LineChart.Series<>());
-    allSeries.put("USD/CHF", this.seriesCHF = new LineChart.Series<>());
+    allSeries.put("EUR/USD", this.seriesEUR = new AreaChart.Series<>());
+    allSeries.put("USD/JPY", this.seriesUSD = new AreaChart.Series<>());
+    allSeries.put("GBP/USD", this.seriesGBP = new AreaChart.Series<>());
+    allSeries.put("USD/CHF", this.seriesCHF = new AreaChart.Series<>());
 
     SplitPane sp = new SplitPane(); 
     sp.setOrientation(Orientation.VERTICAL);  
@@ -123,6 +124,8 @@ public class FXViewChartPane extends VBox {
     xAxis.invalidateRange(options);
     xAxis.setTickLabelRotation(90.0);
     xAxis.setAutoRanging(false);
+    xAxis.setStartMargin(0.0);
+    xAxis.setEndMargin(0.0);
 
     yAxis = new NumberAxis();
     
@@ -139,9 +142,10 @@ public class FXViewChartPane extends VBox {
     yAxis.setLowerBound(1.000);
     yAxis.setUpperBound(1.100);
     yAxis.setTickUnit(0.001);   
+  //  yAxis.set
     //    yAxis.setTickMarkVisible(false);
   
-    lc = new LineChart<>(xAxis, yAxis); 
+    lc = new AreaChart<>(xAxis, yAxis); 
     lc.setPrefSize(650.0, 850.0);
     lc.setStyle(".chart-line-symbol { -fx-background-color: null, null }");    
     lc.setLegendVisible(false);
@@ -156,7 +160,7 @@ public class FXViewChartPane extends VBox {
     return vb;
   }
 
-  public LineChart<String, Number> getChart()
+  public AreaChart<String, Number> getChart()
   {
     return lc;
   }

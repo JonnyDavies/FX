@@ -78,7 +78,7 @@ public class FXController {
   private static StringProperty message3;
   private static StringProperty message4;
   
-  private int notStayingHere = 2;  
+  private int notStayingHereEURUSD = 0;  
   // for bcrypt password
   private static int workload = 12;
 
@@ -438,9 +438,9 @@ public class FXController {
                     
                       // Platform.runLater? 
                       
-                      update = fromServer;
-                      System.out.println(update);
-                      String[] s = update.split("-");
+                        update = fromServer;
+                        System.out.println(update);
+                        String[] s = update.split("-");
                       
                         Platform.runLater(new Runnable() {
                          public void run() {
@@ -513,7 +513,7 @@ public class FXController {
            case "Market":
              if (this.authenticate())
              {
-               // this.startSocketListener();
+               this.startSocketListener();
                // move this
                window.setScene(market);
                this.startTimeline();
@@ -748,13 +748,14 @@ public class FXController {
     ArrayList<String> newCat = new ArrayList<String>();
 
     
+    
+    // separate these for each chart
+    
     // chart >= current time on the chart 
-    if(notStayingHere >= timeInSeconds.size())      
+    if(notStayingHereEURUSD >= timeInSeconds.size())      
     {
-      
       int seriesFutureSize = timeInSeconds.size() + 1;
-      
-      
+        
      // add 1 seconds into the future
       for(int i = timeInSeconds.size(); i < seriesFutureSize; i++){        
         this.cp.addToCalender();      
@@ -762,7 +763,6 @@ public class FXController {
         newCat.add(this.cp.getSDF().format(this.cp.getCalenderInstanceTime()));
       }
       
-
       // remove first 20 seconds of category, so screen doesn't pile up    
       ArrayList<String> sub = this.cp.getTimeSeconds();   
       sub.subList(0,1).clear();
@@ -774,11 +774,10 @@ public class FXController {
        * the same from the index, otherwise it goes awry.
        * */
       // remove 2 from the index so that stays in sync
-      notStayingHere -= 1;
+      notStayingHereEURUSD -= 1;
 
+      XYChart.Series<String, Number> sum = this.cp.getCertainSeries("EUR/USD");   
       
-
-      XYChart.Series<String, Number> sum = this.cp.getCertainSeries("EUR/USD");     
       System.out.println("TESTING series size: ");
       System.out.println(sum.getData().size());
       
@@ -788,13 +787,12 @@ public class FXController {
       
       this.cp.setTimeSeconds(sub);
      //  remove first 20 from series
-      
-      
+         
       ObservableList<String> updatedCategory =  FXCollections.observableArrayList(this.cp.getTimeSeconds()); 
       this.cp.setXAxisCategories(updatedCategory);    
       // dunno?
       this.cp.getXAxis().invalidateRange(updatedCategory);      
- }
+   }
     
     
     if(openTabs.get("EUR/USD"))
@@ -802,7 +800,7 @@ public class FXController {
         String dubs1 = message1.get();
         double d1 = Double.parseDouble(dubs1);
         
-        this.cp.updateSeries("EUR/USD", timeInSeconds.get(notStayingHere), d1);
+        this.cp.updateSeries("EUR/USD", timeInSeconds.get(notStayingHereEURUSD), d1);
                 
         // get upper, lowers boundary strings and current value
         String upper = String.format("%.3f", this.cp.getYAxisUpper());
@@ -838,11 +836,11 @@ public class FXController {
     {     
         String dubs3 = message3.get();
         double d3 = Double.parseDouble(dubs3);
-        this.cp.updateSeries("GBP/USD",timeInSeconds.get(notStayingHere), d3);
+//        this.cp.updateSeries("GBP/USD",timeInSeconds.get(notStayingHere), d3);
     }
     
     
-    notStayingHere++;  
+    notStayingHereEURUSD++;  
   }
   
   public void updateSeconds()
