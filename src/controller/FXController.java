@@ -78,7 +78,11 @@ public class FXController {
   private static StringProperty message3;
   private static StringProperty message4;
   
-  private int notStayingHereEURUSD = 0;  
+  private int notStayingHereEUR = 0;  
+  private int notStayingHereUSD = 0;  
+  private int notStayingHereGBP = 0;  
+  private int notStayingHereCHF = 0;  
+
   // for bcrypt password
   private static int workload = 12;
 
@@ -729,8 +733,11 @@ public class FXController {
     HashMap<String,Boolean> openTabs = this.findOpenTabs();
     
     BigDecimal difference = new BigDecimal("0.010");
-    ArrayList<String> timeInSeconds = this.cp.getTimeSeconds();
-
+    
+    ArrayList<String> timeInSecondsEUR = this.cp.getTimeSecondsEUR();
+    ArrayList<String> timeInSecondsUSD = this.cp.getTimeSecondsUSD();
+    ArrayList<String> timeInSecondsGBP = this.cp.getTimeSecondsGBP();
+    ArrayList<String> timeInSecondsCHF = this.cp.getTimeSecondsCHF();
     
     // update labels here to
     this.updateLabels();
@@ -752,19 +759,19 @@ public class FXController {
     // separate these for each chart
     
     // chart >= current time on the chart 
-    if(notStayingHereEURUSD >= timeInSeconds.size())      
+    if(notStayingHereEUR >= timeInSecondsEUR.size())      
     {
-      int seriesFutureSize = timeInSeconds.size() + 1;
+      int seriesFutureSize = timeInSecondsEUR.size() + 1;
         
      // add 1 seconds into the future
-      for(int i = timeInSeconds.size(); i < seriesFutureSize; i++){        
-        this.cp.addToCalender();      
-        this.cp.addToTimeSeconds(i,this.cp.getSDF().format(this.cp.getCalenderInstanceTime()));       
-        newCat.add(this.cp.getSDF().format(this.cp.getCalenderInstanceTime()));
+      for(int i = timeInSecondsEUR.size(); i < seriesFutureSize; i++){        
+        this.cp.addToCalenderEUR();      
+        this.cp.addToTimeSecondsEUR(i,this.cp.getSDF().format(this.cp.getCalenderInstanceTimeEUR()));       
+        newCat.add(this.cp.getSDF().format(this.cp.getCalenderInstanceTimeEUR()));
       }
       
       // remove first 20 seconds of category, so screen doesn't pile up    
-      ArrayList<String> sub = this.cp.getTimeSeconds();   
+      ArrayList<String> sub = this.cp.getTimeSecondsEUR();   
       sub.subList(0,1).clear();
       
       
@@ -774,7 +781,7 @@ public class FXController {
        * the same from the index, otherwise it goes awry.
        * */
       // remove 2 from the index so that stays in sync
-      notStayingHereEURUSD -= 1;
+      notStayingHereEUR -= 1;
 
       XYChart.Series<String, Number> sum = this.cp.getCertainSeries("EUR/USD");   
       
@@ -785,13 +792,13 @@ public class FXController {
         this.cp.removeSeriesElement("EUR/USD",0);
       }
       
-      this.cp.setTimeSeconds(sub);
+      this.cp.setTimeSecondsEUR(sub);
      //  remove first 20 from series
          
-      ObservableList<String> updatedCategory =  FXCollections.observableArrayList(this.cp.getTimeSeconds()); 
-      this.cp.setXAxisCategories(updatedCategory);    
+      ObservableList<String> updatedCategory =  FXCollections.observableArrayList(this.cp.getTimeSecondsEUR()); 
+      this.cp.setXAxisCategoriesEUR(updatedCategory);    
       // dunno?
-      this.cp.getXAxis().invalidateRange(updatedCategory);      
+      this.cp.getXAxisEUR().invalidateRange(updatedCategory);      
    }
     
     
@@ -800,11 +807,11 @@ public class FXController {
         String dubs1 = message1.get();
         double d1 = Double.parseDouble(dubs1);
         
-        this.cp.updateSeries("EUR/USD", timeInSeconds.get(notStayingHereEURUSD), d1);
+        this.cp.updateSeries("EUR/USD", timeInSecondsEUR.get(notStayingHereEUR), d1);
                 
         // get upper, lowers boundary strings and current value
-        String upper = String.format("%.3f", this.cp.getYAxisUpper());
-        String lower = String.format("%.3f", this.cp.getYAxisLower());
+        String upper = String.format("%.3f", this.cp.getYAxisUpperEUR());
+        String lower = String.format("%.3f", this.cp.getYAxisLowerEUR());
         String current = String.format("%.3f", d1);
                 
         // turn upper, lower and current boundaries into BigDecimals
@@ -818,8 +825,8 @@ public class FXController {
         
         if(threeQuater.compareTo(currentbd) == 0 || threeQuater.compareTo(currentbd) == -1)
         {        
-          this.cp.setYAxisUpper(Double.parseDouble(upperbd.add(difference).toString()));
-          this.cp.setYAxisLower(Double.parseDouble(lowerbd.add(difference).toString())); 
+          this.cp.setYAxisUpperEUR(Double.parseDouble(upperbd.add(difference).toString()));
+          this.cp.setYAxisLowerEUR(Double.parseDouble(lowerbd.add(difference).toString())); 
         }
                 
         // check if the current value is less then or equal to the bottom quarter on the chart
@@ -827,8 +834,8 @@ public class FXController {
         
         if(oneQuater.compareTo(currentbd) == 0 || oneQuater.compareTo(currentbd) == 1)
         {        
-          this.cp.setYAxisUpper(Double.parseDouble(upperbd.subtract(difference).toString()));
-          this.cp.setYAxisLower(Double.parseDouble(lowerbd.subtract(difference).toString())); 
+          this.cp.setYAxisUpperEUR(Double.parseDouble(upperbd.subtract(difference).toString()));
+          this.cp.setYAxisLowerEUR(Double.parseDouble(lowerbd.subtract(difference).toString())); 
         }
     }
     
@@ -840,7 +847,7 @@ public class FXController {
     }
     
     
-    notStayingHereEURUSD++;  
+    notStayingHereEUR++;  
   }
   
   public void updateSeconds()
