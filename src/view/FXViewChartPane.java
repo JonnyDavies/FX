@@ -79,6 +79,7 @@ public class FXViewChartPane extends VBox {
     allSeries.put("USD/JPY", this.seriesUSD = new AreaChart.Series<>());
     allSeries.put("GBP/USD", this.seriesGBP = new AreaChart.Series<>());
     allSeries.put("USD/CHF", this.seriesCHF = new AreaChart.Series<>());
+    
 
     SplitPane sp = new SplitPane(); 
     sp.setOrientation(Orientation.VERTICAL);  
@@ -179,7 +180,9 @@ public class FXViewChartPane extends VBox {
     lcEUR.setLegendVisible(false);
     lcEUR.setCreateSymbols(false); //hide dots       
     
-    lcEUR.getData().add(allSeries.get(currency));   
+    lcEUR.getData().add(allSeries.get(currency));  
+    
+    
     vb.getChildren().addAll(lcEUR);
     
     return vb;
@@ -224,10 +227,16 @@ public class FXViewChartPane extends VBox {
     lcUSD = new AreaChart<>(xAxisUSD, yAxisUSD); 
     lcUSD.setPrefSize(650.0, 850.0);
     lcUSD.setStyle(".chart-line-symbol { -fx-background-color: null, null }");    
+//    lcUSD.setStyle(".chart-series-area-line { fx-stroke: CHART_COLOR_2 }");    
+//    lcUSD.setStyle(".chart-series-area-fill { fx-stroke: CHART_COLOR_2 }");    
+
+    
     lcUSD.setLegendVisible(false);
     lcUSD.setCreateSymbols(false); //hide dots       
     
     lcUSD.getData().add(allSeries.get(currency));   
+    lcUSD.setAnimated(false);
+    
     vb.getChildren().addAll(lcUSD);
     
     return vb;
@@ -271,10 +280,14 @@ public class FXViewChartPane extends VBox {
     lcGBP = new AreaChart<>(xAxisGBP, yAxisGBP); 
     lcGBP.setPrefSize(650.0, 850.0);
     lcGBP.setStyle(".chart-line-symbol { -fx-background-color: null, null }");    
+
     lcGBP.setLegendVisible(false);
     lcGBP.setCreateSymbols(false); //hide dots       
     
-    lcGBP.getData().add(allSeries.get(currency));   
+    lcGBP.getData().add(allSeries.get(currency));
+    lcGBP.setAnimated(false);
+
+    
     vb.getChildren().addAll(lcGBP);
     
     return vb;
@@ -321,7 +334,9 @@ public class FXViewChartPane extends VBox {
     lcCHF.setLegendVisible(false);
     lcCHF.setCreateSymbols(false); //hide dots       
     
-    lcCHF.getData().add(allSeries.get(currency));   
+    lcCHF.getData().add(allSeries.get(currency)); 
+    lcCHF.setAnimated(false);
+
     vb.getChildren().addAll(lcCHF);
     
     return vb;

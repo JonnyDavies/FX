@@ -729,6 +729,7 @@ public class FXController {
   
   public void updateCharts()
   {
+    
     String selectedChart = this.mp.getChartCombo().getValue();
     HashMap<String,Boolean> openTabs = this.findOpenTabs();
     
@@ -742,68 +743,60 @@ public class FXController {
     // update labels here to
     this.updateLabels();
     
-    
-    
-    
     // check if update seconds -- MAY NOT BE STAYING HERE
     // But no errors? so could be working
     // Need the xAxis! 
     // so if size reaches 100 add another 100.
-    
     // ======= possible 25% increment like the other axis, only one way
-    
-    ArrayList<String> newCat = new ArrayList<String>();
 
-    
-    
-    // separate these for each chart
-    
-    // chart >= current time on the chart 
-    if(notStayingHereEUR >= timeInSecondsEUR.size())      
-    {
-      int seriesFutureSize = timeInSecondsEUR.size() + 1;
-        
-     // add 1 seconds into the future
-      for(int i = timeInSecondsEUR.size(); i < seriesFutureSize; i++){        
-        this.cp.addToCalenderEUR();      
-        this.cp.addToTimeSecondsEUR(i,this.cp.getSDF().format(this.cp.getCalenderInstanceTimeEUR()));       
-        newCat.add(this.cp.getSDF().format(this.cp.getCalenderInstanceTimeEUR()));
-      }
-      
-      // remove first 20 seconds of category, so screen doesn't pile up    
-      ArrayList<String> sub = this.cp.getTimeSecondsEUR();   
-      sub.subList(0,1).clear();
-      
-      
-      /** 
-       * When removing and adding 1,2 or 30 seconds from 
-       * the both axis then make sure you're also removing
-       * the same from the index, otherwise it goes awry.
-       * */
-      // remove 2 from the index so that stays in sync
-      notStayingHereEUR -= 1;
-
-      XYChart.Series<String, Number> sum = this.cp.getCertainSeries("EUR/USD");   
-      
-      System.out.println("TESTING series size: ");
-      System.out.println(sum.getData().size());
-      
-      if(sum.getData().size() >= 100){
-        this.cp.removeSeriesElement("EUR/USD",0);
-      }
-      
-      this.cp.setTimeSecondsEUR(sub);
-     //  remove first 20 from series
-         
-      ObservableList<String> updatedCategory =  FXCollections.observableArrayList(this.cp.getTimeSecondsEUR()); 
-      this.cp.setXAxisCategoriesEUR(updatedCategory);    
-      // dunno?
-      this.cp.getXAxisEUR().invalidateRange(updatedCategory);      
-   }
-    
-    
     if(openTabs.get("EUR/USD"))
-    { 
+    {        
+        // chart >= current time on the chart 
+        if(notStayingHereEUR >= timeInSecondsEUR.size())      
+        {
+          ArrayList<String> newCatEUR = new ArrayList<String>();
+
+          
+          int seriesFutureSize = timeInSecondsEUR.size() + 1;
+            
+          // add 1 seconds into the future
+          for(int i = timeInSecondsEUR.size(); i < seriesFutureSize; i++){        
+            this.cp.addToCalenderEUR();      
+            this.cp.addToTimeSecondsEUR(i,this.cp.getSDF().format(this.cp.getCalenderInstanceTimeEUR()));       
+            newCatEUR.add(this.cp.getSDF().format(this.cp.getCalenderInstanceTimeEUR()));
+          }
+          
+          
+          // remove first 20 seconds of category, so screen doesn't pile up    
+          ArrayList<String> sub = this.cp.getTimeSecondsEUR();   
+          sub.subList(0,1).clear();
+          
+          
+          /** 
+           * When removing and adding 1,2 or 30 seconds from 
+           * the both axis then make sure you're also removing
+           * the same from the index, otherwise it goes awry.
+           * */
+          // remove 2 from the index so that stays in sync
+          notStayingHereEUR -= 1;
+  
+          XYChart.Series<String, Number> sum = this.cp.getCertainSeries("EUR/USD");   
+          
+          if(sum.getData().size() >= 100){
+            this.cp.removeSeriesElement("EUR/USD",0);
+          }
+          
+          this.cp.setTimeSecondsEUR(sub);
+         //  remove first 20 from series
+             
+          ObservableList<String> updatedCategory =  FXCollections.observableArrayList(this.cp.getTimeSecondsEUR()); 
+          this.cp.setXAxisCategoriesEUR(updatedCategory);    
+          // dunno?
+          this.cp.getXAxisEUR().invalidateRange(updatedCategory);      
+          
+       }
+             
+        
         String dubs1 = message1.get();
         double d1 = Double.parseDouble(dubs1);
         
@@ -837,24 +830,271 @@ public class FXController {
           this.cp.setYAxisUpperEUR(Double.parseDouble(upperbd.subtract(difference).toString()));
           this.cp.setYAxisLowerEUR(Double.parseDouble(lowerbd.subtract(difference).toString())); 
         }
+        
+        notStayingHereEUR++;       
     }
+    
+    
+    
+    if(openTabs.get("USD/JPY"))
+    {        
+        // chart >= current time on the chart 
+        if(notStayingHereUSD >= timeInSecondsUSD.size())      
+        {
+          ArrayList<String> newCatUSD = new ArrayList<String>();
+
+          
+          int seriesFutureSize = timeInSecondsUSD.size() + 1;
+            
+          // add 1 seconds into the future
+          for(int i = timeInSecondsUSD.size(); i < seriesFutureSize; i++){        
+            this.cp.addToCalenderUSD();      
+            this.cp.addToTimeSecondsUSD(i,this.cp.getSDF().format(this.cp.getCalenderInstanceTimeUSD()));       
+            newCatUSD.add(this.cp.getSDF().format(this.cp.getCalenderInstanceTimeUSD()));
+          }
+          
+          
+          // remove first 20 seconds of category, so screen doesn't pile up    
+          ArrayList<String> sub = this.cp.getTimeSecondsUSD();   
+          sub.subList(0,1).clear();
+          
+          
+          /** 
+           * When removing and adding 1,2 or 30 seconds from 
+           * the both axis then make sure you're also removing
+           * the same from the index, otherwise it goes awry.
+           * */
+          // remove 2 from the index so that stays in sync
+          notStayingHereUSD -= 1;
+  
+          XYChart.Series<String, Number> sum = this.cp.getCertainSeries("USD/JPY");   
+
+          if(sum.getData().size() >= 100){
+            this.cp.removeSeriesElement("USD/JPY",0);
+          }
+          
+          this.cp.setTimeSecondsUSD(sub);
+         //  remove first 20 from series
+             
+          ObservableList<String> updatedCategory =  FXCollections.observableArrayList(this.cp.getTimeSecondsUSD()); 
+          this.cp.setXAxisCategoriesUSD(updatedCategory);    
+          // dunno?
+          this.cp.getXAxisUSD().invalidateRange(updatedCategory);      
+          
+       }
+             
+        
+        String dubs2 = message2.get();
+        double d2 = Double.parseDouble(dubs2);
+        
+        this.cp.updateSeries("USD/JPY", timeInSecondsUSD.get(notStayingHereUSD), d2);
+                
+        // get upper, lowers boundary strings and current value
+        String upper = String.format("%.3f", this.cp.getYAxisUpperUSD());
+        String lower = String.format("%.3f", this.cp.getYAxisLowerUSD());
+        String current = String.format("%.3f", d2);
+                
+        // turn upper, lower and current boundaries into BigDecimals
+        BigDecimal upperbd = new BigDecimal(upper); 
+        BigDecimal lowerbd = new BigDecimal(lower);
+        BigDecimal currentbd = new BigDecimal(current); 
+        
+                
+        // check if the current value is greater then or equal to current 
+        BigDecimal threeQuater = upperbd.subtract(difference);             
+        
+        if(threeQuater.compareTo(currentbd) == 0 || threeQuater.compareTo(currentbd) == -1)
+        {        
+          this.cp.setYAxisUpperUSD(Double.parseDouble(upperbd.add(difference).toString()));
+          this.cp.setYAxisLowerUSD(Double.parseDouble(lowerbd.add(difference).toString())); 
+        }
+                
+        // check if the current value is less then or equal to the bottom quarter on the chart
+        BigDecimal oneQuater = lowerbd.add(difference); 
+        
+        if(oneQuater.compareTo(currentbd) == 0 || oneQuater.compareTo(currentbd) == 1)
+        {        
+          this.cp.setYAxisUpperUSD(Double.parseDouble(upperbd.subtract(difference).toString()));
+          this.cp.setYAxisLowerUSD(Double.parseDouble(lowerbd.subtract(difference).toString())); 
+        }
+        
+        notStayingHereUSD++;       
+    }
+    
+    
+    
     
     if(openTabs.get("GBP/USD"))
-    {     
+    {        
+        // chart >= current time on the chart 
+        if(notStayingHereGBP >= timeInSecondsGBP.size())      
+        {
+          ArrayList<String> newCatGBP = new ArrayList<String>();
+
+          
+          int seriesFutureSize = timeInSecondsGBP.size() + 1;
+            
+          // add 1 seconds into the future
+          for(int i = timeInSecondsGBP.size(); i < seriesFutureSize; i++){        
+            this.cp.addToCalenderGBP();      
+            this.cp.addToTimeSecondsGBP(i,this.cp.getSDF().format(this.cp.getCalenderInstanceTimeGBP()));       
+            newCatGBP.add(this.cp.getSDF().format(this.cp.getCalenderInstanceTimeGBP()));
+          }
+          
+          
+          // remove first 20 seconds of category, so screen doesn't pile up    
+          ArrayList<String> sub = this.cp.getTimeSecondsGBP();   
+          sub.subList(0,1).clear();
+          
+          
+          /** 
+           * When removing and adding 1,2 or 30 seconds from 
+           * the both axis then make sure you're also removing
+           * the same from the index, otherwise it goes awry.
+           * */
+          // remove 2 from the index so that stays in sync
+          notStayingHereGBP -= 1;
+  
+          XYChart.Series<String, Number> sum = this.cp.getCertainSeries("GBP/USD");   
+
+          if(sum.getData().size() >= 100){
+            this.cp.removeSeriesElement("GBP/USD",0);
+          }
+          
+          this.cp.setTimeSecondsGBP(sub);
+         //  remove first 20 from series
+             
+          ObservableList<String> updatedCategory =  FXCollections.observableArrayList(this.cp.getTimeSecondsGBP()); 
+          this.cp.setXAxisCategoriesGBP(updatedCategory);    
+          // dunno?
+          this.cp.getXAxisGBP().invalidateRange(updatedCategory);      
+          
+       }
+             
+        
         String dubs3 = message3.get();
         double d3 = Double.parseDouble(dubs3);
-//        this.cp.updateSeries("GBP/USD",timeInSeconds.get(notStayingHere), d3);
+        
+        this.cp.updateSeries("GBP/USD", timeInSecondsGBP.get(notStayingHereGBP), d3);
+                
+        // get upper, lowers boundary strings and current value
+        String upper = String.format("%.3f", this.cp.getYAxisUpperGBP());
+        String lower = String.format("%.3f", this.cp.getYAxisLowerGBP());
+        String current = String.format("%.3f", d3);
+                
+        // turn upper, lower and current boundaries into BigDecimals
+        BigDecimal upperbd = new BigDecimal(upper); 
+        BigDecimal lowerbd = new BigDecimal(lower);
+        BigDecimal currentbd = new BigDecimal(current); 
+        
+                
+        // check if the current value is greater then or equal to current 
+        BigDecimal threeQuater = upperbd.subtract(difference);             
+        
+        if(threeQuater.compareTo(currentbd) == 0 || threeQuater.compareTo(currentbd) == -1)
+        {        
+          this.cp.setYAxisUpperGBP(Double.parseDouble(upperbd.add(difference).toString()));
+          this.cp.setYAxisLowerGBP(Double.parseDouble(lowerbd.add(difference).toString())); 
+        }
+                
+        // check if the current value is less then or equal to the bottom quarter on the chart
+        BigDecimal oneQuater = lowerbd.add(difference); 
+        
+        if(oneQuater.compareTo(currentbd) == 0 || oneQuater.compareTo(currentbd) == 1)
+        {        
+          this.cp.setYAxisUpperGBP(Double.parseDouble(upperbd.subtract(difference).toString()));
+          this.cp.setYAxisLowerGBP(Double.parseDouble(lowerbd.subtract(difference).toString())); 
+        }
+        
+        notStayingHereGBP++;       
     }
     
-    
-    notStayingHereEUR++;  
-  }
+
+    if(openTabs.get("USD/CHF"))
+    {        
+        // chart >= current time on the chart 
+        if(notStayingHereCHF >= timeInSecondsCHF.size())      
+        {
+          ArrayList<String> newCatCHF = new ArrayList<String>();
+
+          
+          int seriesFutureSizeCHF = timeInSecondsCHF.size() + 1;
+            
+          // add 1 seconds into the future
+          for(int i = timeInSecondsCHF.size(); i < seriesFutureSizeCHF; i++){        
+            this.cp.addToCalenderCHF();      
+            this.cp.addToTimeSecondsCHF(i,this.cp.getSDF().format(this.cp.getCalenderInstanceTimeCHF()));       
+            newCatCHF.add(this.cp.getSDF().format(this.cp.getCalenderInstanceTimeCHF()));
+          }
+          
+          
+          // remove first 20 seconds of category, so screen doesn't pile up    
+          ArrayList<String> sub = this.cp.getTimeSecondsCHF();   
+          sub.subList(0,1).clear();
+          
+          
+          /** 
+           * When removing and adding 1,2 or 30 seconds from 
+           * the both axis then make sure you're also removing
+           * the same from the index, otherwise it goes awry.
+           * */
+          // remove 2 from the index so that stays in sync
+          notStayingHereCHF -= 1;
   
-  public void updateSeconds()
-  {
-    // here we're updating the number of seconds for the bottom of the axis
+          XYChart.Series<String, Number> sum = this.cp.getCertainSeries("USD/CHF");   
+
+          if(sum.getData().size() >= 100){
+            this.cp.removeSeriesElement("USD/CHF",0);
+          }
+          
+          this.cp.setTimeSecondsCHF(sub);
+         //  remove first 20 from series
+             
+          ObservableList<String> updatedCategory =  FXCollections.observableArrayList(this.cp.getTimeSecondsCHF()); 
+          this.cp.setXAxisCategoriesCHF(updatedCategory);    
+          // dunno?
+          this.cp.getXAxisCHF().invalidateRange(updatedCategory);      
+          
+       }
+             
+        
+        String dubs4 = message4.get();
+        double d4 = Double.parseDouble(dubs4);
+        
+        this.cp.updateSeries("USD/CHF", timeInSecondsCHF.get(notStayingHereCHF), d4);
+                
+        // get upper, lowers boundary strings and current value
+        String upper = String.format("%.3f", this.cp.getYAxisUpperCHF());
+        String lower = String.format("%.3f", this.cp.getYAxisLowerCHF());
+        String current = String.format("%.3f", d4);
+                
+        // turn upper, lower and current boundaries into BigDecimals
+        BigDecimal upperbd = new BigDecimal(upper); 
+        BigDecimal lowerbd = new BigDecimal(lower);
+        BigDecimal currentbd = new BigDecimal(current); 
+        
+                
+        // check if the current value is greater then or equal to current 
+        BigDecimal threeQuater = upperbd.subtract(difference);             
+        
+        if(threeQuater.compareTo(currentbd) == 0 || threeQuater.compareTo(currentbd) == -1)
+        {        
+          this.cp.setYAxisUpperCHF(Double.parseDouble(upperbd.add(difference).toString()));
+          this.cp.setYAxisLowerCHF(Double.parseDouble(lowerbd.add(difference).toString())); 
+        }
+                
+        // check if the current value is less then or equal to the bottom quarter on the chart
+        BigDecimal oneQuater = lowerbd.add(difference); 
+        
+        if(oneQuater.compareTo(currentbd) == 0 || oneQuater.compareTo(currentbd) == 1)
+        {        
+          this.cp.setYAxisUpperCHF(Double.parseDouble(upperbd.subtract(difference).toString()));
+          this.cp.setYAxisLowerCHF(Double.parseDouble(lowerbd.subtract(difference).toString())); 
+        }
+        
+        notStayingHereCHF++;       
+    }
     
-    // we start off
   }
   
   public void updateLabels()
