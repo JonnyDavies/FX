@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -27,6 +28,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 public class FXViewChartPane extends VBox {
@@ -182,6 +184,19 @@ public class FXViewChartPane extends VBox {
     
     lcEUR.getData().add(allSeries.get(currency));  
     
+    Node fill = this.seriesEUR.getNode().lookup(".chart-series-area-fill"); // only for AreaChart
+    Node line = this.seriesEUR.getNode().lookup(".chart-series-area-line");
+
+    Color color = Color.RED; // or any other color
+
+    String rgb = String.format("%d, %d, %d",
+            (int) (color.getRed() * 255),
+            (int) (color.getGreen() * 255),
+            (int) (color.getBlue() * 255));
+
+    fill.setStyle("-fx-fill: rgba(" + rgb + ", 0.15);");
+    line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
+   
     
     vb.getChildren().addAll(lcEUR);
     
@@ -237,6 +252,20 @@ public class FXViewChartPane extends VBox {
     lcUSD.getData().add(allSeries.get(currency));   
     lcUSD.setAnimated(false);
     
+    Node fill = this.seriesUSD.getNode().lookup(".chart-series-area-fill"); // only for AreaChart
+    Node line = this.seriesUSD.getNode().lookup(".chart-series-area-line");
+
+    Color color = Color.BLUE; // or any other color
+
+    String rgb = String.format("%d, %d, %d",
+            (int) (color.getRed() * 255),
+            (int) (color.getGreen() * 255),
+            (int) (color.getBlue() * 255));
+
+    fill.setStyle("-fx-fill: rgba(" + rgb + ", 0.15);");
+    line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
+    
+    
     vb.getChildren().addAll(lcUSD);
     
     return vb;
@@ -286,6 +315,19 @@ public class FXViewChartPane extends VBox {
     
     lcGBP.getData().add(allSeries.get(currency));
     lcGBP.setAnimated(false);
+    
+    Node fill = this.seriesGBP.getNode().lookup(".chart-series-area-fill"); // only for AreaChart
+    Node line = this.seriesGBP.getNode().lookup(".chart-series-area-line");
+
+    Color color = Color.BLACK; // or any other color
+
+    String rgb = String.format("%d, %d, %d",
+            (int) (color.getRed() * 255),
+            (int) (color.getGreen() * 255),
+            (int) (color.getBlue() * 255));
+
+    fill.setStyle("-fx-fill: rgba(" + rgb + ", 0.15);");
+    line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
 
     
     vb.getChildren().addAll(lcGBP);
@@ -324,8 +366,8 @@ public class FXViewChartPane extends VBox {
     yAxisCHF = new NumberAxis();
     yAxisCHF.setAutoRanging(false);
     yAxisCHF.setForceZeroInRange(false);
-    yAxisCHF.setLowerBound(1.000);
-    yAxisCHF.setUpperBound(1.100);
+    yAxisCHF.setLowerBound(2.000);
+    yAxisCHF.setUpperBound(2.100);
     yAxisCHF.setTickUnit(0.001);   
 
     lcCHF = new AreaChart<>(xAxisCHF, yAxisCHF); 
@@ -336,6 +378,20 @@ public class FXViewChartPane extends VBox {
     
     lcCHF.getData().add(allSeries.get(currency)); 
     lcCHF.setAnimated(false);
+    
+    Node fill = this.seriesCHF.getNode().lookup(".chart-series-area-fill"); // only for AreaChart
+    Node line = this.seriesCHF.getNode().lookup(".chart-series-area-line");
+
+    Color color = Color.GREEN; // or any other color
+
+    String rgb = String.format("%d, %d, %d",
+            (int) (color.getRed() * 255),
+            (int) (color.getGreen() * 255),
+            (int) (color.getBlue() * 255));
+
+    fill.setStyle("-fx-fill: rgba(" + rgb + ", 0.15);");
+    line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
+
 
     vb.getChildren().addAll(lcCHF);
     
