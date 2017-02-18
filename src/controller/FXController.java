@@ -82,6 +82,8 @@ public class FXController {
   private int notStayingHereUSD = 0;  
   private int notStayingHereGBP = 0;  
   private int notStayingHereCHF = 0;  
+  
+  private  HashMap<String,Boolean> tabStatus;
 
   // for bcrypt password
   private static int workload = 12;
@@ -139,6 +141,32 @@ public class FXController {
     this.cupp.setGBPUSDSellButtonHandler(e->this.processOneClickSell("GBP/USD"));
     this.cupp.setUSDCHFBuyButtonHandler(e->this.processOneClickBuy("USD/CHF"));
     this.cupp.setUSDCHFSellButtonHandler(e->this.processOneClickSell("USD/CHF"));
+
+  }
+  
+  public void closingHousekeepingforUSD()
+  {
+    System.out.println("Testing USD");
+    notStayingHereUSD = 0;
+    this.cp.removeSeries("USD/JPY");
+    tabStatus.put("USD/JPY", false);
+
+  }
+  
+  public void closingHousekeepingforGBP()
+  {
+    System.out.println("Testing GBP");
+    notStayingHereGBP = 0;  
+    this.cp.removeSeries("GBP/USD");
+    tabStatus.put("GBP/USD", false);    
+  }
+  
+  public void closingHousekeepingforCHF()
+  {
+    System.out.println("Testing CHF");
+    notStayingHereCHF = 0;  
+    this.cp.removeSeries("USD/CHF");
+    tabStatus.put("USD/CHF", false);
   }
   
   public void populateOrderTableOnStart(TableView<Order> order)
@@ -183,44 +211,12 @@ public class FXController {
     return;    
   }
   
-  public void processOneClickBuy(String currencyPair)
-  {
-    String quantity;
-       
-    if(this.cupp.getQuantityToggle1().isSelected())
-    {
-        quantity = this.cupp.getQuantityToggle1().getText();
-       
-    }  
-    else if( this.cupp.getQuantityToggle2().isSelected())
-    {
-        quantity = this.cupp.getQuantityToggle2().getText();
-    }
-    else
-    {
-        quantity = this.cupp.getQuantityToggle3().getText();
-    }
-    
-    String currency = currencyPair; 
-    String direction = "Buy";    
-    double price = 0.0;
-    double currentPrice = 0.0;
-    double takeProfit = 0.0;
-    double stopLoss = this.of.returnStopLoss().getValue();
-    Integer result = 0;
-    boolean oneClickOrder = true;
-    
-    
-    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss, result, oneClickOrder);
-    this.model.addOrder(buy);
-    ObservableList<Order> orderList =  FXCollections.observableArrayList(this.model.getOrders());
-    this.op.setItemsTableView(orderList); 
-  }
+ 
   
   public HashMap<String,Boolean> findOpenTabs()
   {
     ObservableList<Tab> options = this.cp.getTabPanes().getTabs();
-    HashMap<String,Boolean> tabStatus = new HashMap<String,Boolean>();
+    tabStatus = new HashMap<String,Boolean>();
 
     boolean tab1Open = false; 
     boolean tab2Open = false;
@@ -264,8 +260,7 @@ public class FXController {
      case "EUR/USD" :                                                   
                         if(!openTabs.get("EUR/USD")){ 
                           // add tab pane()
-                           this.cp.addTabPane("EUR/USD");
-                           
+                           this.cp.addTabPane("EUR/USD");                 
                            // add series data
                         }
                         else{
@@ -278,6 +273,7 @@ public class FXController {
                           // add tab pane()
                            if(!openTabs.get("USD/JPY")){ 
                              this.cp.addTabPane("USD/JPY");
+                             this.cp.setCloseRequesTab2(e->this.closingHousekeepingforUSD());
                            }
                            else{
                              // open alert tab already open
@@ -289,6 +285,7 @@ public class FXController {
                          if(!openTabs.get("GBP/USD")){
                            // add tab pane()
                            this.cp.addTabPane("GBP/USD");
+                           this.cp.setCloseRequesTab3(e->this.closingHousekeepingforGBP());
                          }
                          else{
                            // open alert tab already open
@@ -299,12 +296,48 @@ public class FXController {
                            if(!openTabs.get("USD/CHF")){ 
                           // add tab pane()
                              this.cp.addTabPane("USD/CHF");
+                             this.cp.setCloseRequesTab4(e->this.closingHousekeepingforCHF());
+
                            }
                            else{
                              // open alert tab already open
                            }
          break; 
    }   
+  }
+  
+  public void processOneClickBuy(String currencyPair)
+  {
+    String quantity;
+       
+    if(this.cupp.getQuantityToggle1().isSelected())
+    {
+        quantity = this.cupp.getQuantityToggle1().getText();
+       
+    }  
+    else if( this.cupp.getQuantityToggle2().isSelected())
+    {
+        quantity = this.cupp.getQuantityToggle2().getText();
+    }
+    else 
+    {
+        quantity = this.cupp.getQuantityToggle3().getText();
+    }
+    
+    String currency = currencyPair; 
+    String direction = "Buy";    
+    double currentPrice =  Double.parseDouble(this.getCurrentPrice(currency));
+    double price = Double.parseDouble(this.getCurrentPrice(currency));
+    double takeProfit = 0.0;
+    double stopLoss = this.of.returnStopLoss().getValue();
+    Integer result = 0;
+    boolean oneClickOrder = true;
+    
+    
+    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss, result, oneClickOrder);
+    this.model.addOrder(buy);
+    ObservableList<Order> orderList =  FXCollections.observableArrayList(this.model.getOrders());
+    this.op.setItemsTableView(orderList); 
   }
   
   public void processOneClickSell(String currencyPair)
@@ -326,10 +359,10 @@ public class FXController {
     }
     
     String currency = currencyPair; 
-    String direction = "Sell";    
-    double price = 0.0;
-    
-    double currentPrice = 0.0;
+    String direction = "Sell";   
+     
+    double currentPrice =  Double.parseDouble(this.getCurrentPrice(currency));  
+    double price = Double.parseDouble(this.getCurrentPrice(currency));
     
     double takeProfit = 0.0;
     double stopLoss = this.of.returnStopLoss().getValue();
@@ -339,8 +372,32 @@ public class FXController {
     
     Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss, result, oneClickOrder);
     this.model.addOrder(buy);
+    
     ObservableList<Order> orderList =  FXCollections.observableArrayList(this.model.getOrders());
     this.op.setItemsTableView(orderList); 
+  }
+  
+  public String getCurrentPrice(String currency)
+  {
+    String price = "";
+    
+    switch(currency)
+    {
+      case "EUR/USD": 
+        price =  this.cupp.getLabel1().getText();    
+        break;
+      case "USD/JPY":
+        price =  this.cupp.getLabel2().getText();      
+        break;
+      case "GBP/USD":
+        price =  this.cupp.getLabel3().getText();     
+        break;
+      case "USD/CHF":
+        price =  this.cupp.getLabel4().getText();     
+        break;
+    }
+    
+    return price;
   }
   
   
@@ -358,8 +415,8 @@ public class FXController {
     String currency = this.of.returnCurrencyPair().getValue(); 
     String direction = "Buy";
     
-    double price = 0.0;
-    double currentPrice = 0.0;  
+    double currentPrice  = Double.parseDouble(this.getCurrentPrice(currency));
+    double price = Double.parseDouble(this.getCurrentPrice(currency));
     double takeProfit = this.of.returnTakeProfit().getValue();
     double stopLoss = this.of.returnStopLoss().getValue();
     Integer result = 0;
@@ -388,8 +445,8 @@ public class FXController {
     String quantity = this.of.returnQuantity().getValue();
     String currency = this.of.returnCurrencyPair().getValue(); 
     String direction = "Sell";
-    double price = 0.0;
-    double currentPrice = 0.0;    
+    double currentPrice =  Double.parseDouble(this.getCurrentPrice(currency));
+    double price = Double.parseDouble(this.getCurrentPrice(currency));
     double takeProfit = this.of.returnTakeProfit().getValue();
     double stopLoss = this.of.returnStopLoss().getValue();
     Integer result = 0;
@@ -484,13 +541,30 @@ public class FXController {
     new KeyFrame(Duration.millis(500), 
        new EventHandler<ActionEvent>() { 
           @Override public void handle(ActionEvent actionEvent) {          
-                updateCharts();            
+                updateCharts();      
+                updateOrders();
               }      
          }
      ));
     tl.setCycleCount(Animation.INDEFINITE);
     tl.setAutoReverse(true);
     tl.play(); 
+  }
+  
+  public void updateOrders()
+  {
+    ArrayList<Order> orders = this.model.getOrders();
+    
+    for (Order o : orders)
+    {
+        o.setCurrentPrice(Double.parseDouble(this.getCurrentPrice(o.getCurrencyPair())));     
+    }
+    
+    ObservableList<Order> orderList =  FXCollections.observableArrayList(orders);
+    this.op.setItemsTableView(orderList); 
+    this.op.refreshTableView();
+
+    
   }
   
   public void setSceneToBeDisplayed(String nextScreen)
@@ -721,9 +795,7 @@ public class FXController {
     return traderExist;
   }
   
-  // jonathandavies27@gmail.com
-  
-  
+    
   // call this method in the timeline
   // so it will series and label for currency pairs, should make it smoother
   

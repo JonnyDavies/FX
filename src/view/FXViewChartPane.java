@@ -13,6 +13,7 @@ import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -69,6 +70,8 @@ public class FXViewChartPane extends VBox {
   private Calendar calendarUSD;
   private Calendar calendarGBP;
   private Calendar calendarCHF;
+  
+  private Tab t2, t3, t4;
 
   private SimpleDateFormat sdf;
 
@@ -77,12 +80,7 @@ public class FXViewChartPane extends VBox {
   {
     // intialise series???
     allSeries = new HashMap<String,XYChart.Series<String, Number>>();
-    allSeries.put("EUR/USD", this.seriesEUR = new AreaChart.Series<>());
-    allSeries.put("USD/JPY", this.seriesUSD = new AreaChart.Series<>());
-    allSeries.put("GBP/USD", this.seriesGBP = new AreaChart.Series<>());
-    allSeries.put("USD/CHF", this.seriesCHF = new AreaChart.Series<>());
     
-
     SplitPane sp = new SplitPane(); 
     sp.setOrientation(Orientation.VERTICAL);  
 
@@ -96,14 +94,12 @@ public class FXViewChartPane extends VBox {
     tp.getTabs().addAll(t1);
     
     this.op = new FXViewOrderPane();
-    
-    
+       
     // ===================================================//
     tl1 = new Timeline();
  
     // ===================================================//
-    
-      
+
     lcEUR.setAnimated(false);
     sp.getItems().addAll(tp, op);
     this.getChildren().add(sp);
@@ -112,29 +108,27 @@ public class FXViewChartPane extends VBox {
   public void addTabPane(String currency)
   {
 
-    Tab t;
-    
     switch (currency)
     {
       case "USD/JPY" :       
-        t =  new Tab();
-        t.setText(currency);
-        t.setContent(addUSDPane(currency)); 
-        this.tp.getTabs().addAll(t); 
+        t2 =  new Tab();
+        t2.setText(currency);
+        t2.setContent(addUSDPane(currency)); 
+        this.tp.getTabs().addAll(t2); 
         break;
         
       case "GBP/USD" :
-        t =  new Tab();
-        t.setText(currency);
-        t.setContent(addGBPPane(currency)); 
-        this.tp.getTabs().addAll(t); 
+        t3 =  new Tab();
+        t3.setText(currency);
+        t3.setContent(addGBPPane(currency)); 
+        this.tp.getTabs().addAll(t3); 
         break;
         
       case "USD/CHF" :
-        t =  new Tab();
-        t.setText(currency);
-        t.setContent(addCHFPane(currency)); 
-        this.tp.getTabs().addAll(t); 
+        t4 =  new Tab();
+        t4.setText(currency);
+        t4.setContent(addCHFPane(currency)); 
+        this.tp.getTabs().addAll(t4); 
         break;
     }
     
@@ -143,7 +137,8 @@ public class FXViewChartPane extends VBox {
   
   public VBox addEURPane(String currency) 
   {
-    
+    allSeries.put("EUR/USD", this.seriesEUR = new AreaChart.Series<>());
+
     VBox vb = new VBox();
     vb.setStyle("-fx-background-color :  #e6e6e6");
     vb.setPadding(new Insets(10, 10, 10, 10));
@@ -206,6 +201,7 @@ public class FXViewChartPane extends VBox {
   
   public VBox addUSDPane(String currency) 
   {
+    allSeries.put("USD/JPY", this.seriesUSD = new AreaChart.Series<>());
     
     VBox vb = new VBox();
     vb.setStyle("-fx-background-color :  #e6e6e6");
@@ -273,6 +269,7 @@ public class FXViewChartPane extends VBox {
 
   public VBox addGBPPane(String currency) 
   {
+    allSeries.put("GBP/USD", this.seriesGBP = new AreaChart.Series<>());
     
     VBox vb = new VBox();
     vb.setStyle("-fx-background-color :  #e6e6e6");
@@ -337,7 +334,8 @@ public class FXViewChartPane extends VBox {
 
   public VBox addCHFPane(String currency) 
   {
-    
+    allSeries.put("USD/CHF", this.seriesCHF = new AreaChart.Series<>());
+
     VBox vb = new VBox();
     vb.setStyle("-fx-background-color :  #e6e6e6");
     vb.setPadding(new Insets(10, 10, 10, 10));
@@ -354,7 +352,6 @@ public class FXViewChartPane extends VBox {
         
     ObservableList<String> options = 
     FXCollections.observableArrayList(timeInSecondsCHF); 
-    
     
     xAxisCHF = new CategoryAxis(options);
     xAxisCHF.invalidateRange(options);
@@ -392,10 +389,24 @@ public class FXViewChartPane extends VBox {
     fill.setStyle("-fx-fill: rgba(" + rgb + ", 0.15);");
     line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
 
-
     vb.getChildren().addAll(lcCHF);
     
     return vb;
+  }
+  
+  public void setCloseRequesTab2 (EventHandler<Event> e)
+  {
+        t2.setOnCloseRequest(e);
+  }
+
+  public void setCloseRequesTab3 (EventHandler<Event> e)
+  {
+        t3.setOnCloseRequest(e);
+  }
+
+  public void setCloseRequesTab4 (EventHandler<Event> e)
+  {
+        t4.setOnCloseRequest(e);
   }
 
   public AreaChart<String, Number> getChartEur()
@@ -437,7 +448,7 @@ public class FXViewChartPane extends VBox {
     // add time label?
     allSeries.get(currency).getData().remove(index);    
   }
-  
+    
   public FXViewOrderPane returnOrderPane()
   {
       return this.op;

@@ -23,7 +23,6 @@ public class FXViewOrderPane extends VBox {
 
     order = new TableView<Order>();
    
-    
     TableColumn<Order,String> cpr = new TableColumn<Order,String>("Currency Pair");
     cpr.prefWidthProperty().bind(order.widthProperty().divide(8));
     cpr.setCellValueFactory(new PropertyValueFactory<Order, String>("currencyPair"));
@@ -77,6 +76,7 @@ public class FXViewOrderPane extends VBox {
       return this.order;
  }
   
+  
   public void setItemsTableView(ObservableList<Order> orders)
  {
       this.order.setItems(orders);
@@ -90,6 +90,12 @@ public class FXViewOrderPane extends VBox {
   public void addToOrderList(Order o)
   {
        this.orderList.add(o);
+  }
+  
+  public void refreshTableView()
+  {
+    order.getColumns().get(0).setVisible(false);
+    order.getColumns().get(0).setVisible(true);  
   }
 
 
