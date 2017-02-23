@@ -38,6 +38,9 @@ public class FXViewMenuPane extends HBox {
     
     b3 = new Button("Delete Order");
     b3.setPrefSize(100,30);
+    
+    b4 = new Button("Price Alert");
+    b4.setPrefSize(100,30);
        
   
     
@@ -56,7 +59,7 @@ public class FXViewMenuPane extends HBox {
     l1.setFont(new Font("Arial", 16));
     l1.setTextFill(Color.WHITE);
       
-    this.getChildren().addAll(l1,cb1,b3,b2,b1);
+    this.getChildren().addAll(l1,cb1,b3,b2,b4,b1);
   }
   
   public void addLogOutHandler(EventHandler<ActionEvent> handler) {
@@ -70,6 +73,11 @@ public class FXViewMenuPane extends HBox {
   public void addDeleteOrderHandler(EventHandler<ActionEvent> handler) {
     b3.setOnAction(handler);
   }
+  
+  public void addPriceAlert(EventHandler<ActionEvent> handler) {
+    b4.setOnAction(handler);
+  }
+  
   
   public void addOpenChartHandler(EventHandler<ActionEvent> handler) {
     cb1.setOnAction(handler);

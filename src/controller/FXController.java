@@ -27,6 +27,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
@@ -44,6 +45,7 @@ import view.FXViewLoginPage;
 import view.FXViewMenuPane;
 import view.FXViewNewOrderForm;
 import view.FXViewOrderPane;
+import view.FXViewPriceAlertForm;
 import view.FXViewRegisterPage;
 import view.FXViewRootPane;
 
@@ -62,6 +64,7 @@ public class FXController {
   private FXViewCurrencyPairPane cupp;
   private FXViewMenuPane mp;
   private FXViewNewOrderForm of;
+  private FXViewPriceAlertForm pa;
   private FXViewOrderPane op;                 
   private Trader model;
   
@@ -72,6 +75,8 @@ public class FXController {
   private Scene register;
   private Scene market;
   private Scene modal;
+  private Scene modalPrice;
+
   
   private static StringProperty message1; // static ? review this
   private static StringProperty message2;
@@ -107,10 +112,12 @@ public class FXController {
       this.cupp = this.rp.getCurrencyPairPane();
       this.mp = this.rp.getMenuPane();
       this.of = new FXViewNewOrderForm();
+      this.pa = new FXViewPriceAlertForm();
           
       this.register = new Scene(this.re);
       this.market = new Scene(this.rp); 
-      this.modal = new Scene(this.of, 400, 300);       
+      this.modal = new Scene(this.of, 400, 300);  
+      this.modalPrice = new Scene(this.pa, 300, 230);  
       this.attachEventHandlers();   
       
       message1 = new SimpleStringProperty();
@@ -129,10 +136,17 @@ public class FXController {
     this.re.addRegisterInfoHandler(e -> this.setSceneToBeDisplayed("Login"));
     this.mp.addLogOutHandler(e -> this.setSceneToBeDisplayed("Logout"));
     this.mp.addNewOrderHandler(e -> this.newOrderInputBox());
+    this.mp.addPriceAlert(e -> this.priceAlertInputBox());
     this.mp.addDeleteOrderHandler(e -> this.deleteOrder());
     this.mp.addOpenChartHandler(e -> this.openCharts());
     this.of.buyNewOrderButtonHandler(e -> this.processBuyOrder());
     this.of.sellNewOrderButtonHandler(e -> this.processSellOrder());
+    this.of.takeProfitButtonHandler(e -> this.undisableTakeProfitSpinner());
+    this.of.stopLossButtonHandler(e -> this.undisableStopLossSpinner());
+    
+//    this.pa.takeProfitButtonHandler(e -> this.undisableTakeProfitSpinner());
+//    this.pa.stopLossButtonHandler(e -> this.undisableStopLossSpinner());
+    
     this.cupp.setEURUSDBuyButtonHandler(e->this.processOneClickBuy("EUR/USD"));
     this.cupp.setEURUSDSellButtonHandler(e->this.processOneClickSell("EUR/USD"));
     this.cupp.setUSDJPYBuyButtonHandler(e->this.processOneClickBuy("USD/JPY"));
@@ -144,13 +158,29 @@ public class FXController {
 
   }
   
+  public void undisableTakeProfitSpinner()
+  {
+    Spinner<Double> temp = this.of.returnTakeProfit();
+    Boolean disabled = false;  
+    disabled = (temp.isDisabled() == true) ? false : true; 
+    this.of.setDisableTakeProfit(disabled);  
+  }
+  
+  public void undisableStopLossSpinner()
+  {
+    Spinner<Double> temp = this.of.returnStopLoss();
+    Boolean disabled = false;
+    disabled = (temp.isDisabled() == true) ? false : true; 
+    this.of.setDisableStopLoss(disabled); 
+  }
+  
+  
   public void closingHousekeepingforUSD()
   {
     System.out.println("Testing USD");
     notStayingHereUSD = 0;
     this.cp.removeSeries("USD/JPY");
     tabStatus.put("USD/JPY", false);
-
   }
   
   public void closingHousekeepingforGBP()
@@ -184,9 +214,17 @@ public class FXController {
     windowModal.setScene(modal);
     windowModal.getIcons().removeAll();
     windowModal.showAndWait();  
-   
-   // this.of.sellButtonHandler(e -> System.out.println("Buy Order"));
-
+  }
+  
+  public void priceAlertInputBox()
+  {
+    windowModal = new Stage();
+    windowModal.initModality(Modality.APPLICATION_MODAL);
+    windowModal.alwaysOnTopProperty();
+    windowModal.centerOnScreen();
+    windowModal.setScene(modalPrice);
+    windowModal.getIcons().removeAll();
+    windowModal.showAndWait();  
   }
   
   public void deleteOrder()
@@ -258,50 +296,65 @@ public class FXController {
    {
      
      case "EUR/USD" :                                                   
-                        if(!openTabs.get("EUR/USD")){ 
-                          // add tab pane()
-                           this.cp.addTabPane("EUR/USD");                 
-                           // add series data
-                        }
-                        else{
-                          // open alert tab already open
-                        }
+                if(!openTabs.get("EUR/USD"))
+                { 
+                  // add tab pane()
+                   this.cp.addTabPane("EUR/USD");                 
+                   // add series data
+                   this.cp.getTabPanes().getSelectionModel().select(this.cp.getEURtab());
+                }
+                else
+                {
+                  // open alert tab already open
+                  this.cp.getTabPanes().getSelectionModel().select(this.cp.getEURtab());
+                }
                         
                        
          break;
      case "USD/JPY" :
-                          // add tab pane()
-                           if(!openTabs.get("USD/JPY")){ 
-                             this.cp.addTabPane("USD/JPY");
-                             this.cp.setCloseRequesTab2(e->this.closingHousekeepingforUSD());
-                           }
-                           else{
-                             // open alert tab already open
-                           }
-           
+                // add tab pane()
+                 if(!openTabs.get("USD/JPY"))
+                 { 
+                   this.cp.addTabPane("USD/JPY");
+                   this.cp.setCloseRequesTab2(e->this.closingHousekeepingforUSD());
+                   this.cp.getTabPanes().getSelectionModel().select(this.cp.getUSDtab());
+                 }
+                 else
+                 {
+                   // open alert tab already open
+                   this.cp.getTabPanes().getSelectionModel().select(this.cp.getUSDtab());
+                 }
+ 
          break;   
      case "GBP/USD" :
                         
-                         if(!openTabs.get("GBP/USD")){
-                           // add tab pane()
-                           this.cp.addTabPane("GBP/USD");
-                           this.cp.setCloseRequesTab3(e->this.closingHousekeepingforGBP());
-                         }
-                         else{
-                           // open alert tab already open
-                         }
+                 if(!openTabs.get("GBP/USD"))
+                 {
+                   // add tab pane()
+                   this.cp.addTabPane("GBP/USD");
+                   this.cp.setCloseRequesTab3(e->this.closingHousekeepingforGBP());
+                   this.cp.getTabPanes().getSelectionModel().select(this.cp.getGBPtab());
+                 }
+                 else
+                 {
+                   // open alert tab already open
+                   this.cp.getTabPanes().getSelectionModel().select(this.cp.getGBPtab());
+                 }
          break;
      case "USD/CHF" :
-       
-                           if(!openTabs.get("USD/CHF")){ 
-                          // add tab pane()
-                             this.cp.addTabPane("USD/CHF");
-                             this.cp.setCloseRequesTab4(e->this.closingHousekeepingforCHF());
-
-                           }
-                           else{
-                             // open alert tab already open
-                           }
+ 
+                 if(!openTabs.get("USD/CHF"))
+                 { 
+                // add tab pane()
+                   this.cp.addTabPane("USD/CHF");
+                   this.cp.setCloseRequesTab4(e->this.closingHousekeepingforCHF());
+                   this.cp.getTabPanes().getSelectionModel().select(this.cp.getCHFtab());
+                 }
+                 else
+                 {
+                   // open alert tab already open
+                   this.cp.getTabPanes().getSelectionModel().select(this.cp.getCHFtab());
+                 }
          break; 
    }   
   }
@@ -329,7 +382,7 @@ public class FXController {
     double currentPrice =  Double.parseDouble(this.getCurrentPrice(currency));
     double price = Double.parseDouble(this.getCurrentPrice(currency));
     double takeProfit = 0.0;
-    double stopLoss = this.of.returnStopLoss().getValue();
+    double stopLoss = 0.0;
     Integer result = 0;
     boolean oneClickOrder = true;
     
@@ -365,7 +418,7 @@ public class FXController {
     double price = Double.parseDouble(this.getCurrentPrice(currency));
     
     double takeProfit = 0.0;
-    double stopLoss = this.of.returnStopLoss().getValue();
+    double stopLoss = 0.0;
     Integer result = 0;
     boolean oneClickOrder = true;
     
@@ -495,10 +548,10 @@ public class FXController {
               {  
                   BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));        
                   String fromServer;          
+                  
                   while ((fromServer = in.readLine()) != null) {
                     
-                      // Platform.runLater? 
-                      
+                      // Platform.runLater?     
                         update = fromServer;
                         System.out.println(update);
                         String[] s = update.split("-");
@@ -543,6 +596,7 @@ public class FXController {
           @Override public void handle(ActionEvent actionEvent) {          
                 updateCharts();      
                 updateOrders();
+                checkSLTP();
               }      
          }
      ));
@@ -564,6 +618,80 @@ public class FXController {
     this.op.setItemsTableView(orderList); 
     this.op.refreshTableView();
 
+    
+  }
+  
+  public void checkSLTP()
+  {
+    
+    // check for each order for a stop loss or take profit
+    // if it has one 
+            // check if either has been activated
+            // if it has remove order and trigger modal (check out delete orders)
+    // if not continue
+          
+    
+    ArrayList<Order> orders = this.model.getOrders();
+    ArrayList<Integer> removeOrders = new  ArrayList<Integer>();
+    
+    for (Order o : orders)
+    {
+        
+        Double currentPrice = new Double(Double.parseDouble(this.getCurrentPrice(o.getCurrencyPair())));
+        Double stopLoss = new Double(o.getStopLoss());
+        Double takeProfit = new Double(o.getTakeProfit());
+        boolean removeOrder = false;
+        String reason = "";
+
+        
+        
+        // if wasn't one click order
+        if(stopLoss != 0.0)
+        {
+          if(currentPrice.compareTo(stopLoss) == -1 || currentPrice.compareTo(stopLoss) == 0)
+          {
+            removeOrder = true;
+            // remove
+            reason = "Stop Loss";
+          }        
+        }
+          
+        // if wasn't one click order
+        if(takeProfit != 0.0)
+        {
+          if(currentPrice.compareTo(takeProfit) == 1 || currentPrice.compareTo(takeProfit) == 0)
+          {
+            System.out.println("Make it?");
+            removeOrder = true;
+            // remove
+            reason = "Take Profit";
+          } 
+        }
+          
+        if(removeOrder)
+        {
+          int index = this.model.getOrders().indexOf(o);
+          removeOrders.add(index);
+          System.out.println("Added to ArrayList");
+        }
+        
+    }
+    
+    // removes all of them this is wrong !!!!!!!!!!!
+    System.out.println("==============================");
+    System.out.println(removeOrders);
+    System.out.println(this.model.getOrders());
+    System.out.println("==============================");
+
+    
+    for(Integer i : removeOrders)
+    {
+      System.out.println(i);
+      this.model.removeOrder(i.intValue());
+    }
+   
+    ObservableList<Order> orderList =  FXCollections.observableArrayList(this.model.getOrders());
+    this.op.setItemsTableView(orderList); 
     
   }
   

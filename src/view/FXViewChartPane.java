@@ -1,6 +1,7 @@
 package view;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -71,7 +72,7 @@ public class FXViewChartPane extends VBox {
   private Calendar calendarGBP;
   private Calendar calendarCHF;
   
-  private Tab t2, t3, t4;
+  private Tab t1, t2, t3, t4;
 
   private SimpleDateFormat sdf;
 
@@ -86,7 +87,7 @@ public class FXViewChartPane extends VBox {
 
     this.tp = new TabPane();
 
-    final Tab t1 = new Tab();
+    t1 = new Tab();
     t1.setText("EUR/USD");
     t1.setContent(addEURPane("EUR/USD"));
     t1.setClosable(false);
@@ -102,6 +103,8 @@ public class FXViewChartPane extends VBox {
 
     lcEUR.setAnimated(false);
     sp.getItems().addAll(tp, op);
+    sp.setDividerPositions(0.875);
+
     this.getChildren().add(sp);
   }
   
@@ -169,7 +172,17 @@ public class FXViewChartPane extends VBox {
     yAxisEUR.setForceZeroInRange(false);
     yAxisEUR.setLowerBound(1.000);
     yAxisEUR.setUpperBound(1.100);
-    yAxisEUR.setTickUnit(0.001);   
+    yAxisEUR.setTickUnit(0.001);  
+    
+ 
+    
+    yAxisEUR.setTickLabelFormatter(new NumberAxis.DefaultFormatter(yAxisEUR) {
+      
+      @Override
+      public String toString(Number object) {
+        return String.format("%.3f", object);
+      }
+    });
 
     lcEUR = new AreaChart<>(xAxisEUR, yAxisEUR); 
     lcEUR.setPrefSize(650.0, 850.0);
@@ -288,7 +301,6 @@ public class FXViewChartPane extends VBox {
     ObservableList<String> options = 
     FXCollections.observableArrayList(timeInSecondsGBP); 
     
-    
     xAxisGBP = new CategoryAxis(options);
     xAxisGBP.invalidateRange(options);
     xAxisGBP.setTickLabelRotation(90.0);
@@ -325,8 +337,7 @@ public class FXViewChartPane extends VBox {
 
     fill.setStyle("-fx-fill: rgba(" + rgb + ", 0.15);");
     line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
-
-    
+ 
     vb.getChildren().addAll(lcGBP);
     
     return vb;
@@ -786,5 +797,25 @@ public class FXViewChartPane extends VBox {
   public Timeline getTimeline()
   {
     return tl1;
+  }
+  
+  public Tab getEURtab()
+  {
+      return t1;
+  }
+  
+  public Tab getUSDtab()
+  {
+      return t2;
+  }
+  
+  public Tab getGBPtab()
+  {
+      return t3;
+  }
+  
+  public Tab getCHFtab()
+  {
+      return t4;
   }
 }

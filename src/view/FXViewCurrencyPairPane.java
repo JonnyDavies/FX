@@ -22,7 +22,7 @@ import javafx.scene.text.Text;
 public class FXViewCurrencyPairPane extends VBox {
 
 
-  private Label p1, p2, p3, p4;
+  private Label p0, p1, p2, p3, p4;
   private Button b1, b1a, b2, b2a, b3, b3a, b4, b4a;
   private ToggleButton tb1, tb2, tb3;
   
@@ -31,7 +31,14 @@ public class FXViewCurrencyPairPane extends VBox {
     /**********************************************/
     
     
+    VBox vb = new VBox();
+    p0 = new Label("Quantity");
+    p0.setFont(new Font("Arial", 20));
+    vb.setAlignment(Pos.BASELINE_CENTER);
+    vb.setSpacing(5);
+    vb.setStyle("-fx-background-color :  #d9d9d9");
 
+    
     tb1 = new ToggleButton("10,000");
     tb1.setPrefSize(66,50); 
     tb1.setMinHeight(35);
@@ -52,6 +59,7 @@ public class FXViewCurrencyPairPane extends VBox {
    
     HBox tb = new HBox();
     tb.getChildren().addAll(tb1,tb2,tb3);
+    vb.getChildren().addAll(p0,tb);
 
     /**********************************************/
     VBox main = new VBox();
@@ -134,7 +142,7 @@ public class FXViewCurrencyPairPane extends VBox {
     // add all uaed here
     main.setSpacing(15);
     main.getChildren().addAll(l1,p1,hbox1,l2,p2,hbox2,l3,p3,hbox3,l4,p4,hbox4);
-    this.getChildren().addAll(tb,main);
+    this.getChildren().addAll(vb,main);
 
   }
   

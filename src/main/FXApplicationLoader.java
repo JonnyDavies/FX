@@ -20,25 +20,14 @@ public class FXApplicationLoader extends Application {
 
  
   
-  /**
-   * Find out exactly what the init function does
-   * one-time? obviously, what's called first etc
-   */
   public void init() {   
-    
-    
-
+     
     view = new FXViewLoginPage();    
-    model = new Trader(); // this will be something like FXTrader but rename once UML diagrams are done!
-    controller = new FXController(view, model); //    new FXController(model, view); 
+    model = new Trader(); 
+    controller = new FXController(view, model);
   }
   
 
-  /**
-   * Same with this, what's the difference between the init and start?
-   * They must do similar things!
-   */
-  
   @Override
   public void start(Stage window) throws Exception {
     

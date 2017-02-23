@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -17,7 +18,8 @@ public class FXViewLoginPage extends BorderPane {
   
   private FXViewLoginPane lp;
   private Button b1, b2;
-  private TextField t1, t2;
+  private TextField t1; 
+  private PasswordField p1;
   
   public FXViewLoginPage(){
         
@@ -42,11 +44,11 @@ public class FXViewLoginPage extends BorderPane {
         t1.setPrefSize(300,30); 
         Label l2 = new Label("Password ");
         l2.setFont(new Font("Arial", 15)); 
-        t2 = new TextField(); 
-        t2.setPrefSize(300,30);
+        p1 = new PasswordField(); 
+        p1.setPrefSize(300,30);
         
         VBox vb1 = new VBox();
-        vb1.getChildren().addAll(l1,t1,l2,t2);
+        vb1.getChildren().addAll(l1,t1,l2,p1);
         vb1.setSpacing(2);
                
         b2 = new Button("Register");
@@ -95,8 +97,8 @@ public class FXViewLoginPage extends BorderPane {
       return t1;
   }
 
-  public TextField getPassword()
+  public PasswordField getPassword()
   {
-      return t2;
+      return p1;
   }
 }

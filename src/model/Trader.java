@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +14,8 @@ public class Trader {
   private String lastName;
   private double equity;
   private ArrayList<Order> orders;
+  
+  private HashMap<String, String> priceAlerts; // this suitable for storing price alerts
   
   
   public Trader (){

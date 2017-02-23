@@ -30,7 +30,7 @@ import javafx.stage.StageStyle;
 
 public class FXViewNewOrderForm extends VBox {
   
-  private Button b1, b2;
+  private Button b1, b2, tp, sl;
   private Spinner<Double> sptp, spsl; 
   private ComboBox<String> cb1, cb2;
   
@@ -78,22 +78,23 @@ public class FXViewNewOrderForm extends VBox {
     
     grid.add(q, 0, 2);
 
-    ToggleGroup tg = new ToggleGroup();
-    RadioButton tp = new RadioButton("Take Profit");
-    tp.setToggleGroup(tg);
-    grid.add(tp, 0, 3);
-
-    RadioButton sl = new RadioButton("Stop Loss");
-    sl.setToggleGroup(tg);
-    grid.add(sl, 1, 3);
+    tp = new Button("Take Profit");
+    tp.setPrefSize(120,30); 
+    grid.add(tp, 0, 4);
     
-    sptp = new Spinner<>(0.0, 10.0, 0.0, 0.01);
+    sl = new Button("Stop Loss");
+    sl.setPrefSize(120,30); 
+    grid.add(sl, 1, 4);
+    
+    sptp = new Spinner<>(0.8, 3.0, 1.2, 0.10);
     sptp.setPrefSize(120,30);  
-    grid.add(sptp, 0, 4);
+    sptp.setDisable(true);
+    grid.add(sptp, 0, 5);
 
-    spsl = new Spinner<>(0.0, 10.0, 0.0, 0.01);
+    spsl = new Spinner<>(0.5, 3.0, 1.0, 0.10);
     spsl.setPrefSize(120,30);  
-    grid.add(spsl, 1, 4);
+    spsl.setDisable(true);
+    grid.add(spsl, 1, 5);
     
     b1 = new Button("Sell");
     b1.setPrefSize(130,35);  
@@ -124,14 +125,35 @@ public class FXViewNewOrderForm extends VBox {
           b2.setOnAction(handler);
   }
   
+  public void takeProfitButtonHandler(EventHandler<ActionEvent> handler)
+  {
+          tp.setOnAction(handler);
+  }
+  
+              
+  public void stopLossButtonHandler(EventHandler<ActionEvent> handler)
+  {
+          sl.setOnAction(handler);
+  }
+  
   public Spinner<Double> returnTakeProfit()
   {
-          return sptp;
+          return this.sptp;
   }
 
   public Spinner<Double> returnStopLoss()
   {
-          return spsl;
+          return this.spsl;
+  }
+  
+  public void setDisableStopLoss(Boolean bool)
+  {
+           this.spsl.setDisable(bool);
+  }
+  
+  public void setDisableTakeProfit(Boolean bool)
+  {
+           this.sptp.setDisable(bool);
   }
   
   public ComboBox<String> returnCurrencyPair()
