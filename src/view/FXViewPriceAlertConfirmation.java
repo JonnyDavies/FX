@@ -17,13 +17,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class FXViewPriceAlertForm extends VBox {
+public class FXViewPriceAlertConfirmation extends VBox {
   
   private Button b1, b2;
   private ComboBox<String> cb1;
   private TextField t1;
   
-  public FXViewPriceAlertForm()
+  public FXViewPriceAlertConfirmation()
   {
     
     GridPane grid = new GridPane();
@@ -34,30 +34,11 @@ public class FXViewPriceAlertForm extends VBox {
     grid.setHgap(10);
     grid.setVgap(10);
     
-    ObservableList<String> options = 
-        FXCollections.observableArrayList(
-            "EUR/USD",
-            "USD/JPY",
-            "GBP/USD",
-            "USD/CHF"
-        );
 
-    cb1 = new ComboBox<String>(options);
-    cb1.setPrefSize(120,30);  
-
-    grid.add(cb1, 1, 1);
     
     Label cp = new Label("Currency Pair:");
     grid.add(cp, 0, 1);
 
-
-    t1 = new TextField();
-    t1.setPrefSize(120,30);  
-
-    grid.add(t1, 1, 2);
-    
-    Label p = new Label("Price:");
-    grid.add(p, 0, 2);
   
     b1 = new Button("Cancel");
     b1.setPrefSize(130,35);  
@@ -83,20 +64,10 @@ public class FXViewPriceAlertForm extends VBox {
   }
   
               
-  public void okButtonHandler(EventHandler<ActionEvent> handler)
+  public void okConfirmButtonHandler(EventHandler<ActionEvent> handler)
   {
           b2.setOnAction(handler);
   }
-  
  
-  public ComboBox<String> returnCurrencyPair()
-  {
-          return cb1;
-  }
-  
-  public TextField returnPrice()
-  {
-          return t1;
-  }
 
 }

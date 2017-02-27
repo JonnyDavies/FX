@@ -8,6 +8,9 @@ import model.Trader;
 import view.FXViewLoginPage;
 import view.FXViewRegisterPage;
 import view.FXViewRootPane;
+
+import org.controlsfx.control.Notifications;
+
 import controller.FXController;
 
 public class FXApplicationLoader extends Application {
@@ -31,8 +34,7 @@ public class FXApplicationLoader extends Application {
   @Override
   public void start(Stage window) throws Exception {
     
-      Scene login = new Scene(view);
-    
+      Scene login = new Scene(view, 1300, 700);   
       // we need to figure out where how we're going to change the scene obviously contoller 
       controller.setStage(window);
       // important we keep this reference to the scene
@@ -41,6 +43,7 @@ public class FXApplicationLoader extends Application {
       window.setScene(login);
       window.show();   
       window.setMaximized(true);
+
 
       // service start?
       

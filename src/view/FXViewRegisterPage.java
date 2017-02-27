@@ -3,39 +3,37 @@ package view;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class FXViewRegisterPage extends BorderPane {
+public class FXViewRegisterPage extends GridPane {
   
-private FXViewRegisterPane lp;
 private Button b1, b2;
-private TextField t1, t2, t3, t4, t5;
+private TextField t1, t2, t3;
+private PasswordField p1, p2;
 private Label l1a, l2a, l3a, l4a, l5a; 
   
-   public FXViewRegisterPage()
-  {    
-    lp = new FXViewRegisterPane();   
-    AnchorPane ap = new AnchorPane();
-    ap.getChildren().add(lp);
 
-    this.setCenter(ap);
-    this.setLeft(setBorderPaneSpacesLeftRight());
-    this.setRight(setBorderPaneSpacesLeftRight());
-    this.setTop(setBorderPaneSpacesUpDown());
-    this.setBottom(setBorderPaneSpacesUpDown()); 
-  }
-  
-  private class FXViewRegisterPane extends HBox {
-    
-    public FXViewRegisterPane(){
+    public FXViewRegisterPage(){
+      
+        this.getColumnConstraints().add(new ColumnConstraints(200)); 
+        this.getColumnConstraints().add(new ColumnConstraints(200));
+        
+        this.setAlignment(Pos.CENTER);
+        //this.setHgap(10);
+        this.setVgap(15);
+          
       
         
         Label l1 = new Label("First Name");
@@ -44,87 +42,97 @@ private Label l1a, l2a, l3a, l4a, l5a;
         l1a.setVisible(false);
         l1a.setTextFill(Color.web("red"));
         l1a.setPadding(new Insets(0, 0, 0, 5));
-        HBox hb1 = new HBox(l1,l1a);       
+        
+        this.add(l1, 0, 1);
+        this.add(l1a, 1, 1);
+
+                
         t1 = new TextField();    
         t1.setPrefSize(300,30); 
+        
+        this.add(t1, 0, 2, 2, 1);
+
         
   
         Label l2 = new Label("Last Name");
         l2.setFont(new Font("Arial", 15)); 
+        
         l2a = new Label("- length between 3 & 15");
         l2a.setVisible(false);
         l2a.setTextFill(Color.web("red"));
         l2a.setPadding(new Insets(0, 0, 0, 5));
-        HBox hb2 = new HBox(l2,l2a);       
+        
+        this.add(l2, 0, 3);
+        this.add(l2a, 1, 3);
+        
+        
         t2 = new TextField();    
         t2.setPrefSize(300,30); 
 
+        this.add(t2, 0, 4, 4, 1);
         
         Label l3 = new Label("Email Address");
         l3.setFont(new Font("Arial", 15)); 
+        
         l3a = new Label("- incorrect format");
         l3a.setVisible(false);
         l3a.setTextFill(Color.web("red"));
         l3a.setPadding(new Insets(0, 0, 0, 5));
-        HBox hb3 = new HBox(l3,l3a);       
+        
+        this.add(l3, 0, 5);
+        this.add(l3a, 1, 5);
+        
         t3 = new TextField();    
         t3.setPrefSize(300,30); 
+        
+        this.add(t3, 0, 6, 6, 1);
 
         Label l4 = new Label("Password ");
         l4.setFont(new Font("Arial", 15)); 
+        
         l4a = new Label("- incorrect format");
         l4a.setVisible(false);
         l4a.setTextFill(Color.web("red"));
         l4a.setPadding(new Insets(0, 0, 0, 5));
-        HBox hb4 = new HBox(l4,l4a);       
-        t4 = new TextField(); 
-        t4.setPrefSize(300,30);
+        
+        this.add(l4, 0, 7);
+        this.add(l4a, 1, 7);
+        
+        p1 = new PasswordField(); 
+        p1.setPrefSize(300,30);
+
+        this.add(p1, 0, 8, 8, 1);
 
         
         Label l5 = new Label("Re-enter Password");
         l5.setFont(new Font("Arial", 15)); 
+        
         l5a = new Label("- incorrect format");
         l5a.setVisible(false);
         l5a.setTextFill(Color.web("red"));
         l5a.setPadding(new Insets(0, 0, 0, 5));
-        HBox hb5 = new HBox(l5,l5a); 
-        t5 = new TextField();
-        t5.setPrefSize(300,30); 
+        
+        this.add(l5, 0, 9);
+        this.add(l5a, 1, 9);
+        
+        p2 = new PasswordField();
+        p2.setPrefSize(300,30); 
 
-        VBox vb1 = new VBox();
-        vb1.getChildren().addAll(hb1,t1,hb2,t2,hb3,t3,hb4,t4,hb5,t5);
-        vb1.setSpacing(2);
+        this.add(p2, 0, 10, 10, 1);
+
                
         b2 = new Button("Register");
-        b2.setPrefSize(160,35);      
+        b2.setPrefSize(200,35);      
         b1 = new Button("Back");
-        b1.setPrefSize(160,35);
+        b1.setPrefSize(200,35);
               
-        HBox hb6 = new HBox();
-        hb6.getChildren().addAll(b1,b2);
-        vb1.getChildren().addAll(hb6);
-        vb1.setPadding(new Insets(100, 100, 100, 100));
-        vb1.setSpacing(10);
-        this.setSpacing(8);
-        this.getChildren().add(vb1);
-     }
-  }
+        this.add(b2, 0, 11);
+        this.add(b1, 1, 11);
+        
+
+   }
+
   
-  public VBox setBorderPaneSpacesLeftRight(){
-    
-    VBox vblr = new VBox();
-    vblr.setPrefSize(400,500);      
-    vblr.setStyle("-fx-background-color : white");   
-    return vblr;
-  }  
-  
-  public VBox setBorderPaneSpacesUpDown(){
-    
-    VBox vbud = new VBox();
-    vbud.setPrefSize(100,50);      
-    vbud.setStyle("-fx-background-color : white");   
-    return vbud;
-  } 
   
   public void addRegisterInfoHandler(EventHandler<ActionEvent> handler) {
     b2.setOnAction(handler);
@@ -146,12 +154,12 @@ private Label l1a, l2a, l3a, l4a, l5a;
     return t3;
   }
      
-  public TextField getPassword(){
-    return t4;
+  public PasswordField getPassword(){
+    return p1;
   }
   
-  public TextField getPasswordConfirmed(){
-    return t5;
+  public PasswordField getPasswordConfirmed(){
+    return p2;
   }
   
   public Label getErrorFirstName(){
@@ -173,6 +181,5 @@ private Label l1a, l2a, l3a, l4a, l5a;
   public Label getErrorPasswordConfirmed(){
     return l5a;
   }
-  
 
 }
