@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.text.DecimalFormat;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -49,6 +51,7 @@ import view.FXViewPriceAlertConfirmation;
 import view.FXViewPriceAlertForm;
 import view.FXViewRegisterPage;
 import view.FXViewRootPane;
+import view.FXViewStatusBar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -72,6 +75,7 @@ public class FXController {
   private FXViewNewOrderForm of;
   private FXViewPriceAlertForm pa;
   private FXViewPriceAlertConfirmation pc;
+  private FXViewStatusBar sb;
   private FXViewOrderPane op;
   private Trader model;
 
@@ -125,6 +129,7 @@ public class FXController {
     this.of = new FXViewNewOrderForm();
     this.pa = new FXViewPriceAlertForm();
     this.pc = new FXViewPriceAlertConfirmation();
+    this.sb = this.rp.getStatusBarPane();
 
     this.register = new Scene(this.re, 1300, 700);
     this.market = new Scene(this.rp, 1300, 700);
@@ -392,7 +397,7 @@ public class FXController {
     double price = Double.parseDouble(this.getCurrentPrice(currency));
     double takeProfit = 0.0;
     double stopLoss = 0.0;
-    Integer result = 0;
+    BigDecimal result = new BigDecimal("0.00");
     boolean oneClickOrder = true;
 
 
@@ -423,7 +428,7 @@ public class FXController {
 
     double takeProfit = 0.0;
     double stopLoss = 0.0;
-    Integer result = 0;
+    BigDecimal result = new BigDecimal("0.00");
     boolean oneClickOrder = true;
 
 
@@ -473,7 +478,7 @@ public class FXController {
     double price = Double.parseDouble(this.getCurrentPrice(currency));
     double takeProfit = this.of.returnTakeProfit().getValue();
     double stopLoss = this.of.returnStopLoss().getValue();
-    Integer result = 0;
+    BigDecimal result = new BigDecimal("0.00");
     boolean oneClickOrder = false;
 
 
@@ -503,7 +508,7 @@ public class FXController {
     double price = Double.parseDouble(this.getCurrentPrice(currency));
     double takeProfit = this.of.returnTakeProfit().getValue();
     double stopLoss = this.of.returnStopLoss().getValue();
-    Integer result = 0;
+    BigDecimal result = new BigDecimal("0.00");
     boolean oneClickOrder = false;
 
 
@@ -518,7 +523,8 @@ public class FXController {
     windowModal.close();
   }
 
-  public void startSocketListener() {
+  public void startSocketListener() 
+  {
     FirstLineService service = new FirstLineService();
     service.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
       @Override
@@ -530,7 +536,8 @@ public class FXController {
     service.start();
   }
 
-  private static class FirstLineService extends Service<String> {
+  private static class FirstLineService extends Service<String> 
+  {
 
     protected Task<String> createTask() {
 
@@ -580,7 +587,8 @@ public class FXController {
     }
   }
 
-  public void startTimeline() {
+  public void startTimeline() 
+  {
     Timeline tl = this.cp.getTimeline();
     tl.getKeyFrames().add(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
       @Override
@@ -589,6 +597,8 @@ public class FXController {
         updateOrders();
         checkSLTP();
         checkPriceAlerts();
+        updateOrderResult();
+        calculateLiveResultAndEquity();
 
       }
     }));
@@ -673,7 +683,112 @@ public class FXController {
                  .showWarning();    
   }
 
-  public void updateOrders() {
+  
+  
+  public void calculateLiveResultAndEquity()
+  {
+    ArrayList<Order> orders = this.model.getOrders();
+    
+    BigDecimal liveResult = new BigDecimal("0.00");
+    
+    for (Order o : orders) 
+    {
+      liveResult = liveResult.add(o.getResult());
+    }
+    
+    // set live result
+      // set colours eventually
+    this.sb.setLabelLiveResult(liveResult.toString());
+    
+    // set equity
+      // set colours eventually
+    BigDecimal equity = this.model.getEquity();
+    BigDecimal newEquity = equity.add(liveResult);
+    
+    this.sb.setLabelEquity(newEquity.toString());
+  }
+  
+  
+  
+  
+  public void updateOrderResult() 
+  {
+    ArrayList<Order> orders = this.model.getOrders();
+
+    for (int k = 0; k < orders.size(); k++) 
+    {
+      if(orders.get(k).getDirection().equals("Buy"))
+      {
+        
+        // THINK ABOUT CONVERTING BACK TO GBP!!!!!!!!!!!!!!
+        
+        // get the quantity of buy order
+        BigDecimal quantityOfBuyOrder = new BigDecimal(orders.get(k).getQuantity());
+        
+        // get the initial currency price
+        BigDecimal initialCurrencyPriceOfBuyOrder = new BigDecimal(Double.toString(orders.get(k).getPrice()));
+
+        // get the initial total
+        BigDecimal initialTotal =  quantityOfBuyOrder.multiply(initialCurrencyPriceOfBuyOrder);
+
+        //get the current currency price
+        BigDecimal currentCurrencyPriceOfBuyOrder = new BigDecimal(this.getCurrentPrice(orders.get(k).getCurrencyPair()));
+
+        // get the current total 
+        BigDecimal currentTotal = quantityOfBuyOrder.multiply(currentCurrencyPriceOfBuyOrder);
+
+        // take away the initial total against current total to work out profit/loss store it in table view
+        BigDecimal overallProfitLoss =  currentTotal.subtract(initialTotal).setScale(2);  
+        
+        // format the string to two decimal places
+        overallProfitLoss = overallProfitLoss.setScale(2, RoundingMode.HALF_UP);
+        // update result for table view
+        orders.get(k).setResult(overallProfitLoss);     
+      }
+      else
+      {       
+        /** THINK ABOUT CONVERTING BACK TO GBP!!!!!!!!!!!!!! **/
+        // it's a sell order, different kettle of fish
+        
+        // get the quantity of sell order
+        BigDecimal quantityOfSellOrder = new BigDecimal(orders.get(k).getQuantity());
+        
+        // get the initial currency price
+        BigDecimal initialCurrencyPriceOfSellOrder = new BigDecimal(Double.toString(orders.get(k).getPrice()));
+        
+        // get the initial total
+        BigDecimal initialTotal =  quantityOfSellOrder.multiply(initialCurrencyPriceOfSellOrder);
+
+        //get the current currency price
+        BigDecimal currentCurrencyPriceOfSellOrder = new BigDecimal(this.getCurrentPrice(orders.get(k).getCurrencyPair()));
+        
+        // get the current total 
+        BigDecimal currentTotal = initialTotal.divide(currentCurrencyPriceOfSellOrder, 2, RoundingMode.HALF_UP);
+
+        // get the difference 
+        BigDecimal difference = currentTotal.subtract(quantityOfSellOrder);
+        
+        // convert the difference back
+        BigDecimal finalDifference = difference.multiply(currentCurrencyPriceOfSellOrder).setScale(2, RoundingMode.HALF_UP);
+        
+        finalDifference = finalDifference.setScale(2, RoundingMode.HALF_UP);
+        // format the string to two decimal places
+        
+        // update result for table view
+        orders.get(k).setResult(finalDifference);
+      }  
+    }
+
+    ObservableList<Order> orderList = FXCollections.observableArrayList(orders);
+    this.op.setItemsTableView(orderList);
+    this.op.refreshTableView();
+
+
+  }
+  
+  
+  public void updateOrders() 
+  {
     ArrayList<Order> orders = this.model.getOrders();
 
     for (Order o : orders) 
@@ -687,6 +802,7 @@ public class FXController {
 
 
   }
+  
 
   public void checkSLTP() {
 

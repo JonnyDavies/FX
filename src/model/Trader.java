@@ -1,5 +1,6 @@
 package model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,7 +14,7 @@ public class Trader
   private String password;
   private String firstName;
   private String lastName;
-  private double equity;
+  private BigDecimal equity;
   private ArrayList<Order> orders;
   
   private ArrayList<Double> priceAlertsEUR; // this suitable for storing price alerts
@@ -27,7 +28,7 @@ public class Trader
   {
     this.email = "";
     this.password = "";
-    this.equity = 0.00;
+    this.equity = new BigDecimal("11000.00");
     this.firstName = "";
     this.lastName = "";
     this.orders = new ArrayList<Order>();
@@ -38,7 +39,7 @@ public class Trader
 
   }
   
-  public Trader (String email, String password, String firstName, String lastName,  double equity)
+  public Trader (String email, String password, String firstName, String lastName,  BigDecimal equity)
   {
     this.email = email;
     this.password = password;
@@ -92,17 +93,18 @@ public class Trader
       return lastName;
   }
 
-  public void setEquity(double equity)
+  public void setEquity(BigDecimal equity)
   {
       this.equity = equity;
   }
 
-  public double getEquity()
+  public BigDecimal getEquity()
   {
       return equity;
   }
   
-  public ArrayList<Order> getOrders(){
+  public ArrayList<Order> getOrders()
+  {
     return orders;
   }
   

@@ -58,9 +58,9 @@ public class FXViewOrderPane extends VBox {
     sl.setCellValueFactory(new PropertyValueFactory<Order, Double>("stopLoss"));
     sl.setStyle("-fx-alignment: CENTER");
     
-    TableColumn<Order,Integer> res = new TableColumn<Order,Integer>("Result");
+    TableColumn<Order,Double> res = new TableColumn<Order,Double>("Result");
     res.prefWidthProperty().bind(order.widthProperty().divide(8));
-    res.setCellValueFactory(new PropertyValueFactory<Order, Integer>("result"));
+    res.setCellValueFactory(new PropertyValueFactory<Order, Double>("result"));
     res.setStyle("-fx-alignment: CENTER");
 
     

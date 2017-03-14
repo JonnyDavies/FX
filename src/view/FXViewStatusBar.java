@@ -19,7 +19,7 @@ import javafx.scene.text.Font;
 
 public class FXViewStatusBar extends HBox {
   
-  private Label l1, l2, l3;
+  private Label l1, l1a, l2, l2a, l3;
   
   public FXViewStatusBar(){
     
@@ -30,21 +30,49 @@ public class FXViewStatusBar extends HBox {
 
 
     
-    l1 = new Label("Equity: GBP 1000.89 ");
+    l1 = new Label("Equity: GBP ");
     l1.setFont(new Font("Arial", 12));
-    l1.setTextFill(Color.GREEN);
+    l1.setTextFill(Color.LIGHTGREY);
+    
+    l1a = new Label("1000.89");
+    l1a.setFont(new Font("Arial", 12));
+    l1a.setTextFill(Color.WHITE);
     
     
-    l2 = new Label("Live Result: GBP 0.00");
+    l2 = new Label("Live Result: GBP ");
     l2.setFont(new Font("Arial", 12));
-    l2.setTextFill(Color.RED);
+    l2.setTextFill(Color.LIGHTGREY);
     
+    l2a = new Label("0.00");
+    l2a.setFont(new Font("Arial", 12));
+    l2a.setTextFill(Color.WHITE);
     
-    l3 = new Label("12/02/2017:  09.53.18");
-    l3.setFont(new Font("Arial", 12));
-    l3.setTextFill(Color.WHITE);
-      
-    this.getChildren().addAll(l3,l2,l1);
+  
+//    l3 = new Label("12/02/2017:  09.53.18");
+//    l3.setFont(new Font("Arial", 12));
+//    l3.setTextFill(Color.WHITE);
+     
+    this.getChildren().addAll(l2,l2a,l1,l1a);
   }
+  
+  
+  public Label getLabelLiveResult()
+  {
+    return l2a;
+  }
+  public void setLabelLiveResult(String text)
+  {
+    l2a.setText(text);
+  }
+  
+  public Label getLabelEquity()
+  {
+    return l1a;
+  }
+  public void setLabelEquity (String text)
+  {
+    l1a.setText(text);
+  }
+  
   
 }

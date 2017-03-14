@@ -39,15 +39,15 @@ public class FXViewCurrencyPairPane extends VBox {
     vb.setStyle("-fx-background-color :  #d9d9d9");
 
     
-    tb1 = new ToggleButton("10,000");
+    tb1 = new ToggleButton("1000");
     tb1.setPrefSize(66,50); 
     tb1.setMinHeight(35);
 
-    tb2 = new ToggleButton("20,000");
+    tb2 = new ToggleButton("2000");
     tb2.setPrefSize(67,50);
     tb2.setMinHeight(35);
     
-    tb3 = new ToggleButton("40,000");
+    tb3 = new ToggleButton("5000");
     tb3.setPrefSize(67,50);
     tb3.setMinHeight(35);
        

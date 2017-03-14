@@ -1,5 +1,8 @@
 package model;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+
 import javafx.beans.property.SimpleStringProperty;
 
 public class Order {
@@ -11,7 +14,7 @@ public class Order {
   private double currentPrice;
   private double takeProfit;
   private double stopLoss;
-  private Integer result;
+  private BigDecimal result;
   private boolean oneClickOrder;
   private int id;
   private static int numberOfOrders = 0;
@@ -24,12 +27,12 @@ public class Order {
     this.currentPrice = 0.0;
     this.takeProfit = 0.0;
     this.stopLoss = 0.0;
-    this.result = 0;
+    this.result = new BigDecimal("0.00");
     this.oneClickOrder = false;
     this.id = ++numberOfOrders;
     }
   
-  public Order (String currencyPair, String quantity, String direction, double price, double currentPrice, double takeProfit, double stopLoss, Integer result, boolean oneClickOrder){    
+  public Order (String currencyPair, String quantity, String direction, double price, double currentPrice, double takeProfit, double stopLoss, BigDecimal result, boolean oneClickOrder){    
     this.currencyPair = currencyPair;
     this.quantity = quantity;
     this.direction = direction;
@@ -76,6 +79,7 @@ public class Order {
   }
   
   public void setCurrentPrice(double currentPrice){
+    
     this.currentPrice = currentPrice;
   }
   
@@ -99,11 +103,12 @@ public class Order {
     return this.stopLoss;
   }
   
-  public void setResult(Integer result){
+  public void setResult(BigDecimal result)
+  {  
     this.result = result;
   }
   
-  public Integer getResult(){
+  public BigDecimal getResult(){
     return this.result;
   }
   

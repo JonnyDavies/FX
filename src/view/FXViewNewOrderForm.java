@@ -62,12 +62,12 @@ public class FXViewNewOrderForm extends VBox {
     
     ObservableList<String> qty = 
         FXCollections.observableArrayList(
-            "2,000",
-            "4,000",
-            "10,000",
-            "20,000",
-            "40,000",
-            "100,000"
+            "2000",
+            "4000",
+            "10000",
+            "20000",
+            "40000",
+            "100000"
         );
 
     cb2 = new ComboBox<String>(qty);

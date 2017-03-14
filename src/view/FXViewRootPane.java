@@ -35,4 +35,7 @@ public class FXViewRootPane extends BorderPane {
     return cupp;
   }
 
+  public FXViewStatusBar getStatusBarPane(){
+    return sb;
+  }
 }

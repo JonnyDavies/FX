@@ -9,7 +9,6 @@ import view.FXViewLoginPage;
 import view.FXViewRegisterPage;
 import view.FXViewRootPane;
 
-import org.controlsfx.control.Notifications;
 
 import controller.FXController;
 
@@ -24,7 +23,6 @@ public class FXApplicationLoader extends Application {
  
   
   public void init() {   
-     
     view = new FXViewLoginPage();    
     model = new Trader(); 
     controller = new FXController(view, model);
