@@ -38,7 +38,7 @@ public class FXViewOrderPane extends VBox {
     dir.setCellValueFactory(new PropertyValueFactory<Order, String>("direction"));
     dir.setStyle("-fx-alignment: CENTER");
     
-    TableColumn<Order,Double> prc = new TableColumn<Order,Double>("Price");
+    TableColumn<Order,Double> prc = new TableColumn<Order,Double>("Purchase Price");
     prc.prefWidthProperty().bind(order.widthProperty().divide(8));
     prc.setCellValueFactory(new PropertyValueFactory<Order, Double>("price"));
     prc.setStyle("-fx-alignment: CENTER");

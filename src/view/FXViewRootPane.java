@@ -1,5 +1,8 @@
 package view;
 
+import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
+import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
@@ -12,6 +15,7 @@ public class FXViewRootPane extends BorderPane {
   
   public FXViewRootPane(){
        
+
     mp = new FXViewMenuPane();
     chtp = new FXViewChartPane();
     cupp = new FXViewCurrencyPairPane();

@@ -1,5 +1,7 @@
 package view;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -58,7 +60,6 @@ public class FXViewChartPane extends VBox {
   private CategoryAxis xAxisGBP;
   private CategoryAxis xAxisCHF;
   
-  private Timeline tl1;
   private TabPane tp;
   
   private ArrayList<String> timeInSecondsEUR;
@@ -73,6 +74,8 @@ public class FXViewChartPane extends VBox {
   private Calendar calendarCHF;
   
   private Tab t1, t2, t3, t4;
+  
+  DecimalFormat df = new DecimalFormat("#.000"); 
 
   private SimpleDateFormat sdf;
 
@@ -89,15 +92,14 @@ public class FXViewChartPane extends VBox {
 
     t1 = new Tab();
     t1.setText("EUR/USD");
-    t1.setContent(addEURPane("EUR/USD"));
-    t1.setClosable(false);
+    t1.setContent(addEURPane("EUR/USD","EUR/USD"));
+    t1.setClosable(true);
        
     tp.getTabs().addAll(t1);
     
     this.op = new FXViewOrderPane();
        
     // ===================================================//
-    tl1 = new Timeline();
  
     // ===================================================//
 
@@ -108,7 +110,7 @@ public class FXViewChartPane extends VBox {
     this.getChildren().add(sp);
   }
   
-  public void addTabPane(String currency)
+  public void addTabPane(String currency, String currencyPrice)
   {
 
     switch (currency)
@@ -116,31 +118,33 @@ public class FXViewChartPane extends VBox {
       case "USD/JPY" :       
         t2 =  new Tab();
         t2.setText(currency);
-        t2.setContent(addUSDPane(currency)); 
+        t2.setContent(addUSDPane(currency, currencyPrice)); 
         this.tp.getTabs().addAll(t2); 
         break;
         
       case "GBP/USD" :
         t3 =  new Tab();
         t3.setText(currency);
-        t3.setContent(addGBPPane(currency)); 
+        t3.setContent(addGBPPane(currency, currencyPrice)); 
         this.tp.getTabs().addAll(t3); 
         break;
         
       case "USD/CHF" :
         t4 =  new Tab();
         t4.setText(currency);
-        t4.setContent(addCHFPane(currency)); 
+        t4.setContent(addCHFPane(currency, currencyPrice)); 
         this.tp.getTabs().addAll(t4); 
         break;
     }
     
   }
   
+ 
   
-  public VBox addEURPane(String currency) 
+  public VBox addEURPane(String currency, String currencyPrice) 
   {
     allSeries.put("EUR/USD", this.seriesEUR = new AreaChart.Series<>());
+
 
     VBox vb = new VBox();
     vb.setStyle("-fx-background-color :  #e6e6e6");
@@ -212,7 +216,7 @@ public class FXViewChartPane extends VBox {
   }
   
   
-  public VBox addUSDPane(String currency) 
+  public VBox addUSDPane(String currency, String currencyPrice) 
   {
     allSeries.put("USD/JPY", this.seriesUSD = new AreaChart.Series<>());
     
@@ -244,8 +248,29 @@ public class FXViewChartPane extends VBox {
     yAxisUSD = new NumberAxis();
     yAxisUSD.setAutoRanging(false);
     yAxisUSD.setForceZeroInRange(false);
-    yAxisUSD.setLowerBound(1.000);
-    yAxisUSD.setUpperBound(1.100);
+    
+    yAxisUSD.setTickLabelFormatter(new NumberAxis.DefaultFormatter(yAxisUSD) {
+      
+      @Override
+      public String toString(Number object) {
+        return String.format("%.3f", object);
+      }
+    });
+
+      
+    BigDecimal lower = new BigDecimal(currencyPrice);
+    lower = lower.setScale(1, RoundingMode.HALF_UP);
+    BigDecimal upper = lower.add(new BigDecimal("0.1"));  
+    lower = lower.setScale(3, RoundingMode.HALF_UP);
+    upper = upper.setScale(3, RoundingMode.HALF_UP);
+
+    // calculate bounds
+    
+    yAxisUSD.setLowerBound(lower.doubleValue());
+    yAxisUSD.setUpperBound(upper.doubleValue());
+    
+    
+    
     yAxisUSD.setTickUnit(0.001);   
 
     lcUSD = new AreaChart<>(xAxisUSD, yAxisUSD); 
@@ -280,7 +305,7 @@ public class FXViewChartPane extends VBox {
     return vb;
   }
 
-  public VBox addGBPPane(String currency) 
+  public VBox addGBPPane(String currency, String currencyPrice) 
   {
     allSeries.put("GBP/USD", this.seriesGBP = new AreaChart.Series<>());
     
@@ -311,8 +336,32 @@ public class FXViewChartPane extends VBox {
     yAxisGBP = new NumberAxis();
     yAxisGBP.setAutoRanging(false);
     yAxisGBP.setForceZeroInRange(false);
-    yAxisGBP.setLowerBound(1.000);
-    yAxisGBP.setUpperBound(1.100);
+    
+    yAxisGBP.setTickLabelFormatter(new NumberAxis.DefaultFormatter(yAxisGBP) {
+      
+      @Override
+      public String toString(Number object) {
+        return String.format("%.3f", object);
+      }
+    });
+    
+    
+    
+    BigDecimal lower = new BigDecimal(currencyPrice);
+    lower = lower.setScale(1, RoundingMode.HALF_UP);
+    BigDecimal upper = lower.add(new BigDecimal("0.1"));  
+    lower = lower.setScale(3, RoundingMode.HALF_UP);
+    upper = upper.setScale(3, RoundingMode.HALF_UP);
+    
+    // calculate bounds
+    
+    
+    
+    yAxisGBP.setLowerBound(lower.doubleValue());
+    yAxisGBP.setUpperBound(upper.doubleValue());
+    
+    
+    
     yAxisGBP.setTickUnit(0.001);   
 
     lcGBP = new AreaChart<>(xAxisGBP, yAxisGBP); 
@@ -343,7 +392,7 @@ public class FXViewChartPane extends VBox {
     return vb;
   }
 
-  public VBox addCHFPane(String currency) 
+  public VBox addCHFPane(String currency, String currencyPrice) 
   {
     allSeries.put("USD/CHF", this.seriesCHF = new AreaChart.Series<>());
 
@@ -374,8 +423,27 @@ public class FXViewChartPane extends VBox {
     yAxisCHF = new NumberAxis();
     yAxisCHF.setAutoRanging(false);
     yAxisCHF.setForceZeroInRange(false);
-    yAxisCHF.setLowerBound(2.000);
-    yAxisCHF.setUpperBound(2.100);
+    
+    yAxisCHF.setTickLabelFormatter(new NumberAxis.DefaultFormatter(yAxisCHF) {
+      
+      @Override
+      public String toString(Number object) {
+        return String.format("%.3f", object);
+      }
+    });
+    
+    
+    // calculate bounds
+    
+    BigDecimal lower = new BigDecimal(currencyPrice);
+    lower = lower.setScale(1, RoundingMode.HALF_UP);
+    BigDecimal upper = lower.add(new BigDecimal("0.1"));  
+    lower = lower.setScale(3, RoundingMode.HALF_UP);
+    upper = upper.setScale(3, RoundingMode.HALF_UP);
+    
+    yAxisCHF.setLowerBound(lower.doubleValue());
+    yAxisCHF.setUpperBound(upper.doubleValue());
+      
     yAxisCHF.setTickUnit(0.001);   
 
     lcCHF = new AreaChart<>(xAxisCHF, yAxisCHF); 
@@ -794,11 +862,6 @@ public class FXViewChartPane extends VBox {
     this.calendarCHF.add(Calendar.SECOND, 1);
   }
    
-  public Timeline getTimeline()
-  {
-    return tl1;
-  }
-  
   public Tab getEURtab()
   {
       return t1;

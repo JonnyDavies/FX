@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
@@ -59,7 +60,7 @@ public class FXViewCurrencyPairPane extends VBox {
    
     HBox tb = new HBox();
     tb.getChildren().addAll(tb1,tb2,tb3);
-    vb.getChildren().addAll(p0,tb);
+   // vb.getChildren().addAll(p0,tb);
 
     /**********************************************/
     VBox main = new VBox();
@@ -138,11 +139,13 @@ public class FXViewCurrencyPairPane extends VBox {
     hbox4.prefHeightProperty().bind(this.heightProperty().divide(4));
     hbox4.getChildren().addAll(b4,b4a);
     
+
+    
     /**********************************************/
     // add all uaed here
     main.setSpacing(15);
     main.getChildren().addAll(l1,p1,hbox1,l2,p2,hbox2,l3,p3,hbox3,l4,p4,hbox4);
-    this.getChildren().addAll(vb,main);
+    this.getChildren().addAll(vb,main,tb);
 
   }
   
