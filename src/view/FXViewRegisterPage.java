@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class FXViewRegisterPage extends GridPane {
   
@@ -33,11 +34,15 @@ private Label l1a, l2a, l3a, l4a, l5a;
         this.setAlignment(Pos.CENTER);
         //this.setHgap(10);
         this.setVgap(15);
+        this.setStyle("-fx-background-color : #4d4d4d");
+
           
       
         
         Label l1 = new Label("First Name");
-        l1.setFont(new Font("Arial", 15));
+        l1.setFont(Font.font("", FontWeight.BOLD, 15));
+        l1.setTextFill(Color.WHITE);
+
         l1a = new Label("- length between 3 & 15");
         l1a.setVisible(false);
         l1a.setTextFill(Color.web("red"));
@@ -55,8 +60,9 @@ private Label l1a, l2a, l3a, l4a, l5a;
         
   
         Label l2 = new Label("Last Name");
-        l2.setFont(new Font("Arial", 15)); 
-        
+        l2.setFont(Font.font("", FontWeight.BOLD, 15)); 
+        l2.setTextFill(Color.WHITE);
+
         l2a = new Label("- length between 3 & 15");
         l2a.setVisible(false);
         l2a.setTextFill(Color.web("red"));
@@ -72,7 +78,9 @@ private Label l1a, l2a, l3a, l4a, l5a;
         this.add(t2, 0, 4, 4, 1);
         
         Label l3 = new Label("Email Address");
-        l3.setFont(new Font("Arial", 15)); 
+        l3.setFont(Font.font("", FontWeight.BOLD, 15)); 
+        l3.setTextFill(Color.WHITE);
+
         
         l3a = new Label("- incorrect format");
         l3a.setVisible(false);
@@ -88,7 +96,9 @@ private Label l1a, l2a, l3a, l4a, l5a;
         this.add(t3, 0, 6, 6, 1);
 
         Label l4 = new Label("Password ");
-        l4.setFont(new Font("Arial", 15)); 
+        l4.setFont(Font.font("", FontWeight.BOLD, 15)); 
+        l4.setTextFill(Color.WHITE);
+
         
         l4a = new Label("- incorrect format");
         l4a.setVisible(false);
@@ -105,7 +115,9 @@ private Label l1a, l2a, l3a, l4a, l5a;
 
         
         Label l5 = new Label("Re-enter Password");
-        l5.setFont(new Font("Arial", 15)); 
+        l5.setFont(Font.font("", FontWeight.BOLD, 15)); 
+        l5.setTextFill(Color.WHITE);
+
         
         l5a = new Label("- incorrect format");
         l5a.setVisible(false);
@@ -122,12 +134,19 @@ private Label l1a, l2a, l3a, l4a, l5a;
 
                
         b2 = new Button("Register");
-        b2.setPrefSize(200,35);      
+        b2.setFont(Font.font("", FontWeight.BOLD, 14));
+        b2.setPrefSize(200,35);  
+        b2.setPadding( new Insets( 0, 0, 0, 1));
+
+        
         b1 = new Button("Back");
+        b1.setFont(Font.font("", FontWeight.BOLD, 14));
         b1.setPrefSize(200,35);
+        b1.setPadding( new Insets( 0, 1, 0, 0));
+
               
-        this.add(b2, 0, 11);
-        this.add(b1, 1, 11);
+        this.add(b2, 1, 11);
+        this.add(b1, 0, 11);
         
 
    }

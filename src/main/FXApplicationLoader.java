@@ -9,6 +9,7 @@ import view.FXViewLoginPage;
 import view.FXViewRegisterPage;
 import view.FXViewRootPane;
 
+import java.math.BigDecimal;
 
 import controller.FXController;
 
@@ -25,6 +26,7 @@ public class FXApplicationLoader extends Application {
   public void init() {   
     view = new FXViewLoginPage();    
     model = new Trader(); 
+    model.setEquity(new BigDecimal("11000"));
     controller = new FXController(view, model);
   }
   

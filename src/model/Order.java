@@ -17,9 +17,11 @@ public class Order {
   private BigDecimal result;
   private boolean oneClickOrder;
   private int id;
+  private int dbId;
   private static int numberOfOrders = 0;
   
-  public Order(){
+  public Order()
+  {
     this.currencyPair = "";
     this.quantity = "0";
     this.direction = "";
@@ -30,9 +32,10 @@ public class Order {
     this.result = new BigDecimal("0.00");
     this.oneClickOrder = false;
     this.id = ++numberOfOrders;
-    }
+  }
   
-  public Order (String currencyPair, String quantity, String direction, double price, double currentPrice, double takeProfit, double stopLoss, BigDecimal result, boolean oneClickOrder){    
+  public Order (String currencyPair, String quantity, String direction, double price, double currentPrice, double takeProfit, double stopLoss, BigDecimal result, boolean oneClickOrder, int dbId)
+  {    
     this.currencyPair = currencyPair;
     this.quantity = quantity;
     this.direction = direction;
@@ -43,6 +46,7 @@ public class Order {
     this.result = result;   
     this.oneClickOrder = oneClickOrder;
     this.id = ++numberOfOrders;
+    this.dbId = dbId;
   }
   
   
@@ -122,6 +126,10 @@ public class Order {
   
   public int getId(){
     return this.id;
+  }
+  
+  public int getDBId(){
+    return this.dbId;
   }
   
   public String toString(){

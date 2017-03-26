@@ -16,6 +16,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -28,15 +29,19 @@ public class FXViewLoginPage extends GridPane {
     
     public FXViewLoginPage(){
       
+      
+        
         this.getColumnConstraints().add(new ColumnConstraints(200)); 
         this.getColumnConstraints().add(new ColumnConstraints(200));
         
         this.setAlignment(Pos.CENTER);
         //this.setHgap(10);
         this.setVgap(15);
+        this.setStyle("-fx-background-color : #4d4d4d");
           
         Label l1 = new Label("Email Address ");
-        l1.setFont(new Font("Arial", 15)); 
+        l1.setFont(Font.font("", FontWeight.BOLD, 15)); 
+        l1.setTextFill(Color.WHITE);
         this.add(l1, 0, 1, 1, 1);
   
         t1 = new TextField();
@@ -44,7 +49,8 @@ public class FXViewLoginPage extends GridPane {
         this.add(t1, 0, 2, 2, 1);
    
         Label l2 = new Label("Password ");
-        l2.setFont(new Font("Arial", 15));
+        l2.setFont(Font.font("", FontWeight.BOLD, 15));
+        l2.setTextFill(Color.WHITE);
         this.add(l2, 0, 3, 3, 1);
     
         p1 = new PasswordField(); 
@@ -52,11 +58,17 @@ public class FXViewLoginPage extends GridPane {
         this.add(p1, 0, 4, 4, 1);
              
         b2 = new Button("Register");
+        b2.setFont(Font.font("", FontWeight.BOLD, 14));
         b2.setPrefSize(200,35);  
+        b2.setStyle("-fx-background-color : #d9d9d9");
+        b2.setPadding( new Insets( 4));
         this.add(b2, 0, 5);
 
         b1 = new Button("Logon");
+        b1.setFont(Font.font("", FontWeight.BOLD, 14));
         b1.setPrefSize(200,35);
+        b1.setStyle("-fx-background-color : #d9d9d9");
+        b1.setPadding( new Insets( 0, 0, 0, 1));
         this.add(b1, 1, 5);      
         
   
