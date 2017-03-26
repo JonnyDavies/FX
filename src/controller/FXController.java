@@ -11,6 +11,8 @@ import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 import javafx.animation.Animation;
@@ -64,7 +66,8 @@ import java.util.regex.*;
 
 import org.controlsfx.control.Notifications;
 
-public class FXController {
+public class FXController 
+{
 
   private FXViewLoginPage lg;
   private FXViewRootPane rp;
@@ -96,6 +99,8 @@ public class FXController {
   private static StringProperty message3;
   private static StringProperty message4;
   
+  private Database db;
+  
   private static FirstLineService service;
   
   private Timeline tl;
@@ -115,10 +120,11 @@ public class FXController {
   
   private  boolean alreadyLoggedOn;
   
-
   public FXController(FXViewLoginPage view, Trader model) {
     this.lg = view;
     this.model = model;
+    
+    this.db = new Database();
 
     this.rp = new FXViewRootPane();
     this.re = new FXViewRegisterPage();
@@ -148,7 +154,6 @@ public class FXController {
     message4 = new SimpleStringProperty();
 
   }
-
 
   public void attachEventHandlers() 
   {
@@ -206,7 +211,8 @@ public class FXController {
 
   }
   
-  public void undisableTakeProfitSpinner() {
+  public void undisableTakeProfitSpinner() 
+  {
     Spinner<Double> temp = this.of.returnTakeProfit();
     Boolean disabled = false;
     disabled = (temp.isDisabled() == true) ? false : true;
@@ -220,7 +226,6 @@ public class FXController {
     this.of.setDisableStopLoss(disabled);
   }
 
-
   public void closingHousekeepingforUSD() 
   {
     System.out.println("Testing USD");
@@ -229,26 +234,30 @@ public class FXController {
     tabStatus.put("USD/JPY", false);
   }
 
-  public void closingHousekeepingforGBP() {
+  public void closingHousekeepingforGBP() 
+  {
     System.out.println("Testing GBP");
     notStayingHereGBP = 0;
     this.cp.removeSeries("GBP/USD");
     tabStatus.put("GBP/USD", false);
   }
 
-  public void closingHousekeepingforCHF() {
+  public void closingHousekeepingforCHF() 
+  {
     System.out.println("Testing CHF");
     notStayingHereCHF = 0;
     this.cp.removeSeries("USD/CHF");
     tabStatus.put("USD/CHF", false);
   }
 
-  public void populateOrderTableOnStart(TableView<Order> order) {
+  public void populateOrderTableOnStart(TableView<Order> order) 
+  {
     ObservableList<Order> options = FXCollections.observableArrayList(this.model.getOrders());
     this.op.setItemsTableView(options);
   }
 
-  public void newOrderInputBox() {
+  public void newOrderInputBox() 
+  {
     windowModal = new Stage();
     windowModal.initModality(Modality.APPLICATION_MODAL);
     windowModal.alwaysOnTopProperty();
@@ -278,7 +287,8 @@ public class FXController {
 
     Order selected = this.op.returnTableView().getSelectionModel().getSelectedItem();
 
-    if (selected != null) {
+    if (selected != null) 
+    {
       
       BigDecimal result = selected.getResult();
       BigDecimal equity = this.model.getEquity();
@@ -287,6 +297,13 @@ public class FXController {
       this.model.setEquity(newEquity);
       
       indexOrder = this.model.getOrders().indexOf(selected);
+      
+      // 
+      int id = selected.getDBId();
+      System.out.println("ID EQUALS THIS -> " + id);
+      this.db.deleteOrderDetails(id,"jonathandavies27@gmail.com");
+      
+      
       this.model.removeOrder(indexOrder);
       ObservableList<Order> orderList = FXCollections.observableArrayList(this.model.getOrders());
       this.op.setItemsTableView(orderList);
@@ -412,9 +429,14 @@ public class FXController {
     BigDecimal result = new BigDecimal("0.00");
     boolean oneClickOrder = true;
 
-
-    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss,
-        result, oneClickOrder);
+    
+    // get last id of order
+    int lastId = this.db.getLastOrderId();
+    this.db.insertOrderDetails(++lastId, "jonathandavies27@gmail.com", currency,  quantity, direction, price, takeProfit, stopLoss);
+ 
+    
+    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss, result, oneClickOrder, lastId );
+   
     this.model.addOrder(buy);
     ObservableList<Order> orderList = FXCollections.observableArrayList(this.model.getOrders());
     this.op.setItemsTableView(orderList);
@@ -444,9 +466,9 @@ public class FXController {
     boolean oneClickOrder = true;
 
 
-    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss,
-        result, oneClickOrder);
-    this.model.addOrder(buy);
+//    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss,
+//        result, oneClickOrder);
+//    this.model.addOrder(buy);
 
     ObservableList<Order> orderList = FXCollections.observableArrayList(this.model.getOrders());
     this.op.setItemsTableView(orderList);
@@ -492,13 +514,14 @@ public class FXController {
     boolean oneClickOrder = false;
 
 
-    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss,
-        result, oneClickOrder);
-    this.model.addOrder(buy);
+//    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss,
+//        result, oneClickOrder);
+//    
+//    
+//    this.model.addOrder(buy);
     ObservableList<Order> orderList = FXCollections.observableArrayList(this.model.getOrders());
     this.op.setItemsTableView(orderList);
 
-    // store in db. =================== database function started finish it off
 
     windowModal.close();
   }
@@ -522,9 +545,10 @@ public class FXController {
     boolean oneClickOrder = false;
 
 
-    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss,
-        result, oneClickOrder);
-    this.model.addOrder(buy);
+//    Order buy = new Order(currency, quantity, direction, price, currentPrice, takeProfit, stopLoss,
+//        result, oneClickOrder);
+//    this.model.addOrder(buy);
+    
     ObservableList<Order> orderList = FXCollections.observableArrayList(this.model.getOrders());
     this.op.setItemsTableView(orderList);
 
@@ -596,6 +620,7 @@ public class FXController {
               if (isCancelled())
               {
                 System.out.println("We in cancelled?");
+                out.println("END");
                 out.close();
                 in.close();
                 socket.close();
@@ -636,9 +661,9 @@ public class FXController {
     tl.setCycleCount(Animation.INDEFINITE);
     tl.setAutoReverse(true);
     alreadyLoggedOn = true;
+    
     tl.play(); 
   }
-  
   
   public void setTraderNameAndEquity()
   {
@@ -912,6 +937,7 @@ public class FXController {
   public void setSceneToBeDisplayed(String nextScreen) {
 
     switch (nextScreen) {
+     
       case "Login":
         // validation
         // put a condition round this if validation fails return back to page
@@ -922,42 +948,58 @@ public class FXController {
           window.setScene(register);
         }
         break;
+      
       case "Back":
         window.setScene(login);
         break;
+      
       case "Market":
         if (this.authenticate()) {
           
-          this.startSocketListener();
           // move this
+          // get new trader
+          this.model = new Trader();
+          
           window.setScene(market);
           window.setMaximized(true);
-//          if(alreadyLoggedOn)
-//          {
-//            this.resumeTimeline();
-//          }
-//          else
-//          {
+          
+          // check if any existing orders, populate them
+          
+          this.populateOrders();
+          
+          if(alreadyLoggedOn)
+          {
+          }
+          else
+          {
+//            if (!db.doesTableExist("orders")) {
+//              db.createOrdersTable();
+//            } else {
+//              System.out.println("TABLE EXISTS");
+//            }
+            this.startSocketListener();
             this.startTimeline();
- //         }
+          }
 
         } else {
           window.setScene(login);
         }
         break;
+        
       case "Logout":
         window.setScene(login);
         this.logOffHousekeeping();
         break;
+        
       case "Register":
         window.setScene(register);
+        window.setMaximized(true);
         break;
     }
 
     window.show();
     window.setMaximized(true);
   }
-
 
   public void setStage(Stage stage) {
     this.window = stage;
@@ -967,6 +1009,36 @@ public class FXController {
     this.login = scene;
   }
 
+  public void populateOrders()
+  {
+    // ids start at 1 
+    if(this.db.getLastOrderId() > 0 )
+    {
+      
+      ResultSet rs = this.db.returnOrders("jonathandavies27@gmail.com");
+      
+      try {
+        while (rs.next()) {
+
+          
+         Order buy = new Order(rs.getString("currency"),  rs.getString("quantity") , rs.getString("direction"),  rs.getDouble("price") ,  
+             0.000, rs.getDouble("takeProfit"), rs.getDouble("stopLoss"), new BigDecimal("0.0"), true, rs.getInt("id")  );
+         
+         this.model.addOrder(buy);
+  
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    
+      
+      ObservableList<Order> orderList = FXCollections.observableArrayList(this.model.getOrders());
+      this.op.setItemsTableView(orderList);
+    }
+    
+    
+  }
+  
   public void logOffHousekeeping()
   {
     
@@ -978,26 +1050,13 @@ public class FXController {
    // the problem is still not solved!
   
 
-   // clear series
-   
-   tl.stop();
-   
-   if (service.isRunning()) 
-   {
-     boolean test = service.cancel();
-     System.out.println("Does this cancel? = " + test);
-   }
-   // close chart
-   
   }
-  
   
   public void setTraderDetails() {
     System.out.println(this.re.getFirstName());
-    Database db = new Database();
 
     if (!db.doesTableExist("trader")) {
-      db.createTable();
+      db.createTraderTable();
     } else {
       System.out.println("TABLE EXISTS");
     }
@@ -1120,11 +1179,11 @@ public class FXController {
     l4.textProperty().bind(message4);
   }
 
-  public boolean authenticate() {
+  public boolean authenticate() 
+  {  
     boolean traderExist = false;
     String userEnterdEmail = this.lg.getEmail().getText();
     String userEnterPwd = this.lg.getPassword().getText();
-
 
     Database db = new Database();
 
@@ -1134,8 +1193,7 @@ public class FXController {
     }
 
     // we need to store register details properly
-    traderFirstName = this.lg.getEmail().getText();
- 
+    traderFirstName = this.lg.getEmail().getText(); 
     
     return traderExist;
   }

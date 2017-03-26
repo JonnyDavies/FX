@@ -31,6 +31,7 @@ public class Trader
     this.equity = new BigDecimal("11000.00");
     this.firstName = "";
     this.lastName = "";
+    
     this.orders = new ArrayList<Order>();
     this.priceAlertsEUR = new ArrayList<Double>();
     this.priceAlertsUSD = new ArrayList<Double>();

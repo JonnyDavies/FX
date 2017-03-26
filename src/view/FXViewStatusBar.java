@@ -23,7 +23,7 @@ public class FXViewStatusBar extends HBox {
   
   public FXViewStatusBar(){
     
-    this.setStyle("-fx-background-color : grey");
+    this.setStyle("-fx-background-color : #4d4d4d");
     this.setPadding(new Insets(5, 10, 5, 10));
     this.setSpacing(8);
     this.setAlignment(Pos.CENTER_RIGHT);

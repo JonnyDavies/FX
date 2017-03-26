@@ -89,6 +89,8 @@ public class FXViewChartPane extends VBox {
     sp.setOrientation(Orientation.VERTICAL);  
 
     this.tp = new TabPane();
+    
+
 
     t1 = new Tab();
     t1.setText("EUR/USD");
@@ -108,6 +110,7 @@ public class FXViewChartPane extends VBox {
     sp.setDividerPositions(0.875);
 
     this.getChildren().add(sp);
+    this.setStyle("-fx-background-color: grey;");
   }
   
   public void addTabPane(String currency, String currencyPrice)

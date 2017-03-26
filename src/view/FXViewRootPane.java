@@ -19,12 +19,16 @@ public class FXViewRootPane extends BorderPane {
     mp = new FXViewMenuPane();
     chtp = new FXViewChartPane();
     cupp = new FXViewCurrencyPairPane();
+    cupp.prefWidthProperty().bind(this.widthProperty().divide(7));
+    
     sb = new FXViewStatusBar();
 
     this.setTop(mp);
     this.setLeft(cupp);    
     this.setCenter(chtp); 
     this.setBottom(sb);
+    
+    
   }
   
   public FXViewMenuPane getMenuPane(){
