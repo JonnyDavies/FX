@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -33,6 +34,7 @@ public class FXViewNewOrderForm extends VBox {
   private Button b1, b2, tp, sl;
   private Spinner<Double> sptp, spsl; 
   private ComboBox<String> cb1, cb2;
+  private Label l0;
   
   public FXViewNewOrderForm ()
   {
@@ -44,7 +46,16 @@ public class FXViewNewOrderForm extends VBox {
     grid.setAlignment(Pos.CENTER);
     grid.setHgap(10);
     grid.setVgap(10);
-    
+      
+    l0 = new Label("Select Currency Pair and Quantity");        
+    l0.setFont(Font.font("", FontWeight.BOLD, 15));
+    l0.setTextFill(Color.WHITE);
+    l0.setPrefSize(260,30); 
+    l0.setStyle("-fx-background-color : red");
+    l0.setAlignment(Pos.CENTER);
+    l0.setVisible(false);
+    grid.add(l0, 0, 1, 2, 1);
+        
     ObservableList<String> options = 
         FXCollections.observableArrayList(
             "EUR/USD",
@@ -56,27 +67,33 @@ public class FXViewNewOrderForm extends VBox {
     cb1 = new ComboBox<String>(options);
     cb1.setPrefSize(120,30);  
 
-    grid.add(cb1, 1, 1);
+    grid.add(cb1, 1, 2);
     Label cp = new Label("Currency Pair:");
-    grid.add(cp, 0, 1);
+    cp.setTextFill(Color.WHITE);
+    cp.setFont(Font.font(13));
+
+    grid.add(cp, 0, 2);
     
     ObservableList<String> qty = 
-        FXCollections.observableArrayList(
+        FXCollections.observableArrayList (
             "2000",
             "4000",
-            "10000",
-            "20000",
-            "40000",
-            "100000"
+            "6000",
+            "8000",
+            "10000"
         );
 
     cb2 = new ComboBox<String>(qty);
     cb2.setPrefSize(120,30);  
 
-    grid.add(cb2, 1, 2);
+    grid.add(cb2, 1, 3);
     Label q = new Label("Quantity:");
+    q.setTextFill(Color.WHITE);
+    q.setFont(Font.font(13));
+
+
     
-    grid.add(q, 0, 2);
+    grid.add(q, 0, 3);
 
     tp = new Button("Take Profit");
     tp.setPrefSize(120,30); 
@@ -86,12 +103,12 @@ public class FXViewNewOrderForm extends VBox {
     sl.setPrefSize(120,30); 
     grid.add(sl, 1, 4);
     
-    sptp = new Spinner<>(0.8, 3.0, 1.2, 0.10);
+    sptp = new Spinner<>(0.8, 3.0, 1.2, 0.010);
     sptp.setPrefSize(120,30);  
     sptp.setDisable(true);
     grid.add(sptp, 0, 5);
 
-    spsl = new Spinner<>(0.5, 3.0, 1.0, 0.10);
+    spsl = new Spinner<>(0.5, 3.0, 1.0, 0.010);
     spsl.setPrefSize(120,30);  
     spsl.setDisable(true);
     grid.add(spsl, 1, 5);
@@ -107,10 +124,13 @@ public class FXViewNewOrderForm extends VBox {
     buttons.setAlignment(Pos.CENTER);
     
     Text scenetitle = new Text("New Order");
-    scenetitle.setFont(new Font("Arial", 24));
+    scenetitle.setFont(new Font("Arial", 26));
+    scenetitle.setFill(Color.WHITE);
+
     
     this.getChildren().addAll(scenetitle, grid, buttons);
     this.setAlignment(Pos.CENTER);
+    this.setStyle("-fx-background-color : #4d4d4d");
     this.setSpacing(10);
   }
   
@@ -118,8 +138,7 @@ public class FXViewNewOrderForm extends VBox {
   {
           b1.setOnAction(handler);
   }
-  
-              
+                
   public void buyNewOrderButtonHandler(EventHandler<ActionEvent> handler)
   {
           b2.setOnAction(handler);
@@ -129,8 +148,7 @@ public class FXViewNewOrderForm extends VBox {
   {
           tp.setOnAction(handler);
   }
-  
-              
+               
   public void stopLossButtonHandler(EventHandler<ActionEvent> handler)
   {
           sl.setOnAction(handler);
@@ -166,5 +184,9 @@ public class FXViewNewOrderForm extends VBox {
           return cb2;
   }
 
+  public Label returnErrorLabel()
+  {
+          return l0;
+  }
 
 }

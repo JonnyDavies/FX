@@ -33,12 +33,9 @@ public class FXViewPriceAlertConfirmation extends VBox {
     grid.setAlignment(Pos.CENTER);
     grid.setHgap(10);
     grid.setVgap(10);
-    
-
-    
+       
     Label cp = new Label("Currency Pair:");
     grid.add(cp, 0, 1);
-
   
     b1 = new Button("Cancel");
     b1.setPrefSize(130,35);  

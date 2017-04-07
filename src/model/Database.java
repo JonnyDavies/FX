@@ -7,16 +7,37 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+/**
+ * The Database class handles all of the 
+ * interaction with the database.
+ *  @author JD
+ */
 public class Database 
 {
    
   private Connection connection;
   
+  
+  /** 
+   * Creates the Database object with a connection to
+   * SQLite DB. Also checks whether the tables already,
+   *  if the do not then the are created.  
+   */
   public Database()
   {
     try 
     {
       connection = DriverManager.getConnection("jdbc:sqlite:FX.db");
+      
+      if (!doesTableExist("trader")) 
+      {
+        createTraderTable();
+      } 
+      
+      if (!doesTableExist("orders")) 
+      {
+        createOrdersTable();
+      }      
     }
     catch (Exception e)
     {
@@ -35,13 +56,12 @@ public class Database
     {
       Statement statement = connection.createStatement();
       statement.setQueryTimeout(30);
-      statement.executeUpdate("CREATE TABLE trader (firstname STRING, lastname STRING, email STRING, password STRING, equity INTEGER, CONSTRAINT trader_PK PRIMARY KEY (email))");
+      statement.executeUpdate("CREATE TABLE trader (firstname STRING, lastname STRING, email STRING, password STRING, equity DOUBLE, CONSTRAINT trader_PK PRIMARY KEY (email))");
     }
     catch (SQLException e)
     {
       System.err.println(e.getMessage());
     }
-
   }
   
   public void createOrdersTable()
@@ -73,14 +93,13 @@ public class Database
     catch (SQLException e)
     {
       System.err.println(e.getMessage());
-    }
-    
+    }    
     return tableExists;
   }
   
   public void insertTraderDetails(ArrayList<String> SQLTraderDetails)
   {
-    int equity = 0;
+    double equity = 11000.00;
     
     try
     {
@@ -98,10 +117,25 @@ public class Database
     
   }
   
-  public void insertOrderDetails( int ids, String email, String direction, String currency, String quantity, double price, double takeProfit, double stopLoss)
+  public ResultSet retrieveTraderDetails(String email)
   {
-    // enter order details ========================
+    ResultSet rs2 = null;
     
+    try
+    {
+      Statement statement = connection.createStatement();
+      rs2 = statement.executeQuery("SELECT firstname, lastname, email, equity FROM trader WHERE email = '" + email + "'");
+    }
+    catch (SQLException e)
+    {
+      System.err.println(e.getMessage());
+    }
+    return rs2;
+  }
+  
+  
+  public void insertOrderDetails( int ids, String email, String direction, String currency, String quantity, double price, double takeProfit, double stopLoss)
+  {   
     try
     {
       Statement statement = connection.createStatement();
@@ -122,9 +156,7 @@ public class Database
   
   
   public void deleteOrderDetails(int ids, String email)
-  {
-    // enter order details ========================
-    //  DELETE FROM orders WHERE id=1 AND email='jonathandavies27@gmail.com';
+  {    
     try
     {
       Statement statement = connection.createStatement();
@@ -137,6 +169,44 @@ public class Database
     } 
   }
   
+  public void deletePassword(String email)
+  {   
+    try
+    {
+      Statement statement = connection.createStatement();
+      statement.execute("UPDATE trader SET password = null WHERE email ='"+ email + "' ");
+    }
+    catch (SQLException e)
+    {
+      System.err.println(e.getMessage());
+    } 
+  }
+  
+  public void updatePassword(String password, String email)
+  {  
+    try
+    {
+      Statement statement = connection.createStatement();
+      statement.execute("UPDATE trader SET password ='"+ password + "' WHERE email ='"+ email + "' ");
+    }
+    catch (SQLException e)
+    {
+      System.err.println(e.getMessage());
+    } 
+  }
+  
+  public void updateEquity(double equity, String email)
+  {  
+    try
+    {
+      Statement statement = connection.createStatement();
+      statement.execute("UPDATE trader SET equity ='"+ equity + "' WHERE email ='"+ email + "' ");
+    }
+    catch (SQLException e)
+    {
+      System.err.println(e.getMessage());
+    } 
+  }
   
   public ResultSet returnOrders(String email)
   {
@@ -146,27 +216,23 @@ public class Database
     try
     {
       Statement statement = connection.createStatement();
-      rs = statement.executeQuery("SELECT * FROM orders WHERE email = 'jonathandavies27@gmail.com'");
+      rs = statement.executeQuery("SELECT * FROM orders WHERE email = '" + email + "'");
     }
     catch (SQLException e)
     {
       System.err.println(e.getMessage());
-    } 
-    
+    }   
     return rs;
   }
   
   
   public int getLastOrderId()
   {
-    // enter order details ========================
-    //  DELETE FROM orders WHERE id=1 AND email='jonathandavies27@gmail.com';
     int lastId = 0;
     
     try
     {
-      Statement statement = connection.createStatement();     
-     
+      Statement statement = connection.createStatement();         
       ResultSet rs3 = statement.executeQuery(" SELECT COUNT(*) AS OrdersTotal FROM orders");
       
       if(rs3.getInt("OrdersTotal") > 0)
@@ -178,8 +244,7 @@ public class Database
     catch (SQLException e)
     {
       System.err.println(e.getMessage());
-    } 
-    
+    }    
     return lastId;
   }
   
@@ -196,8 +261,7 @@ public class Database
     catch (SQLException e)
     {
       System.err.println(e);
-    }
-    
+    }   
     return traderExists;
   }
   
@@ -214,7 +278,6 @@ public class Database
     {
       System.err.println(e);
     }
-    
     return hashedPassword;
   }
   

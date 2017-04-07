@@ -14,7 +14,9 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class FXViewPriceAlertForm extends VBox {
@@ -48,8 +50,10 @@ public class FXViewPriceAlertForm extends VBox {
     grid.add(cb1, 1, 1);
     
     Label cp = new Label("Currency Pair:");
-    grid.add(cp, 0, 1);
+    cp.setFont(Font.font(13));
+    cp.setTextFill(Color.WHITE);
 
+    grid.add(cp, 0, 1);
 
     t1 = new TextField();
     t1.setPrefSize(120,30);  
@@ -57,12 +61,15 @@ public class FXViewPriceAlertForm extends VBox {
     grid.add(t1, 1, 2);
     
     Label p = new Label("Price:");
+    p.setTextFill(Color.WHITE);
+    cp.setFont(Font.font(13));
+    p.setAlignment(Pos.BASELINE_RIGHT);
     grid.add(p, 0, 2);
   
     b1 = new Button("Cancel");
     b1.setPrefSize(130,35);  
     
-    b2 = new Button("Ok");
+    b2 = new Button("Confirm");
     b2.setPrefSize(130,35);  
 
     HBox buttons = new HBox();
@@ -71,9 +78,12 @@ public class FXViewPriceAlertForm extends VBox {
     
     Text scenetitle = new Text("Price Alert");
     scenetitle.setFont(new Font("Arial", 24));
+    scenetitle.setFill(Color.WHITE);
+
     
     this.getChildren().addAll(scenetitle, grid, buttons);
     this.setAlignment(Pos.CENTER);
+    this.setStyle("-fx-background-color : #4d4d4d");
     this.setSpacing(10);
   }
   

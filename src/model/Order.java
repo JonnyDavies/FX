@@ -5,6 +5,12 @@ import java.text.DecimalFormat;
 
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+ * The Order class models all of the 
+ * orders that are made within the 
+ * the FX Trading Simulator.
+ *  @author JD
+ */
 public class Order {
   
   private String currencyPair;
@@ -48,62 +54,74 @@ public class Order {
     this.id = ++numberOfOrders;
     this.dbId = dbId;
   }
-  
-  
-  public String getCurrencyPair(){
+   
+  public String getCurrencyPair()
+  {
     return this.currencyPair;
   }
   
-  public void setCurrencyPair(String currencyPair){
+  public void setCurrencyPair(String currencyPair)
+  {
     this.currencyPair = currencyPair;
   }
   
-  public void setQuantity(String quantity){
+  public void setQuantity(String quantity)
+  {
     this.quantity = quantity;
   }
   
-  public String getQuantity(){
+  public String getQuantity()
+  {
     return this.quantity;
   }
   
-  public String getDirection(){
+  public String getDirection()
+  {
     return this.direction;
   }
   
-  public void setDirection(String direction){
+  public void setDirection(String direction)
+  {
     this.direction = direction;
   }
   
-  public void setPrice(double price){
+  public void setPrice(double price)
+  {
     this.price = price;
   }
   
-  public double getCurrentPrice(){
+  public double getCurrentPrice()
+  {
     return this.currentPrice;
   }
   
-  public void setCurrentPrice(double currentPrice){
-    
+  public void setCurrentPrice(double currentPrice)
+  {  
     this.currentPrice = currentPrice;
   }
   
-  public double getPrice(){
+  public double getPrice()
+  {
     return this.price;
   }
   
-  public void setTakeProfit(double takeProfit){
+  public void setTakeProfit(double takeProfit)
+  {
     this.takeProfit = takeProfit;
   }
   
-  public double getTakeProfit(){
+  public double getTakeProfit()
+  {
     return this.takeProfit;
   }
 
-  public void setStopLoss(double stopLoss){
+  public void setStopLoss(double stopLoss)
+  {
     this.stopLoss = stopLoss;
   }
   
-  public double getStopLoss(){
+  public double getStopLoss()
+  {
     return this.stopLoss;
   }
   
@@ -112,27 +130,33 @@ public class Order {
     this.result = result;
   }
   
-  public BigDecimal getResult(){
+  public BigDecimal getResult()
+  {
     return this.result;
   }
   
-  public void setOneClickOrder(boolean oneClickOrder){
+  public void setOneClickOrder(boolean oneClickOrder)
+  {
     this.oneClickOrder = oneClickOrder;
   }
   
-  public boolean getOneClickOrder(){
+  public boolean getOneClickOrder()
+  {
     return this.oneClickOrder;
   }
   
-  public int getId(){
+  public int getId()
+  {
     return this.id;
   }
   
-  public int getDBId(){
+  public int getDBId()
+  {
     return this.dbId;
   }
   
-  public String toString(){
+  public String toString()
+  {
     return "Order[ id=" + id +"quantity=" + quantity + " direction=" + direction + " price=" + price + " takeProfit=" + takeProfit + " stopLoss=" + stopLoss + " result=" + result  + " oneClickOrder=" + oneClickOrder +"]";
   }
 }

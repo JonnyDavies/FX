@@ -72,9 +72,7 @@ public class FXViewChartPane extends VBox {
   private Calendar calendarUSD;
   private Calendar calendarGBP;
   private Calendar calendarCHF;
-  
-  private Tab t1, t2, t3, t4;
-  
+  private Tab t1, t2, t3, t4; 
   DecimalFormat df = new DecimalFormat("#.000"); 
 
   private SimpleDateFormat sdf;
@@ -82,35 +80,25 @@ public class FXViewChartPane extends VBox {
   
   public FXViewChartPane()
   {
-    // intialise series???
+    // intialise series
     allSeries = new HashMap<String,XYChart.Series<String, Number>>();
     
     SplitPane sp = new SplitPane(); 
     sp.setOrientation(Orientation.VERTICAL);  
 
     this.tp = new TabPane();
-    
+    this.addTabPane("EUR/USD", "1.006");
 
 
-    t1 = new Tab();
-    t1.setText("EUR/USD");
-    t1.setContent(addEURPane("EUR/USD","EUR/USD"));
-    t1.setClosable(true);
-       
-    tp.getTabs().addAll(t1);
-    
     this.op = new FXViewOrderPane();
        
-    // ===================================================//
- 
-    // ===================================================//
-
-    lcEUR.setAnimated(false);
+    
     sp.getItems().addAll(tp, op);
-    sp.setDividerPositions(0.875);
+    sp.setDividerPositions(0.8);
 
     this.getChildren().add(sp);
-    this.setStyle("-fx-background-color: grey;");
+    this.setStyle("-fx-background-color:   #4d4d4d;");
+    this.setPadding(new Insets( 0, 0, 0, 0));
   }
   
   public void addTabPane(String currency, String currencyPrice)
@@ -118,6 +106,13 @@ public class FXViewChartPane extends VBox {
 
     switch (currency)
     {
+      case "EUR/USD" :       
+        t1 =  new Tab();
+        t1.setText(currency);
+        t1.setContent(addEURPane(currency, currencyPrice)); 
+        this.tp.getTabs().addAll(t1); 
+        break;
+        
       case "USD/JPY" :       
         t2 =  new Tab();
         t2.setText(currency);
@@ -147,8 +142,7 @@ public class FXViewChartPane extends VBox {
   public VBox addEURPane(String currency, String currencyPrice) 
   {
     allSeries.put("EUR/USD", this.seriesEUR = new AreaChart.Series<>());
-
-
+    
     VBox vb = new VBox();
     vb.setStyle("-fx-background-color :  #e6e6e6");
     vb.setPadding(new Insets(10, 10, 10, 10));
@@ -177,9 +171,20 @@ public class FXViewChartPane extends VBox {
     yAxisEUR = new NumberAxis();
     yAxisEUR.setAutoRanging(false);
     yAxisEUR.setForceZeroInRange(false);
-    yAxisEUR.setLowerBound(1.000);
-    yAxisEUR.setUpperBound(1.100);
+
     yAxisEUR.setTickUnit(0.001);  
+    
+    
+    BigDecimal lower = new BigDecimal(currencyPrice);
+    lower = lower.setScale(1, RoundingMode.HALF_UP);
+    BigDecimal upper = lower.add(new BigDecimal("0.1"));  
+    lower = lower.setScale(3, RoundingMode.HALF_UP);
+    upper = upper.setScale(3, RoundingMode.HALF_UP);
+
+    // calculate bounds
+    
+    yAxisEUR.setLowerBound(lower.doubleValue());
+    yAxisEUR.setUpperBound(upper.doubleValue());
     
  
     
@@ -203,6 +208,8 @@ public class FXViewChartPane extends VBox {
     Node line = this.seriesEUR.getNode().lookup(".chart-series-area-line");
 
     Color color = Color.RED; // or any other color
+    
+    lcEUR.setAnimated(false);
 
     String rgb = String.format("%d, %d, %d",
             (int) (color.getRed() * 255),
@@ -474,6 +481,11 @@ public class FXViewChartPane extends VBox {
     vb.getChildren().addAll(lcCHF);
     
     return vb;
+  }
+  
+  public void setCloseRequesTab1 (EventHandler<Event> e)
+  {
+        t1.setOnCloseRequest(e);
   }
   
   public void setCloseRequesTab2 (EventHandler<Event> e)

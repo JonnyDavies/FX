@@ -38,12 +38,12 @@ public class FXViewMenuPane extends VBox {
     
     
 
-    b1 = new Button(" Logout", fontAwesome.create(FontAwesome.Glyph.COG).color(Color.SILVER));
+    b1 = new Button(" Logout", fontAwesome.create(FontAwesome.Glyph.SIGN_OUT).color(Color.SILVER));
     b1.setPrefSize(80,30);
     b1.setTextFill(Color.WHITE);
     b1.setStyle("-fx-background-color : #4d4d4d");
     
-    b2 = new Button(" New Order", fontAwesome.create(FontAwesome.Glyph.PLUS).color(Color.GREEN));
+    b2 = new Button(" New Order", fontAwesome.create(FontAwesome.Glyph.PLUS).color(Color.LIME));
     b2.setPrefSize(95,30);
     b2.setTextFill(Color.WHITE);
     b2.setStyle("-fx-background-color : #4d4d4d");
@@ -53,7 +53,7 @@ public class FXViewMenuPane extends VBox {
     b3.setTextFill(Color.WHITE);
     b3.setStyle("-fx-background-color : #4d4d4d");
     
-    b4 = new Button(" Price Alert", fontAwesome.create(FontAwesome.Glyph.BELL).color(Color.GOLD));
+    b4 = new Button(" Price Alert", fontAwesome.create(FontAwesome.Glyph.BELL).color(Color.YELLOW));
     b4.setPrefSize(95,30);
     b4.setTextFill(Color.WHITE);
     b4.setStyle("-fx-background-color : #4d4d4d");
@@ -74,7 +74,7 @@ public class FXViewMenuPane extends VBox {
     cb1.getSelectionModel().selectFirst();
 
     
-    l1 = new Label(" Charts ", fontAwesome.create(FontAwesome.Glyph.AREA_CHART).color(Color.BLUE));
+    l1 = new Label(" Charts ", fontAwesome.create(FontAwesome.Glyph.AREA_CHART).color(Color.SKYBLUE));
     l1.setTextFill(Color.WHITE);
     
     
@@ -92,7 +92,9 @@ public class FXViewMenuPane extends VBox {
     cb2.getSelectionModel().selectFirst();
     
     
-    l2 = new Label(" Quantity ", fontAwesome.create(FontAwesome.Glyph.GBP).color(Color.PURPLE));
+    
+    
+    l2 = new Label(" Quantity ", fontAwesome.create(FontAwesome.Glyph.GBP).color(Color.ORANGE));
     l2.setTextFill(Color.WHITE);
        
     HBox leftSection = new HBox();
@@ -115,6 +117,7 @@ public class FXViewMenuPane extends VBox {
    toolBar.getItems().addAll(leftSection, rightSection);
    
    toolBar.setStyle("-fx-background-color : #4d4d4d");
+   
    this.getChildren().add(toolBar);
    
   }
@@ -145,6 +148,10 @@ public class FXViewMenuPane extends VBox {
     return cb1;
   }
 
+  public ComboBox <String> getQuantityCombo()
+  {
+    return cb2;
+  }
 
 
 }

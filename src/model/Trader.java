@@ -7,6 +7,11 @@ import java.util.HashMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * The Trader class stores the Trader's details
+ * and orders within the FX Trading Simulator.
+ *  @author JD
+ */
 public class Trader 
 {
   
@@ -17,12 +22,10 @@ public class Trader
   private BigDecimal equity;
   private ArrayList<Order> orders;
   
-  private ArrayList<Double> priceAlertsEUR; // this suitable for storing price alerts
-  private ArrayList<Double> priceAlertsUSD; // this suitable for storing price alerts
-  private ArrayList<Double> priceAlertsGBP; // this suitable for storing price alerts
-  private ArrayList<Double> priceAlertsCHF; // this suitable for storing price alerts
-
-  
+  private ArrayList<Double> priceAlertsEUR; 
+  private ArrayList<Double> priceAlertsUSD; 
+  private ArrayList<Double> priceAlertsGBP; 
+  private ArrayList<Double> priceAlertsCHF; 
   
   public Trader ()
   {
@@ -30,14 +33,12 @@ public class Trader
     this.password = "";
     this.equity = new BigDecimal("11000.00");
     this.firstName = "";
-    this.lastName = "";
-    
+    this.lastName = "";   
     this.orders = new ArrayList<Order>();
     this.priceAlertsEUR = new ArrayList<Double>();
     this.priceAlertsUSD = new ArrayList<Double>();
     this.priceAlertsGBP = new ArrayList<Double>();
     this.priceAlertsCHF = new ArrayList<Double>();
-
   }
   
   public Trader (String email, String password, String firstName, String lastName,  BigDecimal equity)
@@ -56,12 +57,12 @@ public class Trader
   
   public void setEmail(String email)
   {
-      this.email = email;
+    this.email = email;
   }
   
   public String getEmail()
   {
-      return this.email;
+    return this.email;
   }
   
   public void setPassword(String password)
@@ -76,12 +77,12 @@ public class Trader
   
   public void setFirstName(String firstName)
   {
-      this.firstName = firstName;
+    this.firstName = firstName;
   }
 
   public String getFirstName()
   {
-      return this.firstName;
+    return this.firstName;
   }
   
   public void setLastName(String lastName)
@@ -91,17 +92,17 @@ public class Trader
   
   public String getLastName()
   {
-      return lastName;
+    return lastName;
   }
 
   public void setEquity(BigDecimal equity)
   {
-      this.equity = equity;
+    this.equity = equity;
   }
 
   public BigDecimal getEquity()
   {
-      return equity;
+    return equity;
   }
   
   public ArrayList<Order> getOrders()
@@ -128,8 +129,7 @@ public class Trader
   {
     orders.remove(o);
   }
-  
-  
+    
   public ArrayList<Double> getPriceAlertsEUR()
   {
     return priceAlertsEUR;
@@ -207,13 +207,11 @@ public class Trader
       case "USD/CHF":
         this.priceAlertsCHF.add(price);
         break;
-    }
-   
+    }  
   }
   
   public void removePriceAlert(String currency, Double price)
   {
-
     switch(currency)
     {
       case "EUR/USD":
@@ -228,14 +226,11 @@ public class Trader
       case "USD/CHF":
         this.priceAlertsCHF.remove(price);
         break;
-    }
-   
+    }   
   }
  
-  public String toString(){
+  public String toString()
+  {
     return "Trader[username= " + email + " password=" + password + " firstName=" + firstName + " lastName=" + lastName + " Equity=" + equity + " ]";
   }
-
-
-
 }

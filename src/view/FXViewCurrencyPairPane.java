@@ -18,6 +18,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -29,45 +30,11 @@ public class FXViewCurrencyPairPane extends VBox {
   private Button b1, b1a, b2, b2a, b3, b3a, b4, b4a;
   private ToggleButton tb1, tb2, tb3;
   
-  public FXViewCurrencyPairPane () {
-    
-    
-    
-    /**********************************************/
-    
-
-    
-    tb1 = new ToggleButton("1000");
-    tb1.setPrefSize(66,50); 
-    tb1.setMinHeight(35);
-
-    tb2 = new ToggleButton("2000");
-    tb2.setPrefSize(67,50);
-    tb2.setMinHeight(35);
-    
-    tb3 = new ToggleButton("5000");
-    tb3.setPrefSize(67,50);
-    tb3.setMinHeight(35);
-       
-    ToggleGroup group = new ToggleGroup();
-    tb1.setToggleGroup(group);
-    tb2.setToggleGroup(group);
-    tb3.setToggleGroup(group);
-    tb1.setSelected(true);
-   
-    HBox tb = new HBox();
-    tb.getChildren().addAll(tb1,tb2,tb3);
-  
-
-    /**********************************************/
-    
-
-    
-    
+  public FXViewCurrencyPairPane () 
+  {  
     VBox vb1 = new VBox();    
     vb1.setAlignment(Pos.BASELINE_CENTER);
     vb1.setStyle("-fx-background-color :  #d9d9d9");
-    
     
     Label l1 = new Label("EUR/USD");
     l1.setFont(new Font(20));
@@ -75,6 +42,7 @@ public class FXViewCurrencyPairPane extends VBox {
     
     p1 = new Label("1.000");
     p1.setFont(Font.font(26));
+
     
     b1 = new Button("Buy");
     b1.setPrefSize(100,50); 
@@ -94,15 +62,7 @@ public class FXViewCurrencyPairPane extends VBox {
     
     
     /**********************************************/
-    
-//    Separator s1 = new Separator();
-//    s1.setOrientation(Orientation.HORIZONTAL);
-//    s1.setStyle("-fx-background-color :  grey");
 
-    
-    /**********************************************/
-    
-    
     VBox vb2 = new VBox();    
     vb2.setAlignment(Pos.BASELINE_CENTER);
     vb2.setStyle("-fx-background-color :  #d9d9d9");
@@ -111,7 +71,7 @@ public class FXViewCurrencyPairPane extends VBox {
     l2.setFont(new Font(20));
     l2.setPadding( new Insets( 4, 0, 0, 0));
     
-    p2 = new Label("110.928");
+    p2 = new Label("1.002");
     p2.setFont(Font.font(26));
     
     b2 = new Button("Buy");
@@ -134,12 +94,7 @@ public class FXViewCurrencyPairPane extends VBox {
 
     
     /**********************************************/
-    
-//    Separator s2 = new Separator();
-//    s2.setOrientation(Orientation.HORIZONTAL);
-//    s2.setStyle("-fx-background-color :  grey");
 
-    /**********************************************/
     
    
     
@@ -154,6 +109,7 @@ public class FXViewCurrencyPairPane extends VBox {
     
     p3 = new Label("1.001");
     p3.setFont(Font.font(26));
+    
     
     b3 = new Button("Buy");
     b3.setPrefSize(100,50); 
@@ -174,13 +130,7 @@ public class FXViewCurrencyPairPane extends VBox {
     
     /**********************************************/
     
-//    Separator s3 = new Separator();
-//    s3.setOrientation(Orientation.HORIZONTAL);
-//    s3.setStyle("-fx-background-color :  grey; -fx-border-style: solid;-fx-border-width: 1px;");
-//
 
-    /**********************************************/
-      
     VBox vb4 = new VBox();    
     vb4.setAlignment(Pos.BASELINE_CENTER);
     vb4.setStyle("-fx-background-color :  #d9d9d9");
@@ -190,7 +140,7 @@ public class FXViewCurrencyPairPane extends VBox {
     l4.setFont(new Font(20));
     l4.setPadding( new Insets( 4, 0, 0, 0));
     
-    p4 = new Label("1.00998");
+    p4 = new Label("1.009");
     p4.setFont(Font.font(26));
     
     b4 = new Button("Buy");
